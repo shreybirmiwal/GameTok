@@ -539,23 +539,19 @@ def prepare_game():
     """Generate game code (Anthropic) and store it without applying. Returns a token."""
     data = request.get_json() or {}
     game_idea = (data.get('game_idea') or '').strip()
-    MAX_IDEA_LEN = 500
-    if not game_idea or len(game_idea) > MAX_IDEA_LEN:
-        logger.warning(f"prepare-game rejected idea length={len(game_idea)} (max={MAX_IDEA_LEN})")
-        return jsonify({"error": f"Invalid 'game_idea' (max {MAX_IDEA_LEN} chars)"}), 400
+    if not game_idea:
+        return jsonify({"error": "Missing 'game_idea'"}), 400
     try:
         _cleanup_prepared()
         logger.info(f"🧪 Preparing game (generate only) for idea: '{game_idea}'")
-        if len(game_idea) < 4:
-            return jsonify({"error": "Idea too short"}), 400
+
         game_html = generate_game_with_anthropic(game_idea)
         if not game_html:
             return jsonify({"error": "Failed to generate game HTML"}), 500
         sanitized_code, _ = sanitize_react_code(game_html, "Claude")
         if not sanitized_code:
             return jsonify({"error": "Sanitization failed"}), 500
-        if len(sanitized_code) > 250_000:
-            return jsonify({"error": "Prepared code too large"}), 400
+
         import uuid
         token = uuid.uuid4().hex
         prepared_games[token] = {
@@ -607,6 +603,8 @@ def generate_game_with_anthropic(game_idea):
         - Inline styles only; no CSS files.
         - Export default the component.
         - Keep the play area near 400x300 and keep mechanics simple.
+        - Ensure there are NO unfinished JSX tags; close all elements and return a valid tree.
+        - The file must END with: export default GameZone;
         """
         
         user_prompt = f"""Create a SIMPLE {game_idea} game as a React functional component that REPLACES the entire contents of src/GameZone.js.
@@ -618,25 +616,46 @@ def generate_game_with_anthropic(game_idea):
         - Provide restart/reset in the component
         - Return ONLY the full file contents of GameZone.js (imports + component + export default).
         - DO NOT wrap the code in markdown fences or any prose.
+        - The code must compile without syntax errors.
         """
 
-        logger.info(f"📡 Sending request to Claude for '{game_idea}' - Model: claude-sonnet-4-20250514")
-        message = anthropic_client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2000,
-            temperature=0.7,
-            system=system_prompt,
-            messages=[{
-                "role": "user",
-                "content": user_prompt
-            }]
-        )
-        
+        logger.info(f"📡 Sending request to Claude for '{game_idea}' - Model: claude-3-5-sonnet-20241022")
+        def call_claude(augment: str = ""):
+            return anthropic_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=4000,
+                temperature=0.2,
+                system=system_prompt,
+                messages=[{
+                    "role": "user",
+                    "content": user_prompt + ("\n" + augment if augment else "")
+                }]
+            )
+
+        message = call_claude()
         generated_content = message.content[0].text
-        logger.info(f"✅ Claude generated content for '{game_idea}' - Length: {len(generated_content)} chars")
+
+        # Heuristic check for a likely truncated tag at the end
+        truncated = False
+        if generated_content is None:
+            truncated = True
+        else:
+            tail = generated_content.strip().splitlines()[-1] if generated_content.strip().splitlines() else ""
+            if tail.endswith("<") or ("<" in tail and not tail.endswith(">") and "</" not in tail):
+                truncated = True
+            # obvious case: ends with an opening tag name
+            if tail.strip().startswith("<") and not tail.strip().endswith(">"):
+                truncated = True
+
+        if truncated:
+            logger.warning("⚠️ Detected likely truncated JSX. Retrying once with explicit instruction to resend full file.")
+            message = call_claude("Your previous output was truncated. Resend the ENTIRE file ensuring all JSX elements are properly closed and the file ends with 'export default GameZone;'.")
+            generated_content = message.content[0].text
+
+        logger.info(f"✅ Claude generated content for '{game_idea}' - Length: {len(generated_content or '')} chars")
         
         # Log some details about what was generated
-        content_lower = generated_content.lower()
+        content_lower = (generated_content or "").lower()
         has_canvas = "<canvas" in content_lower
         has_script = "<script" in content_lower
         has_style = "<style" in content_lower or "style=" in content_lower

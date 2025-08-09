@@ -2179,3 +2179,19 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 14:30:58,055 - INFO -  * Restarting with stat
 2025-08-09 14:30:59,608 - WARNING -  * Debugger is active!
 2025-08-09 14:30:59,615 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:31:31,978 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:31:32,218 - INFO -  * Restarting with stat
+2025-08-09 14:31:34,229 - WARNING -  * Debugger is active!
+2025-08-09 14:31:34,237 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:31:37,562 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:31:37,734 - INFO -  * Restarting with stat
+2025-08-09 14:31:39,000 - WARNING -  * Debugger is active!
+2025-08-09 14:31:39,008 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:31:44,472 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:31:44,787 - INFO -  * Restarting with stat
+2025-08-09 14:31:46,160 - WARNING -  * Debugger is active!
+2025-08-09 14:31:46,166 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:32:25,295 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:32:25,502 - INFO -  * Restarting with stat
+2025-08-09 14:32:27,107 - WARNING -  * Debugger is active!
+2025-08-09 14:32:27,116 - INFO -  * Debugger PIN: 803-561-142

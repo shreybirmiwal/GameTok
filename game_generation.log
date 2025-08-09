@@ -3064,3 +3064,129 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 15:14:13,675 - INFO - 🧪 Filling next-game slot with idea: 'space shooter'
 2025-08-09 15:14:13,675 - INFO - 🤖 Claude generation starting for: 'space shooter'
 2025-08-09 15:14:13,675 - INFO - 📡 Sending request to Claude for 'space shooter' - Model: claude-sonnet-4-20250514
+2025-08-09 15:14:43,781 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 15:14:43,782 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 15:14:43,783 - INFO -  * Restarting with stat
+2025-08-09 15:14:45,393 - WARNING -  * Debugger is active!
+2025-08-09 15:14:45,402 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 15:15:36,460 - INFO - 127.0.0.1 - - [09/Aug/2025 15:15:36] "POST /connect HTTP/1.1" 200 -
+2025-08-09 15:15:49,249 - INFO - 127.0.0.1 - - [09/Aug/2025 15:15:49] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 15:15:49,251 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'flappy bird game' - Timestamp: 2025-08-09 15:15:49.251850
+2025-08-09 15:15:49,252 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'flappy bird game'
+2025-08-09 15:15:49,252 - INFO - 🤖 Claude generation starting for: 'flappy bird game'
+2025-08-09 15:15:49,252 - INFO - 📡 Sending request to Claude for 'flappy bird game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:16:10,549 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:16:10,578 - INFO - ✅ Claude generated content for 'flappy bird game' - Length: 6158 chars
+2025-08-09 15:16:10,578 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:16:10,579 - INFO - ✅ Claude generated game - Length: 6158 chars, Has Canvas: False, Has Script: False
+2025-08-09 15:16:10,579 - INFO - 🎮 GENERATED GAME CODE for 'flappy bird game':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [bird, setBird] = useState({ y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -8;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 120;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGH...
+--------------------------------------------------
+2025-08-09 15:16:10,580 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'flappy bird game'
+2025-08-09 15:16:11,878 - INFO - 📖 Read current GameZone.js - Size: 1043 chars
+2025-08-09 15:16:11,879 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'flappy bird game', size: 6158 chars
+2025-08-09 15:16:13,311 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:16:13,325 - INFO - ✅ Morph returned updated React component - New size: 6158 chars
+2025-08-09 15:16:13,963 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'flappy bird game'
+2025-08-09 15:16:13,964 - INFO - 🎉 GAME GENERATION SUCCESS - 'flappy bird game' - Duration: 24.71s - Size: 6158 chars
+2025-08-09 15:16:13,965 - INFO - 127.0.0.1 - - [09/Aug/2025 15:16:13] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:16:26,252 - INFO - 127.0.0.1 - - [09/Aug/2025 15:16:26] "OPTIONS /generate-idea HTTP/1.1" 200 -
+2025-08-09 15:16:27,447 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:16:27,450 - INFO - 127.0.0.1 - - [09/Aug/2025 15:16:27] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 15:16:27,458 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'puzzle platformer game' - Timestamp: 2025-08-09 15:16:27.458061
+2025-08-09 15:16:27,458 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'puzzle platformer game'
+2025-08-09 15:16:27,458 - INFO - 🤖 Claude generation starting for: 'puzzle platformer game'
+2025-08-09 15:16:27,458 - INFO - 📡 Sending request to Claude for 'puzzle platformer game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:16:50,132 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:16:50,136 - INFO - ✅ Claude generated content for 'puzzle platformer game' - Length: 7473 chars
+2025-08-09 15:16:50,137 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:16:50,137 - INFO - ✅ Claude generated game - Length: 7473 chars, Has Canvas: False, Has Script: False
+2025-08-09 15:16:50,137 - INFO - 🎮 GENERATED GAME CODE for 'puzzle platformer game':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [player, setPlayer] = useState({ x: 50, y: 200, width: 20, height: 20 });
+  const [platforms] = useState([
+    { x: 0, y: 250, width: 150, height: 20 },
+    { x: 200, y: 200, width: 100, height: 20 },
+    { x: 350, y: 150, width: 50, height: 20 },
+    { x: 150, y: 100, width: 100, height: 20 },
+    { x: 300, y: 50, width: 100, height: 20 }
+  ]);
+  const [goal] = useState({ x: 350, y:...
+--------------------------------------------------
+2025-08-09 15:16:50,138 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'puzzle platformer game'
+2025-08-09 15:16:51,302 - INFO - 📖 Read current GameZone.js - Size: 6158 chars
+2025-08-09 15:16:51,302 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'puzzle platformer game', size: 7473 chars
+2025-08-09 15:16:52,839 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:16:52,840 - INFO - ✅ Morph returned updated React component - New size: 7473 chars
+2025-08-09 15:16:53,512 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'puzzle platformer game'
+2025-08-09 15:16:53,513 - INFO - 🎉 GAME GENERATION SUCCESS - 'puzzle platformer game' - Duration: 26.06s - Size: 7473 chars
+2025-08-09 15:16:53,515 - INFO - 127.0.0.1 - - [09/Aug/2025 15:16:53] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:17:16,803 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:17:16,805 - INFO - 127.0.0.1 - - [09/Aug/2025 15:17:16] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 15:17:16,814 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'tower defense game' - Timestamp: 2025-08-09 15:17:16.814236
+2025-08-09 15:17:16,814 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'tower defense game'
+2025-08-09 15:17:16,814 - INFO - 🤖 Claude generation starting for: 'tower defense game'
+2025-08-09 15:17:16,814 - INFO - 📡 Sending request to Claude for 'tower defense game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:17:45,611 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:17:45,613 - INFO - ✅ Claude generated content for 'tower defense game' - Length: 8452 chars
+2025-08-09 15:17:45,613 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:17:45,613 - INFO - ✅ Claude generated game - Length: 8452 chars, Has Canvas: True, Has Script: False
+2025-08-09 15:17:45,613 - INFO - 🎮 GENERATED GAME CODE for 'tower defense game':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(10);
+  const [money, setMoney] = useState(100);
+  const [towers, setTowers] = useState([]);
+  const [enemies, setEnemies] = useState([]);
+  const [projectiles, setProjectiles] = useState([]);
+  const [selectedTower, setSelectedTow...
+--------------------------------------------------
+2025-08-09 15:17:45,614 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'tower defense game'
+2025-08-09 15:17:46,671 - INFO - 📖 Read current GameZone.js - Size: 7473 chars
+2025-08-09 15:17:46,671 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'tower defense game', size: 8452 chars
+2025-08-09 15:17:48,350 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:17:48,354 - INFO - ✅ Morph returned updated React component - New size: 8454 chars
+2025-08-09 15:17:49,009 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'tower defense game'
+2025-08-09 15:17:49,009 - INFO - 🎉 GAME GENERATION SUCCESS - 'tower defense game' - Duration: 32.20s - Size: 8452 chars
+2025-08-09 15:17:49,009 - INFO - 127.0.0.1 - - [09/Aug/2025 15:17:49] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:18:26,519 - INFO - 🧪 Filling next-game slot with idea: 'brick breaker'
+2025-08-09 15:18:26,519 - INFO - 🤖 Claude generation starting for: 'brick breaker'
+2025-08-09 15:18:26,519 - INFO - 📡 Sending request to Claude for 'brick breaker' - Model: claude-sonnet-4-20250514
+2025-08-09 15:18:43,860 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:18:43,863 - INFO - ✅ Claude generated content for 'brick breaker' - Length: 5023 chars
+2025-08-09 15:18:43,863 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:18:43,863 - INFO - ✅ next-game slot filled
+2025-08-09 15:18:43,863 - INFO - 127.0.0.1 - - [09/Aug/2025 15:18:43] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:18:47,698 - INFO - 127.0.0.1 - - [09/Aug/2025 15:18:47] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:18:51,860 - INFO - 📖 Read current GameZone.js - Size: 8454 chars
+2025-08-09 15:18:51,861 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'brick breaker', size: 5023 chars
+2025-08-09 15:18:53,822 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:18:53,825 - INFO - ✅ Morph returned updated React component - New size: 5023 chars
+2025-08-09 15:18:54,443 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'brick breaker'
+2025-08-09 15:18:54,443 - INFO - 127.0.0.1 - - [09/Aug/2025 15:18:54] "POST /scroll-apply HTTP/1.1" 200 -

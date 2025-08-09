@@ -46,6 +46,36 @@ function App() {
     }
   };
 
+  // Helper: prefill the next-game slot on the server
+  const fillNextSlot = async (idea) => {
+    try {
+      const res = await fetch('http://localhost:8080/fill-next', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(idea ? { idea } : {}),
+      });
+      return await res.json();
+    } catch (e) {
+      console.warn('fill-next failed', e);
+      return null;
+    }
+  };
+
+  // Helper: try to instantly apply the cached next-game
+  const applyNextIfReady = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/scroll-apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json().catch(() => ({}));
+      return { status: res.status, ok: res.ok, ...data };
+    } catch (e) {
+      return { ok: false, error: String(e) };
+    }
+  };
+
   // Fetch a concise idea from backend Anthropic endpoint
   const fetchIdeaFromAnthropic = async () => {
     const res = await fetch('http://localhost:8080/generate-idea', {
@@ -59,12 +89,14 @@ function App() {
     return String(data.idea).trim();
   };
 
-  const handleGameSubmit = (e) => {
+  const handleGameSubmit = async (e) => {
     e.preventDefault();
-    if (gameInput.trim()) {
-      updateGameViaFreestyle(gameInput.trim());
-      setGameInput('');
-    }
+    const idea = gameInput.trim();
+    if (!idea) return;
+    setGameInput('');
+    await updateGameViaFreestyle(idea);
+    // After a full generate, prefill the next-game slot for fast scroll
+    fillNextSlot().catch(() => { });
   };
 
   // Prevent page scroll from stealing controls while game is active/focused/hovered
@@ -109,6 +141,8 @@ function App() {
         setLastPrompt(idea);
         setCurrentGame(`Generating ${idea}...`);
         await updateGameViaFreestyle(idea);
+        // Prefill the next-game slot right after initial generate
+        fillNextSlot().catch(() => { });
       } catch (e) {
         console.warn('Auto-init failed', e);
       }
@@ -118,15 +152,35 @@ function App() {
   const handleNextClick = async () => {
     if (isGeneratingRef.current || isSwiping) return;
     setIsSwiping(true);
-    setTimeout(async () => {
-      try {
-        const idea = await fetchIdeaFromAnthropic();
-        await updateGameViaFreestyle(idea);
-      } catch (e) {
-        console.warn('Idea fetch failed', e);
-        setIsSwiping(false);
+    setIsGenerating(true);
+    isGeneratingRef.current = true;
+
+    try {
+      // 1) Try instant apply of cached next-game
+      const applied = await applyNextIfReady();
+      if (applied?.success && applied?.used_next) {
+        const idea = applied.game_idea || 'next game';
+        setLastPrompt(idea);
+        setCurrentGame(`Loading ${idea}...`);
+        // Reload to reflect written GameZone.js
+        setTimeout(() => { try { window.location.reload(); } catch { } }, 150);
+        // Refill the next slot in the background for the following scroll
+        fillNextSlot().catch(() => { });
+        return;
       }
-    }, 120);
+
+      // 2) Fallback: fetch idea then do full generate
+      const idea = await fetchIdeaFromAnthropic();
+      await updateGameViaFreestyle(idea);
+      // Refill after full generate
+      fillNextSlot().catch(() => { });
+    } catch (e) {
+      console.warn('Next click flow failed', e);
+    } finally {
+      setIsGenerating(false);
+      isGeneratingRef.current = false;
+      setIsSwiping(false);
+    }
   };
 
   return (

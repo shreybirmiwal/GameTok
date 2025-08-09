@@ -179,24 +179,56 @@
   border-radius: 8px;
 }
 
-.feed-container {
-  width: 100%;
-  height: 75vh;
-  max-width: 900px;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid #222;
+/* Remove feed container styles (not used) */
+
+.game-stage {
+  display: inline-block;
+  transition: transform 180ms ease, opacity 180ms ease;
 }
 
-.feed-slide {
-  scroll-snap-align: start;
-  min-height: 75vh;
-  display: flex;
+.game-stage.swipe {
+  transform: translateY(-24px);
+  opacity: 0.85;
+}
+
+.next-cta {
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 999px;
+  padding: 10px 16px;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 16px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.next-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.next-cta-arrow {
+  font-size: 14px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
 }
 
 .next-slide .next-card {

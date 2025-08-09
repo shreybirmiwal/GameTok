@@ -10,12 +10,11 @@ function App() {
   const [nextIdea, setNextIdea] = useState('');
   const [nextToken, setNextToken] = useState('');
   const [queue, setQueue] = useState([]); // [{idea, token}]
+  const [isSwiping, setIsSwiping] = useState(false);
 
   const isGeneratingRef = useRef(false);
   const gameContainerRef = useRef(null);
   const [isGameActive, setIsGameActive] = useState(false);
-  const nextSlideRef = useRef(null);
-  const nextTriggeringRef = useRef(false);
 
   const updateGameViaFreestyle = async (gameName) => {
     try {
@@ -35,10 +34,8 @@ function App() {
         console.log('Game generated successfully:', result);
         setCurrentGame(gameName);
         setTimeout(() => {
-          try {
-            window.location.reload();
-          } catch { }
-        }, 300);
+          try { window.location.reload(); } catch { }
+        }, 200);
       } else {
         const error = await response.json();
         console.error('Failed to generate game:', error);
@@ -50,7 +47,7 @@ function App() {
     } finally {
       setIsGenerating(false);
       isGeneratingRef.current = false;
-      nextTriggeringRef.current = false;
+      setIsSwiping(false);
     }
   };
 
@@ -131,11 +128,8 @@ function App() {
       const data = await res.json();
       if (res.ok && data?.success) {
         setCurrentGame(idea);
-        setTimeout(() => {
-          try { window.location.reload(); } catch { }
-        }, 200);
+        setTimeout(() => { try { window.location.reload(); } catch { } }, 150);
       } else {
-        // Fallback to full generation if apply fails
         await updateGameViaFreestyle(idea);
       }
     } catch (e) {
@@ -144,7 +138,7 @@ function App() {
     } finally {
       setIsGenerating(false);
       isGeneratingRef.current = false;
-      nextTriggeringRef.current = false;
+      setIsSwiping(false);
     }
   };
 
@@ -212,7 +206,6 @@ function App() {
       const [, ...rest] = prev;
       return rest;
     });
-    // Update next immediately from current queue state
     setTimeout(async () => {
       const snapshot = queue.slice(1);
       const next = snapshot[0];
@@ -220,14 +213,12 @@ function App() {
         setNextIdea(next.idea);
         setNextToken(next.token);
       } else {
-        // Top up if empty
         const idea = await fetchIdeaFromAnthropic();
         const token = await prepareGame(idea);
         setQueue([{ idea, token }]);
         setNextIdea(idea);
         setNextToken(token);
       }
-      // Always attempt to top up to keep ~3 in queue
       while (queue.length < 3) {
         const idea = await fetchIdeaFromAnthropic();
         const token = await prepareGame(idea);
@@ -236,32 +227,19 @@ function App() {
     }, 0);
   };
 
-  // Trigger next when next slide snaps into view
-  useEffect(() => {
-    const node = nextSlideRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
-          if (!isGeneratingRef.current && !nextTriggeringRef.current) {
-            nextTriggeringRef.current = true;
-            const idea = nextIdea || generateIdeaLocally();
-            if (nextToken) {
-              applyPrepared(nextToken, idea).finally(() => rotateAndTopUpQueue());
-            } else {
-              updateGameViaFreestyle(idea).finally(() => rotateAndTopUpQueue());
-            }
-          }
-        }
-      },
-      { threshold: [0, 0.25, 0.5, 0.75, 0.9, 1] }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [nextIdea, nextToken]);
+  const handleNextClick = () => {
+    if (isGeneratingRef.current || isSwiping) return;
+    setIsSwiping(true);
+    // Small visual swipe animation before triggering
+    setTimeout(() => {
+      const idea = nextIdea || generateIdeaLocally();
+      if (nextToken) {
+        applyPrepared(nextToken, idea).finally(() => rotateAndTopUpQueue());
+      } else {
+        updateGameViaFreestyle(idea).finally(() => rotateAndTopUpQueue());
+      }
+    }, 120);
+  };
 
   return (
     <div className="App">
@@ -282,30 +260,23 @@ function App() {
           </form>
         </div>
 
-        <div className="feed-container">
-          <section className="feed-slide">
-            <div
-              ref={gameContainerRef}
-              className="game-container"
-              tabIndex={0}
-              onFocus={() => setIsGameActive(true)}
-              onBlur={() => setIsGameActive(false)}
-              onMouseEnter={() => setIsGameActive(true)}
-              onMouseLeave={() => setIsGameActive(false)}
-              onClick={() => gameContainerRef.current && gameContainerRef.current.focus()}
-            >
-              <GameZone currentGame={currentGame} />
-            </div>
-          </section>
-
-          <section ref={nextSlideRef} className="feed-slide next-slide">
-            <div className="next-card">
-              <div className="next-hint">Swipe up for next game</div>
-              {nextIdea && <div className="next-idea" title={nextIdea}>{nextIdea}</div>}
-              <div className="arrow">▲</div>
-            </div>
-          </section>
+        <div
+          ref={gameContainerRef}
+          className={`game-stage ${isSwiping ? 'swipe' : ''}`}
+          tabIndex={0}
+          onFocus={() => setIsGameActive(true)}
+          onBlur={() => setIsGameActive(false)}
+          onMouseEnter={() => setIsGameActive(true)}
+          onMouseLeave={() => setIsGameActive(false)}
+          onClick={() => gameContainerRef.current && gameContainerRef.current.focus()}
+        >
+          <GameZone currentGame={currentGame} />
         </div>
+
+        <button className="next-cta" onClick={handleNextClick} disabled={isGenerating || isSwiping}>
+          <span className="next-cta-arrow">▲</span>
+          <span>Swipe for next</span>
+        </button>
       </div>
 
       {lastPrompt && (

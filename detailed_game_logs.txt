@@ -844,3 +844,795 @@ const GameZone = ({ currentGame }) => {
     switch(maze[y][
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: shooter game - 2025-08-09 13:31:51.192977
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [player, setPlayer] = useState({ x: 200, y: 250 });
+  const [bullets, setBullets] = useState([]);
+  const [enemies, setEnemies] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameRunning, setGameRunning] = useState(false);
+  const [keys, setKeys] = useState({});
+
+  const gameWidth = 400;
+  const gameHeight = 300;
+
+  const startGame = () => {
+    setPlayer({ x: 200, y: 250 });
+    setBullets([]);
+    setEnemies([]);
+    setScore(0);
+    setGameRunning(true);
+  };
+
+  const resetGame = () => {
+    setGameRunning(false);
+    setPlayer({ x: 200, y: 250 });
+    setBullets([]);
+    setEnemies([]);
+    setScore(0);
+  };
+
+  const handleKeyDown = useCallback((e) => {
+    setKeys(prev => ({ ...prev, [e.key]: true }));
+    if (e.key === ' ') {
+      e.preventDefault();
+      if (gameRunning) {
+        setBullets(prev => [...prev, { x: player.x, y: player.y - 10, id: Date.now() }]);
+      }
+    }
+  }, [gameRunning, player.x, player.y]);
+
+  const handleKeyUp = useCallback((e) => {
+    setKeys(prev => ({ ...prev, [e.key]: false }));
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [handleKeyDown, handleKeyUp]);
+
+  useEffect(() => {
+    if (!gameRunning) return;
+
+    const gameLoop = setInterval(() => {
+      setPlayer(prev => {
+        let newX = prev.x;
+        if (keys['ArrowLeft'] && newX > 0) newX -= 5;
+        if (keys['ArrowRight'] && newX < gameWidth - 20) newX += 5;
+        return { ...prev, x: newX };
+      });
+
+      setBullets(prev => prev
+        .map(bullet => ({ ...bullet, y: bullet.y - 8 }))
+        .filter(bullet => bullet.y > 0)
+      );
+
+      setEnemies(prev => {
+        let newEnemies = prev
+          .map(enemy => ({ ...enemy, y: enemy.y + 2 }))
+          .filter(enemy => enemy.y < gameHeight);
+        
+        if (Math.random() < 0.02) {
+          newEnemies.push({
+            x: Math.random() * (gameWidth - 20),
+            y: 0,
+            id: Date.now()
+          });
+        }
+        
+        return newEnemies;
+      });
+
+      setBullets(prevBullets => {
+        setEnemies(prevEnemies => {
+          let newEnemies = [...prevEnemies];
+          let newBullets = [...prevBullets];
+          
+          prevBullets.forEach(bullet => {
+            const hitEnemyIndex = newEnemies.findIndex(enemy => 
+              bullet.x < enemy.x + 20 && bullet.x + 5 > enemy.x &&
+              bullet.y < enemy.y + 20 && bullet.y + 5 > enemy.y
+            );
+            
+            if (hitEnemyIndex !== -1) {
+              newEnemies.splice(hitEnemyIndex, 1);
+              newBullets = newBullets.filter(b => b.id !== bullet.id);
+              setScore(prev => prev + 10);
+            }
+          });
+          
+          const playerHit = newEnemies.some(enemy =>
+            player.x < enemy.x + 20 && player.x + 20 > enemy.x &&
+            player.y < enemy.y + 20 && player.y + 20 > enemy.y
+          );
+          
+          if (playerHit) {
+            setGameRunning(false);
+          }
+          
+          return newEnemies;
+        });
+        
+        return prevBullets;
+      });
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameRunning, keys, player.x, player.y]);
+
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h2>Shooter Game</h2>
+      <div style={{ marginBottom: '10px' }}>
+        <span>Score: {score}</span>
+        <button onClick={startGame} style={{ marginLeft: '20px', marginRight: '10px' }}>
+          Start
+        </button>
+        <button onClick={resetGame}>Reset</button>
+      </div>
+      
+      <div style={{
+        width: `${gameWidth}px`,
+        height: `${gameHeight}px`,
+        border: '2px solid #333',
+        position: 'relative',
+        backgroundColor: '#001122',
+        margin: '0 auto',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          left: `${player.x}px`,
+          top: `${player.y}px`,
+          width: '20px',
+          height: '20px',
+          backgroundColor: '#00ff00',
+          borderRadius: '3px'
+        }} />
+        
+        {bullets.map(bullet => (
+          <div key={bullet.id} style={{
+            position: 'absolute',
+            left: `${bullet.x}px`,
+            top: `${bullet.y}px`,
+            width: '5px',
+            height: '10px',
+            backgroundColor: '#ffff00',
+            borderRadius: '2px'
+          }} />
+        ))}
+        
+        {enemies.map(enemy => (
+          <div key={enemy.id} style={{
+            position: 'absolute',
+            left: `${enemy.x}px`,
+            top: `${enemy.y}px`,
+            width: '20px',
+            height: '20px',
+            backgroundColor: '#ff0000',
+            borderRadius: '3px'
+          }} />
+        ))}
+        
+        {!gameRunning && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            fontSize: '18px',
+            fontWeight: 'bold'
+          }}>
+            {score > 0 ? `Game Over! Final Score: ${score}` : 'Press Start to Play'}
+          </div>
+        )}
+      </div>
+      
+      <div style={{ marginTop: '10px', fontSize: '14px' }}>
+        Use ← → arrows to move, SPACE to shoot
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: chess - 2025-08-09 13:33:32.818454
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useRef, useEffect } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const initialBoard = [
+    ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+    ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+  ];
+
+  const [board, setBoard] = useState(initialBoard);
+  const [selectedSquare, setSelectedSquare] = useState(null);
+  const [currentPlayer, setCurrentPlayer] = useState('white');
+  const [gameStatus, setGameStatus] = useState('playing');
+
+  const pieceSymbols = {
+    'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
+    'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
+  };
+
+  const isWhitePiece = (piece) => piece && piece === piece.toUpperCase();
+  const isBlackPiece = (piece) => piece && piece === piece.toLowerCase();
+
+  const isValidMove = (fromRow, fromCol, toRow, toCol, piece) => {
+    if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) return false;
+    
+    const targetPiece = board[toRow][toCol];
+    if (targetPiece && 
+        ((isWhitePiece(piece) && isWhitePiece(targetPiece)) ||
+         (isBlackPiece(piece) && isBlackPiece(targetPiece)))) {
+      return false;
+    }
+
+    const rowDiff = Math.abs(toRow - fromRow);
+    const colDiff = Math.abs(toCol - fromCol);
+
+    switch (piece.toLowerCase()) {
+      case 'p':
+        const direction = isWhitePiece(piece) ? -1 : 1;
+        const startRow = isWhitePiece(piece) ? 6 : 1;
+        
+        if (toCol === fromCol) {
+          if (toRow === fromRow + direction && !targetPiece) return true;
+          if (fromRow === startRow && toRow === fromRow + 2 * direction && !targetPiece) return true;
+        } else if (Math.abs(toCol - fromCol) === 1 && toRow === fromRow + direction && targetPiece) {
+          return true;
+        }
+        return false;
+
+      case 'r':
+        if (fromRow === toRow || fromCol === toCol) {
+          const stepRow = fromRow === toRow ? 0 : (toRow > fromRow ? 1 : -1);
+          const stepCol = fromCol === toCol ? 0 : (toCol > fromCol ? 1 : -1);
+          for (let i = 1; i < Math.max(rowDiff, colDiff); i++) {
+            if (board[fromRow + i * stepRow][fromCol + i * stepCol]) return false;
+          }
+          return true;
+        }
+        return false;
+
+      case 'n':
+        return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
+
+      case 'b':
+        if (rowDiff === colDiff) {
+          const stepRow = toRow > fromRow ? 1 : -1;
+          const stepCol = toCol > fromCol ? 1 : -1;
+          for (let i = 1; i < rowDiff; i++) {
+            if (board[fromRow + i * stepRow][fromCol + i * stepCol]) return false;
+          }
+          return true;
+        }
+        return false;
+
+      case 'q':
+        if (fromRow === toRow || fromCol === toCol || rowDiff === colDiff) {
+          const stepRow = fromRow === toRow ? 0 : (toRow > fromRow ? 1 : -1);
+          const stepCol = fromCol === toCol ? 0 : (toCol > fromCol ? 1 : -1);
+          for (let i = 1; i < Math.max(rowDiff, colDiff); i++) {
+            if (board[fromRow + i * stepRow][fromCol + i * stepCol]) return false;
+          }
+          return true;
+        }
+        return false;
+
+      case 'k':
+        return rowDiff <= 1 && colDiff <= 1 && (rowDiff + colDiff > 0);
+
+      default:
+        return false;
+    }
+  };
+
+  const handleSquareClick = (row, col) => {
+    if (gameStatus !== 'playing') return;
+
+    if (selectedSquare) {
+      const [fromRow, fromCol] = selectedSquare;
+      const piece = board[fromRow][fromCol];
+      
+      if (row === fromRow && col === fromCol) {
+        setSelectedSquare(null);
+        return;
+      }
+
+      if (piece && 
+          ((currentPlayer === 'white' && isWhitePiece(piece)) ||
+           (currentPlayer === 'black' && isBlackPiece(piece))) &&
+          isValidMove(fromRow, fromCol, row, col, piece)) {
+        
+        const newBoard = board.map(r => [...r]);
+        const capturedPiece = newBoard[row][col];
+        newBoard[row][col] = piece;
+        newBoard[fromRow][fromCol] = null;
+        
+        setBoard(newBoard);
+        setSelectedSquare(null);
+        setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+
+        if (capturedPiece && capturedPiece.toLowerCase() === 'k') {
+          setGameStatus(`${currentPlayer} wins!`);
+        }
+      } else {
+        setSelectedSquare(null);
+      }
+    } else {
+      const piece = board[row][col];
+      if (piece && 
+          ((currentPlayer === 'white' && isWhitePiece(piece)) ||
+           (currentPlayer === 'black' && isBlackPiece(piece)))) {
+        setSelectedSquare([row, col]);
+      }
+    }
+  };
+
+  const resetGame = () => {
+    setBoard(initialBoard.map(row => [...row]));
+    setSelectedSquare(null);
+    setCurrentPlayer('white');
+    setGameStatus('playing');
+  };
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Chess Game</h2>
+      
+      <div style={{ 
+        marginBottom: '10px', 
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }}>
+        {gameStatus === 'playing' ? `Current Player: ${currentPlayer}` : gameStatus}
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplate
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: flappy bird - 2025-08-09 13:34:58.374086
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const gameLoopRef = useRef(null);
+  const [score, setScore] = useState(0);
+  const [gameState, setGameState] = useState('waiting');
+  const [bird, setBird] = useState({ y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const BIRD_SIZE = 20;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 100;
+  const GRAVITY = 0.5;
+  const JUMP_STRENGTH = -8;
+  const PIPE_SPEED = 2;
+
+  const resetGame = useCallback(() => {
+    setBird({ y: 150, velocity: 0 });
+    setPipes([]);
+    setScore(0);
+    setGameState('waiting');
+  }, []);
+
+  const startGame = useCallback(() => {
+    setGameState('playing');
+    setBird(prev => ({ ...prev, velocity: JUMP_STRENGTH }));
+  }, []);
+
+  const jump = useCallback(() => {
+    if (gameState === 'playing') {
+      setBird(prev => ({ ...prev, velocity: JUMP_STRENGTH }));
+    } else if (gameState === 'waiting') {
+      startGame();
+    }
+  }, [gameState, startGame]);
+
+  const checkCollision = useCallback((birdY, pipes) => {
+    if (birdY < 0 || birdY + BIRD_SIZE > CANVAS_HEIGHT) {
+      return true;
+    }
+
+    const birdX = 50;
+    for (let pipe of pipes) {
+      if (birdX + BIRD_SIZE > pipe.x && birdX < pipe.x + PIPE_WIDTH) {
+        if (birdY < pipe.topHeight || birdY + BIRD_SIZE > pipe.topHeight + PIPE_GAP) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }, []);
+
+  const updateGame = useCallback(() => {
+    if (gameState !== 'playing') return;
+
+    setBird(prev => {
+      const newY = prev.y + prev.velocity;
+      const newVelocity = prev.velocity + GRAVITY;
+      return { y: newY, velocity: newVelocity };
+    });
+
+    setPipes(prev => {
+      let newPipes = prev.map(pipe => ({ ...pipe, x: pipe.x - PIPE_SPEED }))
+                        .filter(pipe => pipe.x + PIPE_WIDTH > 0);
+
+      if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < CANVAS_WIDTH - 200) {
+        const topHeight = Math.random() * (CANVAS_HEIGHT - PIPE_GAP - 40) + 20;
+        newPipes.push({
+          x: CANVAS_WIDTH,
+          topHeight: topHeight,
+          scored: false
+        });
+      }
+
+      newPipes.forEach(pipe => {
+        if (!pipe.scored && pipe.x + PIPE_WIDTH < 50) {
+          pipe.scored = true;
+          setScore(s => s + 1);
+        }
+      });
+
+      return newPipes;
+    });
+  }, [gameState]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
+
+  useEffect(() => {
+    if (gameState === 'playing') {
+      if (checkCollision(bird.y, pipes)) {
+        setGameState('gameOver');
+        return;
+      }
+    }
+  }, [bird.y, pipes, gameState, checkCollision]);
+
+  useEffect(() => {
+    if (gameState === 'playing') {
+      gameLoopRef.current = setInterval(updateGame, 16);
+    } else {
+      if (gameLoopRef.current) {
+        clearInterval(gameLoopRef.current);
+      }
+    }
+
+    return () => {
+      if (gameLoopRef.current) {
+        clearInterval(gameLoopRef.current);
+      }
+    };
+  }, [gameState, updateGame]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    pipes.forEach(pipe => {
+      ctx.fillStyle = '#32CD32';
+      ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.topHeight);
+      ctx.fillRect(pipe.x, pipe.topHeight + PIPE_GAP, PIPE_WIDTH, CANVAS_HEIGHT - pipe.topHeight - PIPE_GAP);
+    });
+
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(50 - BIRD_SIZE/2, bird.y, BIRD_SIZE, BIRD_SIZE);
+
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Arial';
+    ctx.fillText(`Score: ${score}`, 10, 30);
+
+    if (gameState === 'waiting') {
+      ctx.fillStyle = 'rgba(0,0,0,0.7)';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.fillStyle = '#FFF';
+      ctx.font = '24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Click or Press Space to Start', CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+      ctx.textAlign = 'left';
+    }
+
+    if (gameState === 'gameOver') {
+      ctx.fillStyle = 'rgba(255,0,0,0.7)';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.fillStyle = '#FFF';
+      ctx.font = '24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Game Over!', CANVAS_WIDTH/2, CANVAS_HEIGHT/2 - 20);
+      ctx.fillText(`Final Score: ${score}`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 20);
+      ctx.textAlign = 'left';
+    }
+  }, [bird, pipes, score, gameState]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 20px 0', color: '#333' }}>Flappy Bird</h2>
+      
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        onClick={jump}
+        style={{ 
+          border: '2px solid #333',
+          cursor: 'pointer',
+          display: 'block'
+        }}
+      />
+      
+      <div style={{ marginTop: '20px' }}>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginRight: '10px'
+          }}
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: pacmanbutmakethespacebarbarelymakeujump - 2025-08-09 13:46:31.135871
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [player, setPlayer] = useState({ x: 50, y: 250, velY: 0, onGround: true });
+  const [dots, setDots] = useState([]);
+  const [ghosts, setGhosts] = useState([]);
+
+  const initializeGame = useCallback(() => {
+    const newDots = [];
+    for (let i = 0; i < 20; i++) {
+      newDots.push({
+        x: 100 + i * 15,
+        y: 260,
+        collected: false
+      });
+    }
+    
+    const newGhosts = [
+      { x: 200, y: 240, dx: 1 },
+      { x: 300, y: 240, dx: -1 }
+    ];
+
+    setDots(newDots);
+    setGhosts(newGhosts);
+    setPlayer({ x: 50, y: 250, velY: 0, onGround: true });
+    setScore(0);
+    setGameState('playing');
+  }, []);
+
+  useEffect(() => {
+    initializeGame();
+  }, [initializeGame]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space' && player.onGround) {
+        e.preventDefault();
+        setPlayer(prev => ({ ...prev, velY: -8, onGround: false }));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [player.onGround]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setPlayer(prev => {
+        let newY = prev.y + prev.velY;
+        let newVelY = prev.velY + 0.5;
+        let newOnGround = prev.onGround;
+
+        if (newY >= 250) {
+          newY = 250;
+          newVelY = 0;
+          newOnGround = true;
+        } else {
+          newOnGround = false;
+        }
+
+        return { ...prev, y: newY, velY: newVelY, onGround: newOnGround };
+      });
+
+      setGhosts(prev => prev.map(ghost => {
+        let newX = ghost.x + ghost.dx;
+        let newDx = ghost.dx;
+
+        if (newX <= 80 || newX >= 350) {
+          newDx = -ghost.dx;
+          newX = ghost.x + newDx;
+        }
+
+        return { ...ghost, x: newX, dx: newDx };
+      }));
+
+      setDots(prev => {
+        const newDots = prev.map(dot => {
+          if (!dot.collected && 
+              Math.abs(dot.x - player.x) < 15 && 
+              Math.abs(dot.y - player.y) < 15) {
+            setScore(s => s + 10);
+            return { ...dot, collected: true };
+          }
+          return dot;
+        });
+        return newDots;
+      });
+
+      ghosts.forEach(ghost => {
+        if (Math.abs(ghost.x - player.x) < 20 && Math.abs(ghost.y - player.y) < 20) {
+          setGameState('gameOver');
+        }
+      });
+
+      if (dots.every(dot => dot.collected)) {
+        setGameState('won');
+      }
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, player, ghosts, dots]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 400, 300);
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 400, 300);
+
+    ctx.fillStyle = '#0f0';
+    ctx.fillRect(0, 270, 400, 30);
+
+    ctx.fillStyle = '#ff0';
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, 10, 0.2 * Math.PI, 1.8 * Math.PI);
+    ctx.lineTo(player.x, player.y);
+    ctx.fill();
+
+    dots.forEach(dot => {
+      if (!dot.collected) {
+        ctx.fillStyle = '#ff0';
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, 3, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    });
+
+    ghosts.forEach(ghost => {
+      ctx.fillStyle = '#f0f';
+      ctx.fillRect(ghost.x - 10, ghost.y - 10, 20, 20);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(ghost.x - 6, ghost.y - 8, 4, 4);
+      ctx.fillRect(ghost.x + 2, ghost.y - 8, 4, 4);
+    });
+  }, [player, dots, ghosts]);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Pac-Jump</h2>
+      <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+        Score: {score}
+      </div>
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={300}
+        style={{ border: '2px solid #333', backgroundColor: '#000' }}
+      />
+      <div style={{ marginTop: '10px', textAlign: 'center' }}>
+        <div style={{ marginBottom: '10px', fontSize: '14px' }}>
+          Press SPACEBAR to barely jump! Collect dots, avoid ghosts!
+        </div>
+        {gameState === 'gameOver' && (
+          <div style={{ color: 'red', fontWeight: 'bold', marginBottom: '10px' }}>
+            Game Over! Ghost got you!
+          </div>
+        )}
+        {gameState === 'won' && (
+          <div style={{ color: 'green', fontWeight: 'bold', marginBottom: '10px' }}>
+            You Won! All dots collected!
+          </div>
+        )}
+        <button
+          onClick={initializeGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          {gameState === 'playing' ? 'Restart' : 'Play Again'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

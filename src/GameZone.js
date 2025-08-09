@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // React GameZone scaffold. Morph will replace this entire file with a generated React game component.
 const GameZone = ({ currentGame }) => {
   const canvasRef = useRef(null);
-  const [message, setMessage] = useState('Ready');
+  const [message] = useState('Ready');
 
   useEffect(() => {
     const canvas = canvasRef.current;

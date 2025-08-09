@@ -5644,3 +5644,861 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: Dot Dash: Guide a bouncing dot through a maze by drawing temporary line segments that disappear after a few seconds. - 2025-08-09 14:13:50.389479
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [lines, setLines] = useState([]);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [currentLine, setCurrentLine] = useState(null);
+  
+  const dotRef = useRef({ x: 50, y: 150, vx: 2, vy: 1 });
+  const animationRef = useRef();
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const DOT_RADIUS = 8;
+  const LINE_DURATION = 3000;
+
+  const maze = [
+    { x: 100, y: 0, width: 20, height: 100 },
+    { x: 200, y: 50, width: 20, height: 150 },
+    { x: 300, y: 0, width: 20, height: 120 },
+    { x: 0, y: 200, width: 150, height: 20 },
+    { x: 250, y: 250, width: 150, height: 20 }
+  ];
+
+  const checkCollision = (x, y, radius) => {
+    for (let wall of maze) {
+      if (x + radius > wall.x && x - radius < wall.x + wall.width &&
+          y + radius > wall.y && y - radius < wall.y + wall.height) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const lineIntersectsCircle = (line, cx, cy, radius) => {
+    const dx = line.endX - line.startX;
+    const dy = line.endY - line.startY;
+    const fx = line.startX - cx;
+    const fy = line.startY - cy;
+
+    const a = dx * dx + dy * dy;
+    const b = 2 * (fx * dx + fy * dy);
+    const c = (fx * fx + fy * fy) - radius * radius;
+
+    const discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) return false;
+
+    const discriminantSqrt = Math.sqrt(discriminant);
+    const t1 = (-b - discriminantSqrt) / (2 * a);
+    const t2 = (-b + discriminantSqrt) / (2 * a);
+
+    return (t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1);
+  };
+
+  const gameLoop = useCallback(() => {
+    if (gameState !== 'playing') return;
+
+    const dot = dotRef.current;
+    let newX = dot.x + dot.vx;
+    let newY = dot.y + dot.vy;
+
+    if (newX - DOT_RADIUS <= 0 || newX + DOT_RADIUS >= CANVAS_WIDTH) {
+      dot.vx = -dot.vx;
+      newX = dot.x + dot.vx;
+    }
+    if (newY - DOT_RADIUS <= 0 || newY + DOT_RADIUS >= CANVAS_HEIGHT) {
+      dot.vy = -dot.vy;
+      newY = dot.y + dot.vy;
+    }
+
+    if (checkCollision(newX, newY, DOT_RADIUS)) {
+      dot.vx = -dot.vx;
+      dot.vy = -dot.vy;
+      newX = dot.x + dot.vx;
+      newY = dot.y + dot.vy;
+    }
+
+    setLines(prevLines => {
+      const currentTime = Date.now();
+      const validLines = prevLines.filter(line => currentTime - line.timestamp < LINE_DURATION);
+      
+      for (let line of validLines) {
+        if (lineIntersectsCircle(line, newX, newY, DOT_RADIUS)) {
+          const dx = line.endX - line.startX;
+          const dy = line.endY - line.startY;
+          const length = Math.sqrt(dx * dx + dy * dy);
+          if (length > 0) {
+            const normalX = -dy / length;
+            const normalY = dx / length;
+            const dotProduct = dot.vx * normalX + dot.vy * normalY;
+            dot.vx = dot.vx - 2 * dotProduct * normalX;
+            dot.vy = dot.vy - 2 * dotProduct * normalY;
+          }
+          break;
+        }
+      }
+      
+      return validLines;
+    });
+
+    dot.x = newX;
+    dot.y = newY;
+
+    if (dot.x > CANVAS_WIDTH - 50 && dot.y > CANVAS_HEIGHT - 50) {
+      setGameState('won');
+      setScore(prev => prev + 100);
+    }
+
+    animationRef.current = requestAnimationFrame(gameLoop);
+  }, [gameState]);
+
+  useEffect(() => {
+    if (gameState === 'playing') {
+      animationRef.current = requestAnimationFrame(gameLoop);
+    }
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [gameLoop, gameState]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    ctx.fillStyle = '#333';
+    maze.forEach(wall => {
+      ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+    });
+
+    ctx.fillStyle = '#00ff00';
+    ctx.fillRect(CANVAS_WIDTH - 50, CANVAS_HEIGHT - 50, 40, 40);
+
+    const currentTime = Date.now();
+    lines.forEach(line => {
+      const age = currentTime - line.timestamp;
+      const opacity = Math.max(0, 1 - age / LINE_DURATION);
+      ctx.strokeStyle = `rgba(255, 0, 0, ${opacity})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(line.startX, line.startY);
+      ctx.lineTo(line.endX, line.endY);
+      ctx.stroke();
+    });
+
+    if (currentLine) {
+      ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(currentLine.startX, currentLine.startY);
+      ctx.lineTo(currentLine.endX, currentLine.endY);
+      ctx.stroke();
+    }
+
+    const dot = dotRef.current;
+    ctx.fillStyle = '#0066ff';
+    ctx.beginPath();
+    ctx.arc(dot.x, dot.y, DOT_RADIUS, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  const handleMouseDown = (e) => {
+    if (gameState !== 'playing') return;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setIsDrawing(true);
+    setCurrentLine({ startX: x, startY: y, endX: x, endY: y });
+  };
+
+  const handleMouseMove = (e
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Color Matcher: Match falling colored blocks by dragging and connecting same-colored pairs before they hit the bottom. - 2025-08-09 14:15:31.256522
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [blocks, setBlocks] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [selectedBlock, setSelectedBlock] = useState(null);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
+  const gameWidth = 400;
+  const gameHeight = 300;
+
+  const generateBlock = useCallback(() => {
+    return {
+      id: Math.random(),
+      x: Math.random() * (gameWidth - 40),
+      y: -40,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      matched: false
+    };
+  }, []);
+
+  const resetGame = () => {
+    setBlocks([]);
+    setScore(0);
+    setGameOver(false);
+    setSelectedBlock(null);
+    setGameStarted(true);
+  };
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setBlocks(prevBlocks => {
+        const newBlocks = prevBlocks.map(block => ({
+          ...block,
+          y: block.y + 1
+        }));
+
+        const activeBlocks = newBlocks.filter(block => !block.matched && block.y < gameHeight);
+        const bottomBlocks = newBlocks.filter(block => block.y >= gameHeight && !block.matched);
+
+        if (bottomBlocks.length > 0) {
+          setGameOver(true);
+          return newBlocks;
+        }
+
+        if (Math.random() < 0.02 && activeBlocks.length < 8) {
+          activeBlocks.push(generateBlock());
+        }
+
+        return activeBlocks;
+      });
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameStarted, gameOver, generateBlock]);
+
+  const handleBlockClick = (block) => {
+    if (block.matched) return;
+
+    if (!selectedBlock) {
+      setSelectedBlock(block);
+    } else if (selectedBlock.id === block.id) {
+      setSelectedBlock(null);
+    } else if (selectedBlock.color === block.color) {
+      setBlocks(prevBlocks => 
+        prevBlocks.map(b => 
+          b.id === selectedBlock.id || b.id === block.id 
+            ? { ...b, matched: true }
+            : b
+        )
+      );
+      setScore(prev => prev + 10);
+      setSelectedBlock(null);
+      
+      setTimeout(() => {
+        setBlocks(prevBlocks => 
+          prevBlocks.filter(b => b.id !== selectedBlock.id && b.id !== block.id)
+        );
+      }, 200);
+    } else {
+      setSelectedBlock(block);
+    }
+  };
+
+  if (!gameStarted) {
+    return (
+      <div style={{
+        width: gameWidth,
+        height: gameHeight,
+        border: '2px solid #333',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f0f0f0',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        <h2 style={{ margin: '10px', textAlign: 'center' }}>Color Matcher</h2>
+        <p style={{ margin: '10px', textAlign: 'center', fontSize: '14px' }}>
+          Click same-colored blocks to match them before they hit the bottom!
+        </p>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4ecdc4',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Start Game
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      width: gameWidth,
+      height: gameHeight + 60,
+      border: '2px solid #333',
+      position: 'relative',
+      backgroundColor: '#f9f9f9',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <div style={{
+        height: '40px',
+        backgroundColor: '#333',
+        color: 'white',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '0 10px'
+      }}>
+        <div>Score: {score}</div>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '5px 10px',
+            backgroundColor: '#ff6b6b',
+            color: 'white',
+            border: 'none',
+            borderRadius: '3px',
+            cursor: 'pointer',
+            fontSize: '12px'
+          }}
+        >
+          Restart
+        </button>
+      </div>
+
+      <div style={{
+        width: gameWidth,
+        height: gameHeight,
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: '#e8e8e8'
+      }}>
+        {blocks.map(block => (
+          <div
+            key={block.id}
+            onClick={() => handleBlockClick(block)}
+            style={{
+              position: 'absolute',
+              left: block.x,
+              top: block.y,
+              width: '40px',
+              height: '40px',
+              backgroundColor: block.color,
+              border: selectedBlock?.id === block.id ? '3px solid #333' : '2px solid #fff',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              opacity: block.matched ? 0.3 : 1,
+              transition: 'opacity 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              color: '#333'
+            }}
+          >
+            {selectedBlock?.id === block.id ? '✓' : ''}
+          </div>
+        ))}
+      </div>
+
+      {gameOver && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '20px',
+          borderRadius: '10px',
+          textAlign: 'center'
+        }}>
+          <h3>Game Over!</h3>
+          <p>Final Score: {score}</p>
+          <button
+            onClick={resetGame}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#4ecdc4',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Play Again
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Neon Dodge: Weave through scrolling geometric obstacles as a glowing triangle while collecting power-ups that temporarily shrink your hitbox. - 2025-08-09 14:15:34.017764
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const gameStateRef = useRef({
+    player: { x: 50, y: 150, size: 12, shrunk: false, shrinkTimer: 0 },
+    obstacles: [],
+    powerUps: [],
+    score: 0,
+    gameRunning: false,
+    gameOver: false,
+    keys: {}
+  });
+
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameRunning, setGameRunning] = useState(false);
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const PLAYER_SPEED = 3;
+  const OBSTACLE_SPEED = 2;
+  const POWERUP_SPEED = 1.5;
+
+  const resetGame = useCallback(() => {
+    gameStateRef.current = {
+      player: { x: 50, y: 150, size: 12, shrunk: false, shrinkTimer: 0 },
+      obstacles: [],
+      powerUps: [],
+      score: 0,
+      gameRunning: true,
+      gameOver: false,
+      keys: {}
+    };
+    setScore(0);
+    setGameOver(false);
+    setGameRunning(true);
+  }, []);
+
+  const startGame = useCallback(() => {
+    resetGame();
+  }, [resetGame]);
+
+  const stopGame = useCallback(() => {
+    gameStateRef.current.gameRunning = false;
+    setGameRunning(false);
+    setGameOver(true);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+  }, []);
+
+  const spawnObstacle = useCallback(() => {
+    const obstacle = {
+      x: CANVAS_WIDTH,
+      y: Math.random() * (CANVAS_HEIGHT - 40),
+      width: 20 + Math.random() * 30,
+      height: 20 + Math.random() * 30,
+      color: `hsl(${Math.random() * 60 + 300}, 100%, 60%)`
+    };
+    gameStateRef.current.obstacles.push(obstacle);
+  }, []);
+
+  const spawnPowerUp = useCallback(() => {
+    const powerUp = {
+      x: CANVAS_WIDTH,
+      y: Math.random() * (CANVAS_HEIGHT - 20),
+      size: 8,
+      color: '#00ff00'
+    };
+    gameStateRef.current.powerUps.push(powerUp);
+  }, []);
+
+  const checkCollision = useCallback((rect1, rect2) => {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+  }, []);
+
+  const updateGame = useCallback(() => {
+    const state = gameStateRef.current;
+    if (!state.gameRunning) return;
+
+    const player = state.player;
+    
+    // Handle player movement
+    if (state.keys['ArrowUp'] && player.y > 0) {
+      player.y -= PLAYER_SPEED;
+    }
+    if (state.keys['ArrowDown'] && player.y < CANVAS_HEIGHT - player.size * 2) {
+      player.y += PLAYER_SPEED;
+    }
+    if (state.keys['ArrowLeft'] && player.x > 0) {
+      player.x -= PLAYER_SPEED;
+    }
+    if (state.keys['ArrowRight'] && player.x < CANVAS_WIDTH - player.size * 2) {
+      player.x += PLAYER_SPEED;
+    }
+
+    // Update shrink timer
+    if (player.shrunk) {
+      player.shrinkTimer--;
+      if (player.shrinkTimer <= 0) {
+        player.shrunk = false;
+        player.size = 12;
+      }
+    }
+
+    // Spawn obstacles
+    if (Math.random() < 0.02) {
+      spawnObstacle();
+    }
+
+    // Spawn power-ups
+    if (Math.random() < 0.005) {
+      spawnPowerUp();
+    }
+
+    // Update obstacles
+    state.obstacles = state.obstacles.filter(obstacle => {
+      obstacle.x -= OBSTACLE_SPEED;
+      return obstacle.x > -obstacle.width;
+    });
+
+    // Update power-ups
+    state.powerUps = state.powerUps.filter(powerUp => {
+      powerUp.x -= POWERUP_SPEED;
+      return powerUp.x > -powerUp.size;
+    });
+
+    // Check obstacle collisions
+    const playerRect = { x: player.x, y: player.y, width: player.size * 2, height: player.size * 2 };
+    for (let obstacle of state.obstacles) {
+      if (checkCollision(playerRect, obstacle)) {
+        stopGame();
+        return;
+      }
+    }
+
+    // Check power-up collisions
+    state.powerUps = state.powerUps.filter(powerUp => {
+      const powerUpRect = { x: powerUp.x, y: powerUp.y, width: powerUp.size * 2, height: powerUp.size * 2 };
+      if (checkCollision(playerRect, powerUpRect)) {
+        player.shrunk = true;
+        player.shrinkTimer = 300; // 5 seconds at 60fps
+        player.size = 6;
+        return false;
+      }
+      return true;
+    });
+
+    // Update score
+    state.score += 1;
+    setScore(state.score);
+  }, [checkCollision, spawnObstacle, spawnPowerUp, stopGame]);
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const state = gameStateRef.current;
+
+    // Clear canvas with dark background
+    ctx.fillStyle = '#000011';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    if (!state.gameRunning && !state.gameOver) return;
+
+    // Draw player (glowing triangle)
+    ctx.save();
+    ctx.translate(state.player.x + state.player.size, state.player.y + state.player.size);
+    
+    // Glow effect
+    ctx.shadowColor = state.player.shrunk ? '#00ff00' : '#00ffff';
+    ctx.shadowBlur = 15;
+    
+    ctx.fillStyle = state.player.shrunk ? '#00ff00' : '#00ffff';
+    ctx.beginPath();
+    ctx.moveTo(state.player.size, 0);
+    ctx.lineTo(-state.player.size, state.player.size);
+    ctx.lineTo(-state.player.size, -state.player.size);
+    ctx.closePath();
+    ctx.fill();
+    
+    ctx.restore();
+
+    // Draw obstacles
+    state.obstacles.forEach(obstacle => {
+      ctx.save();
+      ctx.shadowColor = obstacle.color;
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = obstacle.color;
+      ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+      ctx.restore();
+    });
+
+    // Draw power-ups
+    state.powerUps.forEach(powerUp => {
+      ctx.save();
+      ctx.shadowColor = powerUp.color;
+      ctx.shadowBlur = 8;
+      ctx.fillStyle = powerUp.color;
+      ctx.beginPath();
+      ctx.arc(powerUp.x + powerUp.size, powerUp.y + powerUp.size, powerUp.
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Neon Bounce: Tap to bounce a glowing ball between moving platforms while avoiding deadly red barriers. - 2025-08-09 14:16:14.877479
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const gameStateRef = useRef({
+    ball: { x: 200, y: 150, vx: 0, vy: 0, radius: 8 },
+    platforms: [
+      { x: 50, y: 250, width: 80, height: 8, vx: 1 },
+      { x: 270, y: 180, width: 80, height: 8, vx: -1 },
+      { x: 150, y: 100, width: 80, height: 8, vx: 1.5 }
+    ],
+    barriers: [
+      { x: 0, y: 80, width: 400, height: 4 },
+      { x: 0, y: 280, width: 400, height: 4 }
+    ],
+    score: 0,
+    gameOver: false,
+    gravity: 0.3,
+    bounceForce: -8
+  });
+
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+
+  const resetGame = useCallback(() => {
+    gameStateRef.current = {
+      ball: { x: 200, y: 150, vx: 0, vy: 0, radius: 8 },
+      platforms: [
+        { x: 50, y: 250, width: 80, height: 8, vx: 1 },
+        { x: 270, y: 180, width: 80, height: 8, vx: -1 },
+        { x: 150, y: 100, width: 80, height: 8, vx: 1.5 }
+      ],
+      barriers: [
+        { x: 0, y: 80, width: 400, height: 4 },
+        { x: 0, y: 280, width: 400, height: 4 }
+      ],
+      score: 0,
+      gameOver: false,
+      gravity: 0.3,
+      bounceForce: -8
+    };
+    setScore(0);
+    setGameOver(false);
+  }, []);
+
+  const handleTap = useCallback(() => {
+    if (!gameStateRef.current.gameOver) {
+      gameStateRef.current.ball.vy = gameStateRef.current.bounceForce;
+    }
+  }, []);
+
+  const checkCollision = useCallback((rect1, rect2) => {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+  }, []);
+
+  const updateGame = useCallback(() => {
+    const game = gameStateRef.current;
+    
+    if (game.gameOver) return;
+
+    // Update ball physics
+    game.ball.vy += game.gravity;
+    game.ball.x += game.ball.vx;
+    game.ball.y += game.ball.vy;
+
+    // Update platforms
+    game.platforms.forEach(platform => {
+      platform.x += platform.vx;
+      if (platform.x <= 0 || platform.x + platform.width >= 400) {
+        platform.vx *= -1;
+      }
+    });
+
+    // Check platform collisions
+    game.platforms.forEach(platform => {
+      const ballRect = {
+        x: game.ball.x - game.ball.radius,
+        y: game.ball.y - game.ball.radius,
+        width: game.ball.radius * 2,
+        height: game.ball.radius * 2
+      };
+      
+      if (checkCollision(ballRect, platform) && game.ball.vy > 0) {
+        game.ball.vy = game.bounceForce * 0.8;
+        game.score += 10;
+        setScore(game.score);
+      }
+    });
+
+    // Check barrier collisions
+    game.barriers.forEach(barrier => {
+      const ballRect = {
+        x: game.ball.x - game.ball.radius,
+        y: game.ball.y - game.ball.radius,
+        width: game.ball.radius * 2,
+        height: game.ball.radius * 2
+      };
+      
+      if (checkCollision(ballRect, barrier)) {
+        game.gameOver = true;
+        setGameOver(true);
+      }
+    });
+
+    // Check bounds
+    if (game.ball.x < 0 || game.ball.x > 400 || game.ball.y > 300) {
+      game.gameOver = true;
+      setGameOver(true);
+    }
+  }, [checkCollision]);
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const game = gameStateRef.current;
+    
+    // Clear canvas
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 400, 300);
+    
+    // Draw ball with glow effect
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 20;
+    ctx.fillStyle = '#00ffff';
+    ctx.beginPath();
+    ctx.arc(game.ball.x, game.ball.y, game.ball.radius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Reset shadow
+    ctx.shadowBlur = 0;
+    
+    // Draw platforms with glow
+    ctx.shadowColor = '#00ff00';
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = '#00ff00';
+    game.platforms.forEach(platform => {
+      ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+    });
+    
+    // Draw barriers
+    ctx.shadowColor = '#ff0000';
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = '#ff0000';
+    game.barriers.forEach(barrier => {
+      ctx.fillRect(barrier.x, barrier.y, barrier.width, barrier.height);
+    });
+    
+    // Reset shadow
+    ctx.shadowBlur = 0;
+  }, []);
+
+  const gameLoop = useCallback(() => {
+    updateGame();
+    draw();
+    animationRef.current = requestAnimationFrame(gameLoop);
+  }, [updateGame, draw]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = 400;
+      canvas.height = 300;
+    }
+    
+    gameLoop();
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [gameLoop]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      backgroundColor: '#111',
+      minHeight: '100vh',
+      color: '#fff',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ 
+        margin: '0 0 10px 0', 
+        color: '#00ffff',
+        textShadow: '0 0 10px #00ffff'
+      }}>
+        Neon Bounce
+      </h2>
+      
+      <div style={{ marginBottom: '10px', fontSize: '18px' }}>
+        Score: {score}
+      </div>
+      
+      <canvas
+        ref={canvasRef}
+        onClick={handleTap}
+        style={{
+          border: '2px solid #333',
+          cursor: 'pointer',
+          
+----------------------------------------
+

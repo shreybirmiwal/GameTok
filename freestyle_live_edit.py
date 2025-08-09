@@ -395,19 +395,24 @@ def generate_idea():
     try:
         data = request.get_json(silent=True) or {}
         prompt = data.get('prompt') or (
-            "Generate a short, simple, descriptive arcade-style game idea that can be built in a browser canvas. "
-            "Respond with a single line: '<Title>: <one-sentence mechanic>'. Keep it concise."
+            "Generate an implementation-ready, tiny HTML5 canvas game idea that an LLM can build in one pass with 100% accuracy. "
+            "Return a single line formatted as: \"<Title>: <explicit mechanic spec>\". "
+            "Keep the title short, but make the mechanic spec explicit (1–2 sentences max) with concrete controls and numbers."
         )
         recent_ideas = data.get('recentIdeas') or []
 
         system_prompt = (
-            "You are a creative assistant helping prototype tiny web arcade games fast. "
-            "Output must be a single line idea suitable for a quick HTML5 canvas prototype."
+            "You are a creative assistant producing implementation-ready specs for tiny HTML5 canvas games. "
+            "Output must be ONE line idea suitable for a quick canvas prototype. The mechanic spec MUST include: "
+            "- exact control scheme (e.g., Arrow keys to move, Space to jump) "
+            "- clear win/lose or score condition "
+            "- concrete parameters (e.g., speeds, spawn rates, sizes) where relevant "
+            "Avoid vague pitches (e.g., 'neon dodge')."
         )
 
         # Compose user prompt with recent ideas to avoid duplicates
         avoid = ("\nRecent ideas (avoid repeating):\n- " + "\n- ".join(recent_ideas)) if recent_ideas else ""
-        user_prompt = f"{prompt}{avoid}\nReturn only the idea, nothing else."
+        user_prompt = f"{prompt}{avoid}\nReturn only one line with the exact format '<Title>: <explicit mechanic spec>'. No extra text."
 
         idea_text = None
         try:

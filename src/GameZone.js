@@ -1,36 +1,27 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
+// React GameZone scaffold. Morph will replace this entire file with a generated React game component.
 const GameZone = ({ currentGame }) => {
-  // Simple HTML content zone - perfect for Morph apply!
-  // Just put your HTML game content here and it will render
-  // this is the html content that will be rendered in the game zone ONLY CHANGE THIS ZONE
-  // MORPH: ONLY replace the content between these backticks - keep everything else the same
-  const htmlContent = `
-    <div style="text-align: center; padding: 20px;">
-      <h2>🎮 HTML Game Zone</h2>
-      <p>This is where your HTML5 Canvas games will appear!</p>
-      <div style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); padding: 20px; border-radius: 10px; color: white; margin: 20px 0;">
-        <strong>Perfect for Morph Apply!</strong><br/>
-        Just replace the htmlContent variable above with your generated HTML5 game code
-      </div>
-      <div style="border: 2px dashed #ccc; padding: 40px; margin: 20px 0; border-radius: 8px;">
-        <p style="color: #666; font-style: italic;">
-          🎯 Game content will render here<br/>
-          📝 Use Morph to apply HTML5 Canvas games directly<br/>
-          🚀 No complex React components needed!
-        </p>
-      </div>
-      <p style="font-size: 12px; color: #888;">
-        Current game: ${currentGame || 'None selected'}
-      </p>
-    </div>
-  `;
+  const canvasRef = useRef(null);
+  const [message, setMessage] = useState('Ready');
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0f0';
+    ctx.font = '16px monospace';
+    ctx.fillText('React GameZone Scaffold', 90, 150);
+  }, [currentGame]);
 
   return (
-    <div className="game-zone">
-      <div className="game-content">
-        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-      </div>
+    <div style={{ textAlign: 'center', padding: 16 }}>
+      <h3 style={{ marginBottom: 12 }}>{currentGame || 'Your Game'}</h3>
+      <canvas ref={canvasRef} width={400} height={300} style={{ border: '2px solid #333', background: '#fff' }} />
+      <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>{message}</div>
     </div>
   );
 };

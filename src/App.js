@@ -7,12 +7,13 @@ function App() {
   const [gameInput, setGameInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [lastPrompt, setLastPrompt] = useState('');
+  const [nextIdea, setNextIdea] = useState('');
 
-  const sentinelRef = useRef(null);
   const isGeneratingRef = useRef(false);
-  const canScrollTriggerRef = useRef(true);
   const gameContainerRef = useRef(null);
   const [isGameActive, setIsGameActive] = useState(false);
+  const nextSlideRef = useRef(null);
+  const nextTriggeringRef = useRef(false);
 
   const updateGameViaFreestyle = async (gameName) => {
     try {
@@ -48,6 +49,7 @@ function App() {
     } finally {
       setIsGenerating(false);
       isGeneratingRef.current = false;
+      nextTriggeringRef.current = false;
     }
   };
 
@@ -132,32 +134,38 @@ function App() {
     };
   }, [isGameActive]);
 
-  // Bottom scroll: when sentinel enters viewport, generate one new idea
+  // Preload next idea on mount
   useEffect(() => {
-    const handler = async () => {
-      if (isGeneratingRef.current) return;
-      if (!canScrollTriggerRef.current) return;
-      canScrollTriggerRef.current = false;
+    let cancelled = false;
+    (async () => {
       const idea = await fetchIdeaFromAnthropic();
-      await updateGameViaFreestyle(idea);
-    };
+      if (!cancelled) setNextIdea(idea);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Trigger next when next slide snaps into view
+  useEffect(() => {
+    const node = nextSlideRef.current;
+    if (!node) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry.isIntersecting) {
-          handler();
-        } else {
-          // Reset once the sentinel leaves the viewport so user must scroll back to bottom again
-          canScrollTriggerRef.current = true;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
+          if (!isGeneratingRef.current && !nextTriggeringRef.current) {
+            nextTriggeringRef.current = true;
+            const idea = nextIdea || generateIdeaLocally();
+            updateGameViaFreestyle(idea);
+          }
         }
       },
-      { root: null, rootMargin: '100px', threshold: 0 }
+      { threshold: [0, 0.25, 0.5, 0.75, 0.9, 1] }
     );
 
-    if (sentinelRef.current) observer.observe(sentinelRef.current);
+    observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [nextIdea]);
 
   return (
     <div className="App">
@@ -178,23 +186,30 @@ function App() {
           </form>
         </div>
 
-        <div
-          ref={gameContainerRef}
-          className="game-container"
-          tabIndex={0}
-          onFocus={() => setIsGameActive(true)}
-          onBlur={() => setIsGameActive(false)}
-          onMouseEnter={() => setIsGameActive(true)}
-          onMouseLeave={() => setIsGameActive(false)}
-          onClick={() => gameContainerRef.current && gameContainerRef.current.focus()}
-        >
-          <GameZone currentGame={currentGame} />
-        </div>
+        <div className="feed-container">
+          <section className="feed-slide">
+            <div
+              ref={gameContainerRef}
+              className="game-container"
+              tabIndex={0}
+              onFocus={() => setIsGameActive(true)}
+              onBlur={() => setIsGameActive(false)}
+              onMouseEnter={() => setIsGameActive(true)}
+              onMouseLeave={() => setIsGameActive(false)}
+              onClick={() => gameContainerRef.current && gameContainerRef.current.focus()}
+            >
+              <GameZone currentGame={currentGame} />
+            </div>
+          </section>
 
-        {/* Spacer to enable scrolling to bottom on simple screens */}
-        <div className="scroll-spacer" />
-        {/* Sentinel for infinite scroll */}
-        <div ref={sentinelRef} className="scroll-sentinel" />
+          <section ref={nextSlideRef} className="feed-slide next-slide">
+            <div className="next-card">
+              <div className="next-hint">Swipe up for next game</div>
+              {nextIdea && <div className="next-idea" title={nextIdea}>{nextIdea}</div>}
+              <div className="arrow">▲</div>
+            </div>
+          </section>
+        </div>
       </div>
 
       {lastPrompt && (

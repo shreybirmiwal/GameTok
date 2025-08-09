@@ -5414,3 +5414,233 @@ const GameZone = ({ currentGame }) => {
         )
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: safari - 2025-08-09 14:13:05.445488
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [animals, setAnimals] = useState([]);
+  const [nextAnimalId, setNextAnimalId] = useState(1);
+
+  const animalTypes = [
+    { type: 'lion', emoji: '🦁', points: 10, speed: 2 },
+    { type: 'elephant', emoji: '🐘', points: 15, speed: 1.5 },
+    { type: 'zebra', emoji: '🦓', points: 8, speed: 3 },
+    { type: 'giraffe', emoji: '🦒', points: 12, speed: 2.5 }
+  ];
+
+  const spawnAnimal = useCallback(() => {
+    const animalType = animalTypes[Math.floor(Math.random() * animalTypes.length)];
+    const newAnimal = {
+      id: nextAnimalId,
+      ...animalType,
+      x: Math.random() * 350,
+      y: Math.random() * 250,
+      direction: Math.random() * 2 * Math.PI
+    };
+    setAnimals(prev => [...prev, newAnimal]);
+    setNextAnimalId(prev => prev + 1);
+  }, [nextAnimalId]);
+
+  const moveAnimals = useCallback(() => {
+    setAnimals(prev => prev.map(animal => {
+      let newX = animal.x + Math.cos(animal.direction) * animal.speed;
+      let newY = animal.y + Math.sin(animal.direction) * animal.speed;
+      let newDirection = animal.direction;
+
+      if (newX < 0 || newX > 350) {
+        newDirection = Math.PI - animal.direction;
+        newX = Math.max(0, Math.min(350, newX));
+      }
+      if (newY < 0 || newY > 250) {
+        newDirection = -animal.direction;
+        newY = Math.max(0, Math.min(250, newY));
+      }
+
+      return {
+        ...animal,
+        x: newX,
+        y: newY,
+        direction: newDirection
+      };
+    }));
+  }, []);
+
+  const handleAnimalClick = (animalId) => {
+    const animal = animals.find(a => a.id === animalId);
+    if (animal) {
+      setScore(prev => prev + animal.points);
+      setAnimals(prev => prev.filter(a => a.id !== animalId));
+    }
+  };
+
+  const resetGame = () => {
+    setGameState('playing');
+    setScore(0);
+    setTimeLeft(30);
+    setAnimals([]);
+    setNextAnimalId(1);
+  };
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameTimer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          setGameState('gameOver');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(gameTimer);
+  }, [gameState]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const spawnTimer = setInterval(spawnAnimal, 2000);
+    return () => clearInterval(spawnTimer);
+  }, [gameState, spawnAnimal]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const moveTimer = setInterval(moveAnimals, 100);
+    return () => clearInterval(moveTimer);
+  }, [gameState, moveAnimals]);
+
+  useEffect(() => {
+    spawnAnimal();
+  }, []);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#8B4513' }}>Safari Hunt</h2>
+      
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '400px',
+        marginBottom: '10px',
+        fontSize: '18px',
+        fontWeight: 'bold'
+      }}>
+        <span style={{ color: '#228B22' }}>Score: {score}</span>
+        <span style={{ color: '#DC143C' }}>Time: {timeLeft}s</span>
+      </div>
+
+      <div style={{
+        width: '400px',
+        height: '300px',
+        border: '3px solid #8B4513',
+        backgroundColor: '#F4A460',
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '10px'
+      }}>
+        {animals.map(animal => (
+          <div
+            key={animal.id}
+            onClick={() => handleAnimalClick(animal.id)}
+            style={{
+              position: 'absolute',
+              left: `${animal.x}px`,
+              top: `${animal.y}px`,
+              fontSize: '24px',
+              cursor: 'pointer',
+              userSelect: 'none',
+              transition: 'transform 0.1s',
+              transform: 'scale(1)',
+              zIndex: 1
+            }}
+            onMouseDown={(e) => {
+              e.target.style.transform = 'scale(0.9)';
+            }}
+            onMouseUp={(e) => {
+              e.target.style.transform = 'scale(1)';
+            }}
+          >
+            {animal.emoji}
+          </div>
+        ))}
+
+        {gameState === 'gameOver' && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            textAlign: 'center',
+            zIndex: 10
+          }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Game Over!</h3>
+            <p style={{ margin: '0 0 15px 0' }}>Final Score: {score}</p>
+            <button
+              onClick={resetGame}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#228B22',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{
+        marginTop: '15px',
+        textAlign: 'center',
+        color: '#8B4513'
+      }}>
+        <p style={{ margin: '5px 0', fontSize: '14px' }}>
+          Click on the animals to score points!
+        </p>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '8px 16px',
+            fontSize: '14px',
+            backgroundColor: '#DC143C',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginTop: '5px'
+          }}
+        >
+          Restart Game
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

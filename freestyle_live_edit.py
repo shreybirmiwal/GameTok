@@ -437,7 +437,7 @@ def generate_idea():
             message = anthropic_client.messages.create(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=128,
-                temperature=0.3,
+                temperature=0.8,
                 system=system_prompt,
                 messages=[{"role": "user", "content": user_prompt}],
             )

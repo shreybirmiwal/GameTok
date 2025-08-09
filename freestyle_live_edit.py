@@ -45,6 +45,80 @@ morph_client = OpenAI(
 # Global variable to store the dev server connection
 dev_server_wrapper = None
 
+# In-memory debug snapshot of the last generation and apply
+last_generation_debug = {
+    "idea": None,
+    "timestamp": None,
+    # Claude outputs
+    "claude_code_raw": None,
+    "claude_code": None,  # sanitized
+    # Before/after
+    "before_code": None,
+    "morph_code_raw": None,
+    "morph_code": None,   # sanitized
+    "written_code": None
+}
+
+# --------------------
+# Sanitization helpers
+# --------------------
+
+def strip_markdown_fences(text: str) -> (str, bool):
+    """Remove markdown code fences like ```js ... ``` and return (stripped, was_stripped)."""
+    if text is None:
+        return text, False
+    if "```" not in text:
+        return text, False
+    # Capture the largest fenced block if multiple
+    matches = list(re.finditer(r"```[a-zA-Z0-9_\-]*\n", text))
+    if not matches:
+        # Fallback: remove any bare fences
+        return text.replace("```", ""), True
+    start = matches[0].end()
+    end_idx = text.rfind("```")
+    if end_idx > start:
+        inner = text[start:end_idx]
+        return inner.strip(), True
+    return text.replace("```", ""), True
+
+
+def ensure_react_file_contract(code: str) -> (str, list):
+    """Ensure the file starts with a React import and ends with export default GameZone.
+    Returns (possibly fixed code, list_of_fixes)."""
+    fixes = []
+    if code is None:
+        return code, fixes
+    normalized = code.lstrip("\ufeff")  # strip BOM if present
+    # Ensure import
+    first_300 = normalized[:300]
+    if "import React" not in first_300:
+        normalized = (
+            "import React, { useEffect, useRef, useState } from 'react';\n" + normalized
+        )
+        fixes.append("added_import")
+    # Ensure export default
+    if "export default GameZone" not in normalized:
+        normalized = normalized.rstrip() + "\n\nexport default GameZone;\n"
+        fixes.append("added_export")
+    return normalized, fixes
+
+
+def sanitize_react_code(raw: str, source_label: str) -> (str, dict):
+    """Strip fences and enforce React file contract. Returns (sanitized, meta)."""
+    meta = {"source": source_label, "stripped_fences": False, "fixes": []}
+    code = raw or ""
+    code, stripped = strip_markdown_fences(code)
+    meta["stripped_fences"] = stripped
+    code, fixes = ensure_react_file_contract(code)
+    meta["fixes"] = fixes
+    if stripped or fixes:
+        logger.warning(f"Sanitized {source_label}: stripped_fences={stripped}, fixes={fixes}")
+    return code, meta
+
+# --------------------
+# Dev server wrapper
+# --------------------
+
 class DevServerWrapper:
     def __init__(self, dev_server):
         self.dev_server = dev_server
@@ -107,7 +181,8 @@ def home():
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
             "/generate-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - Claude generates, Morph applies!",
             "/game-log": "GET - View recent game generation logs",
-            "/detailed-log": "GET - View detailed game code and before/after comparisons"
+            "/detailed-log": "GET - View detailed game code and before/after comparisons",
+            "/last-debug": "GET - View last Claude output, Morph result, and written code"
         }
     }
     
@@ -257,7 +332,12 @@ def generate_game():
         # Step 1: Generate HTML5 game with Anthropic
         logger.info(f"📝 Calling Claude to generate HTML5 Canvas game for: '{game_idea}'")
         game_html = generate_game_with_anthropic(game_idea)
-        if not game_html:
+        # snapshot Claude output
+        last_generation_debug["idea"] = game_idea
+        last_generation_debug["timestamp"] = datetime.now().isoformat()
+        last_generation_debug["claude_code_raw"] = game_html # Store raw
+        last_generation_debug["claude_code"], _ = sanitize_react_code(game_html, "Claude") # Store sanitized
+        if not last_generation_debug["claude_code"]:
             logger.error(f"❌ Claude generation FAILED for: '{game_idea}'")
             return jsonify({"error": "Failed to generate game HTML"}), 500
         
@@ -285,7 +365,7 @@ def generate_game():
         
         # Step 2: Use Morph to replace GameZone.js with React component
         logger.info(f"⚡ Applying React component to GameZone.js using Morph for: '{game_idea}'")
-        if apply_react_with_morph_to_gamezone(game_html, game_idea):
+        if apply_react_with_morph_to_gamezone(last_generation_debug["claude_code"], game_idea):
             end_time = datetime.now()
             duration = (end_time - start_time).total_seconds()
             logger.info(f"🎉 GAME GENERATION SUCCESS - '{game_idea}' - Duration: {duration:.2f}s - Size: {game_length} chars")
@@ -357,27 +437,42 @@ def get_detailed_log():
 
 # Removed duplicate /generate-html-game endpoint - using /generate-game instead
 
+@app.route('/last-debug')
+def get_last_debug():
+    """Return the last generation/apply snapshot including full code blocks"""
+    try:
+        return jsonify({
+            "success": True,
+            "debug": last_generation_debug
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 def generate_game_with_anthropic(game_idea):
     """Generate a complete, self-contained React GameZone component using Anthropic API - zero dependencies beyond React"""
     try:
         logger.info(f"🤖 Claude generation starting for: '{game_idea}'")
         
         system_prompt = """You are a React game developer. Generate a complete, self-contained React functional component called GameZone that can be saved directly as src/GameZone.js.
-        - Output MUST be valid JavaScript/JSX only (no markdown fences)
-        - Only import React hooks; no external packages
-        - Inline styles only; no CSS files
-        - Export default the component
-        - Keep the play area near 400x300 and keep mechanics simple
+        HARD REQUIREMENTS (do not violate):
+        - Output MUST be valid JavaScript/JSX only.
+        - DO NOT include markdown fences (no ```js, no ```json, no ```).
+        - DO NOT include explanations or comments outside the code.
+        - Only import React hooks; no external packages.
+        - Inline styles only; no CSS files.
+        - Export default the component.
+        - Keep the play area near 400x300 and keep mechanics simple.
         """
         
         user_prompt = f"""Create a SIMPLE {game_idea} game as a React functional component that REPLACES the entire contents of src/GameZone.js.
-        Requirements:
+        Requirements (must follow exactly):
         - Component name: GameZone; prop: currentGame (may be unused)
         - No document.getElementById; if using canvas, useRef + useEffect
         - No external libs; only React
         - Inline styles; no classes
         - Provide restart/reset in the component
-        - Return ONLY the full file contents of GameZone.js (imports + component + export default), no explanations.
+        - Return ONLY the full file contents of GameZone.js (imports + component + export default).
+        - DO NOT wrap the code in markdown fences or any prose.
         """
 
         logger.info(f"📡 Sending request to Claude for '{game_idea}' - Model: claude-sonnet-4-20250514")
@@ -418,6 +513,7 @@ def apply_react_with_morph_to_gamezone(react_code, game_name):
         # Read current GameZone.js
         current_gamezone = dev_server_wrapper.read_gamezone()
         logger.info(f"📖 Read current GameZone.js - Size: {len(current_gamezone)} chars")
+        last_generation_debug["before_code"] = current_gamezone
         
         instruction = f"""I am replacing the entire contents of src/GameZone.js with a new React component implementing '{game_name}'.
         This is a single edit to one file. Return ONLY the final code for src/GameZone.js.
@@ -436,10 +532,14 @@ def apply_react_with_morph_to_gamezone(react_code, game_name):
             }]
         )
         
-        updated_gamezone = response.choices[0].message.content
+        updated_gamezone_raw = response.choices[0].message.content
+        updated_gamezone, _meta = sanitize_react_code(updated_gamezone_raw, "Morph")
         logger.info(f"✅ Morph returned updated React component - New size: {len(updated_gamezone)} chars")
+        last_generation_debug["morph_code_raw"] = updated_gamezone_raw
+        last_generation_debug["morph_code"] = updated_gamezone
         
         dev_server_wrapper.write_gamezone(updated_gamezone)
+        last_generation_debug["written_code"] = updated_gamezone
         logger.info(f"📝 Written new React GameZone to Freestyle - Game: '{game_name}'")
         return True
     

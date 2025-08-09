@@ -661,3 +661,110 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 13:07:13,893 - INFO - 127.0.0.1 - - [09/Aug/2025 13:07:13] "POST /generate-game HTTP/1.1" 200 -
 2025-08-09 13:12:42,197 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
 2025-08-09 13:12:42,488 - INFO -  * Restarting with stat
+2025-08-09 13:17:25,765 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 13:17:25,766 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 13:17:25,768 - INFO -  * Restarting with stat
+2025-08-09 13:17:27,128 - WARNING -  * Debugger is active!
+2025-08-09 13:17:27,141 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:17:32,108 - INFO - 127.0.0.1 - - [09/Aug/2025 13:17:32] "GET / HTTP/1.1" 200 -
+2025-08-09 13:18:06,604 - INFO - 127.0.0.1 - - [09/Aug/2025 13:18:06] "GET / HTTP/1.1" 200 -
+2025-08-09 13:18:07,589 - INFO - 127.0.0.1 - - [09/Aug/2025 13:18:07] "GET / HTTP/1.1" 200 -
+2025-08-09 13:18:14,999 - INFO - 127.0.0.1 - - [09/Aug/2025 13:18:14] "POST /connect HTTP/1.1" 200 -
+2025-08-09 13:18:28,871 - INFO - 127.0.0.1 - - [09/Aug/2025 13:18:28] "GET / HTTP/1.1" 200 -
+2025-08-09 13:18:44,800 - INFO - 127.0.0.1 - - [09/Aug/2025 13:18:44] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:18:44,804 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'tik tak toe' - Timestamp: 2025-08-09 13:18:44.804356
+2025-08-09 13:18:44,804 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'tik tak toe'
+2025-08-09 13:18:44,804 - INFO - 🤖 Claude generation starting for: 'tik tak toe'
+2025-08-09 13:18:44,804 - INFO - 📡 Sending request to Claude for 'tik tak toe' - Model: claude-sonnet-4-20250514
+2025-08-09 13:18:54,724 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:18:54,731 - INFO - ✅ Claude generated content for 'tik tak toe' - Length: 2875 chars
+2025-08-09 13:18:54,732 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:18:54,732 - INFO - ✅ Claude generated game - Length: 2875 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:18:54,732 - INFO - 🎮 GENERATED GAME CODE for 'tik tak toe':
+--------------------------------------------------
+```javascript
+import React, { useState } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [board, setBoard] = useState(Array(9).fill(null));
+  const [isXNext, setIsXNext] = useState(true);
+  const [winner, setWinner] = useState(null);
+
+  const checkWinner = (squares) => {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+     ...
+--------------------------------------------------
+2025-08-09 13:18:54,732 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'tik tak toe'
+2025-08-09 13:18:56,055 - INFO - 📖 Read current GameZone.js - Size: 1065 chars
+2025-08-09 13:18:56,055 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'tik tak toe', size: 2875 chars
+2025-08-09 13:18:57,249 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:18:57,262 - INFO - ✅ Morph returned updated React component - New size: 2875 chars
+2025-08-09 13:18:57,943 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'tik tak toe'
+2025-08-09 13:18:57,944 - INFO - 🎉 GAME GENERATION SUCCESS - 'tik tak toe' - Duration: 13.14s - Size: 2875 chars
+2025-08-09 13:18:57,944 - INFO - 127.0.0.1 - - [09/Aug/2025 13:18:57] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:20:06,877 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:20:07,067 - INFO -  * Restarting with stat
+2025-08-09 13:20:08,593 - WARNING -  * Debugger is active!
+2025-08-09 13:20:08,602 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:20:19,504 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:20:19,666 - INFO -  * Restarting with stat
+2025-08-09 13:20:21,186 - WARNING -  * Debugger is active!
+2025-08-09 13:20:21,193 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:20:49,294 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:20:49,495 - INFO -  * Restarting with stat
+2025-08-09 13:20:51,124 - WARNING -  * Debugger is active!
+2025-08-09 13:20:51,133 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:20:58,825 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:20:59,125 - INFO -  * Restarting with stat
+2025-08-09 13:21:00,704 - WARNING -  * Debugger is active!
+2025-08-09 13:21:00,711 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:21:10,508 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:21:10,672 - INFO -  * Restarting with stat
+2025-08-09 13:21:12,165 - WARNING -  * Debugger is active!
+2025-08-09 13:21:12,173 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:21:24,120 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:21:24,417 - INFO -  * Restarting with stat
+2025-08-09 13:21:26,049 - WARNING -  * Debugger is active!
+2025-08-09 13:21:26,059 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:22:38,475 - INFO - 127.0.0.1 - - [09/Aug/2025 13:22:38] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:22:53,698 - INFO - 127.0.0.1 - - [09/Aug/2025 13:22:53] "GET / HTTP/1.1" 200 -
+2025-08-09 13:22:54,416 - INFO - 127.0.0.1 - - [09/Aug/2025 13:22:54] "GET / HTTP/1.1" 200 -
+2025-08-09 13:23:11,111 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:23:11,285 - INFO -  * Restarting with stat
+2025-08-09 13:23:13,236 - WARNING -  * Debugger is active!
+2025-08-09 13:23:13,245 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:23:29,479 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:23:29,648 - INFO -  * Restarting with stat
+2025-08-09 13:23:31,209 - WARNING -  * Debugger is active!
+2025-08-09 13:23:31,217 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:23:42,738 - INFO - 127.0.0.1 - - [09/Aug/2025 13:23:42] "POST /connect HTTP/1.1" 200 -
+2025-08-09 13:23:45,300 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:23:45,527 - INFO -  * Restarting with stat
+2025-08-09 13:23:47,142 - WARNING -  * Debugger is active!
+2025-08-09 13:23:47,150 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:24:07,069 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:07] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:08,198 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:08] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:12,660 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:12] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:13,428 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:13] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:13,683 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:13] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:13,811 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:13] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:13,958 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:13] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:14,094 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:14] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:49,293 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:49] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:24:49,298 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:49] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:24:52,494 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:52] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:53,378 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:53] "GET / HTTP/1.1" 200 -
+2025-08-09 13:24:53,633 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:53] "GET / HTTP/1.1" 200 -

@@ -5,6 +5,8 @@ import GameZone from './GameZone';
 function App() {
   const [currentGame, setCurrentGame] = useState("Your Game");
   const [gameInput, setGameInput] = useState("");
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectStatus, setConnectStatus] = useState("");
 
   const updateGameViaFreestyle = async (gameName) => {
     try {
@@ -42,10 +44,58 @@ function App() {
     }
   };
 
-  // Removed scroll functionality
+  const handleReconnect = async () => {
+    try {
+      setIsConnecting(true);
+      setConnectStatus("Connecting...");
+      const res = await fetch('http://localhost:8080/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (data.success) {
+        setConnectStatus('Connected');
+      } else {
+        setConnectStatus(`Failed: ${data.error || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error('Reconnect error', err);
+      setConnectStatus('Error connecting');
+    } finally {
+      setIsConnecting(false);
+      // Clear status after a short delay
+      setTimeout(() => setConnectStatus(""), 4000);
+    }
+  };
 
   return (
     <div className="App">
+      {/* Reconnect button - fixed top-right */}
+      <button
+        onClick={handleReconnect}
+        disabled={isConnecting}
+        style={{
+          position: 'fixed',
+          top: 12,
+          right: 12,
+          zIndex: 1000,
+          padding: '8px 12px',
+          background: '#222',
+          color: '#fff',
+          border: '1px solid #444',
+          borderRadius: 8,
+          cursor: isConnecting ? 'not-allowed' : 'pointer'
+        }}
+        aria-label="Reconnect to dev server"
+      >
+        {isConnecting ? 'Reconnecting...' : 'Reconnect'}
+      </button>
+      {connectStatus && (
+        <div style={{ position: 'fixed', top: 52, right: 12, zIndex: 1000, fontSize: 12, color: '#ccc' }}>
+          {connectStatus}
+        </div>
+      )}
+
       <div className="content-container">
         <div className="game-input-section">
           <h2>What game do you want to play?</h2>
@@ -64,8 +114,6 @@ function App() {
         </div>
 
         <GameZone currentGame={currentGame} />
-
-        {/* Removed scroll indicator */}
       </div>
     </div>
   );

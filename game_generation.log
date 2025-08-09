@@ -578,3 +578,84 @@
 2025-08-09 13:01:22,144 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
 2025-08-09 13:01:22,144 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 15.88s - Size: 3732 chars
 2025-08-09 13:01:22,145 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:22] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:05:07,494 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 13:05:07,494 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 13:05:07,496 - INFO -  * Restarting with stat
+2025-08-09 13:05:08,769 - WARNING -  * Debugger is active!
+2025-08-09 13:05:08,781 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:05:59,151 - INFO - 127.0.0.1 - - [09/Aug/2025 13:05:59] "POST /connect HTTP/1.1" 200 -
+2025-08-09 13:06:17,514 - INFO - 127.0.0.1 - - [09/Aug/2025 13:06:17] "GET / HTTP/1.1" 200 -
+2025-08-09 13:06:53,041 - INFO - 127.0.0.1 - - [09/Aug/2025 13:06:53] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:06:53,047 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'tiktactoe' - Timestamp: 2025-08-09 13:06:53.046996
+2025-08-09 13:06:53,047 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'tiktactoe'
+2025-08-09 13:06:53,047 - INFO - 🤖 Claude generation starting for: 'tiktactoe'
+2025-08-09 13:06:53,047 - INFO - 📡 Sending request to Claude for 'tiktactoe' - Model: claude-sonnet-4-20250514
+2025-08-09 13:07:10,514 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:07:10,522 - INFO - ✅ Claude generated content for 'tiktactoe' - Length: 4381 chars
+2025-08-09 13:07:10,523 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:07:10,523 - INFO - ✅ Claude generated game - Length: 4381 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:07:10,523 - INFO - 🎮 GENERATED GAME CODE for 'tiktactoe':
+--------------------------------------------------
+```
+<div style="text-align: center; padding: 20px;">
+  <h3>🎮 Tic Tac Toe</h3>
+  <canvas id="game_tiktactoe_canvas" width="400" height="300" style="border: 2px solid #333; background: #fff; cursor: pointer;"></canvas>
+  <div style="margin: 10px 0;">
+    <strong>Current Player: <span id="game_tiktactoe_player">X</span></strong>
+  </div>
+  <div style="font-size: 12px; color: #666;">
+    Controls: Click on squares to place X or O
+  </div>
+</div>
+<script>
+const tiktactoe_canvas = document.getElementB...
+--------------------------------------------------
+2025-08-09 13:07:10,523 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'tiktactoe'
+2025-08-09 13:07:11,662 - INFO - 📖 Read current GameZone.js - Size: 1508 chars
+2025-08-09 13:07:11,662 - INFO - 📄 BEFORE MORPH - Current GameZone.js:
+--------------------------------------------------
+import React from 'react';
+
+const GameZone = ({ currentGame }) => {
+  // Simple HTML content zone - perfect for Morph apply!
+  // Just put your HTML game content here and it will render
+  // this is the html content that will be rendered in the game zone ONLY CHANGE THIS ZONE
+  // MORPH: ONLY replac...
+--------------------------------------------------
+2025-08-09 13:07:11,662 - INFO - ⚡ Sending to Morph fast apply - Game: 'tiktactoe', HTML size: 4381 chars
+2025-08-09 13:07:13,185 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:07:13,197 - INFO - ✅ Morph returned updated code - New size: 4975 chars
+2025-08-09 13:07:13,197 - INFO - 📝 AFTER MORPH - Updated GameZone.js:
+--------------------------------------------------
+import React from 'react';
+
+const GameZone = ({ currentGame }) => {
+  // Simple HTML content zone - perfect for Morph apply!
+  // Just put your HTML game content here and it will render
+  // this is the html content that will be rendered in the game zone ONLY CHANGE THIS ZONE
+  // MORPH: ONLY replace the content between these backticks - keep everything else the same
+  const htmlContent = `
+<div style="text-align: center; padding: 20px;">
+  <h3>🎮 Tic Tac Toe</h3>
+  <canvas id="game_tiktactoe_can...
+--------------------------------------------------
+2025-08-09 13:07:13,198 - INFO - 🔄 MORPH CHANGES DETECTED for 'tiktactoe':
+2025-08-09 13:07:13,198 - INFO -    Original size: 1508 chars
+2025-08-09 13:07:13,198 - INFO -    Updated size: 4975 chars
+2025-08-09 13:07:13,198 - INFO -    Size difference: +3467 chars
+2025-08-09 13:07:13,198 - INFO - 🔍 HTML CONTENT COMPARISON for 'tiktactoe':
+2025-08-09 13:07:13,198 - INFO - 📤 OLD htmlContent (900 chars):
+<div style="text-align: center; padding: 20px;">
+      <h2>🎮 HTML Game Zone</h2>
+      <p>This is where your HTML5 Canvas games will appear!</p>
+      <div style="background: linear-gradient(45deg, #f...
+2025-08-09 13:07:13,198 - INFO - 📥 NEW htmlContent (4373 chars):
+<div style="text-align: center; padding: 20px;">
+  <h3>🎮 Tic Tac Toe</h3>
+  <canvas id="game_tiktactoe_canvas" width="400" height="300" style="border: 2px solid #333; background: #fff; cursor: pointer...
+2025-08-09 13:07:13,891 - INFO - 📝 Written to Freestyle dev server - Game: 'tiktactoe' successfully deployed
+2025-08-09 13:07:13,891 - INFO - 🎉 GAME GENERATION SUCCESS - 'tiktactoe' - Duration: 20.84s - Size: 4381 chars
+2025-08-09 13:07:13,893 - INFO - 127.0.0.1 - - [09/Aug/2025 13:07:13] "POST /generate-game HTTP/1.1" 200 -

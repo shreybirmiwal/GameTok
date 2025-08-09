@@ -94,6 +94,8 @@ function App() {
     const idea = gameInput.trim();
     if (!idea) return;
     setGameInput('');
+    // Start prefill immediately in parallel with full generate
+    fillNextSlot().catch(() => { });
     await updateGameViaFreestyle(idea);
     // After a full generate, prefill the next-game slot for fast scroll
     fillNextSlot().catch(() => { });
@@ -140,6 +142,8 @@ function App() {
         const idea = 'flappy bird game';
         setLastPrompt(idea);
         setCurrentGame(`Generating ${idea}...`);
+        // Start prefill immediately in parallel with the first generate
+        fillNextSlot().catch(() => { });
         await updateGameViaFreestyle(idea);
         // Prefill the next-game slot right after initial generate
         fillNextSlot().catch(() => { });

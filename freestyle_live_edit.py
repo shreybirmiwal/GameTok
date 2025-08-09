@@ -59,6 +59,9 @@ last_generation_debug = {
     "written_code": None
 }
 
+# In-memory prepared games storage
+prepared_games = {}
+
 # --------------------
 # Sanitization helpers
 # --------------------
@@ -514,6 +517,57 @@ def get_last_debug():
             "debug": last_generation_debug
         })
     except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/prepare-game', methods=['POST'])
+def prepare_game():
+    """Generate game code (Anthropic) and store it without applying. Returns a token."""
+    data = request.get_json() or {}
+    game_idea = data.get('game_idea')
+    if not game_idea:
+        return jsonify({"error": "Missing 'game_idea'"}), 400
+    try:
+        logger.info(f"🧪 Preparing game (generate only) for idea: '{game_idea}'")
+        game_html = generate_game_with_anthropic(game_idea)
+        if not game_html:
+            return jsonify({"error": "Failed to generate game HTML"}), 500
+        sanitized_code, _ = sanitize_react_code(game_html, "Claude")
+        if not sanitized_code:
+            return jsonify({"error": "Sanitization failed"}), 500
+        import uuid
+        token = uuid.uuid4().hex
+        prepared_games[token] = {
+            "idea": game_idea,
+            "code": sanitized_code,
+            "created_at": datetime.now().isoformat(),
+        }
+        logger.info(f"✅ Prepared game stored with token: {token}")
+        return jsonify({"success": True, "token": token})
+    except Exception as e:
+        logger.error(f"❌ prepare-game error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/apply-prepared', methods=['POST'])
+def apply_prepared():
+    """Apply a previously prepared game by token using Morph to write GameZone.js."""
+    data = request.get_json() or {}
+    token = data.get('token')
+    if not token:
+        return jsonify({"error": "Missing 'token'"}), 400
+    if token not in prepared_games:
+        return jsonify({"error": "Invalid or expired token"}), 404
+    try:
+        record = prepared_games.pop(token)
+        idea = record["idea"]
+        code = record["code"]
+        logger.info(f"⚡ Applying prepared game for idea '{idea}' token={token}")
+        ok = apply_react_with_morph_to_gamezone(code, idea)
+        if ok:
+            return jsonify({"success": True, "game_idea": idea})
+        else:
+            return jsonify({"error": "Failed to apply prepared game"}), 500
+    except Exception as e:
+        logger.error(f"❌ apply-prepared error: {e}")
         return jsonify({"error": str(e)}), 500
 
 def generate_game_with_anthropic(game_idea):

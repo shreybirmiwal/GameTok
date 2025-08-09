@@ -8,6 +8,7 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [lastPrompt, setLastPrompt] = useState('');
   const [nextIdea, setNextIdea] = useState('');
+  const [nextToken, setNextToken] = useState('');
 
   const isGeneratingRef = useRef(false);
   const gameContainerRef = useRef(null);
@@ -32,7 +33,6 @@ function App() {
         const result = await response.json();
         console.log('Game generated successfully:', result);
         setCurrentGame(gameName);
-        // Ensure the newly written GameZone.js is loaded
         setTimeout(() => {
           try {
             window.location.reload();
@@ -97,6 +97,56 @@ function App() {
     }
   };
 
+  // Prepare a game server-side to reduce latency
+  const prepareGame = async (idea) => {
+    try {
+      const res = await fetch('http://localhost:8080/prepare-game', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ game_idea: idea }),
+      });
+      const data = await res.json();
+      if (res.ok && data?.token) {
+        return data.token;
+      }
+      throw new Error(data?.error || 'prepare failed');
+    } catch (e) {
+      console.warn('prepare-game failed', e);
+      return '';
+    }
+  };
+
+  const applyPrepared = async (token, idea) => {
+    setIsGenerating(true);
+    isGeneratingRef.current = true;
+    setLastPrompt(idea);
+    setCurrentGame(`Generating ${idea}...`);
+    try {
+      const res = await fetch('http://localhost:8080/apply-prepared', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+      const data = await res.json();
+      if (res.ok && data?.success) {
+        setCurrentGame(idea);
+        setTimeout(() => {
+          try { window.location.reload(); } catch { }
+        }, 200);
+      } else {
+        // Fallback to full generation if apply fails
+        await updateGameViaFreestyle(idea);
+      }
+    } catch (e) {
+      console.warn('apply-prepared failed, falling back', e);
+      await updateGameViaFreestyle(idea);
+    } finally {
+      setIsGenerating(false);
+      isGeneratingRef.current = false;
+      nextTriggeringRef.current = false;
+    }
+  };
+
   const handleGameSubmit = (e) => {
     e.preventDefault();
     if (gameInput.trim()) {
@@ -134,12 +184,15 @@ function App() {
     };
   }, [isGameActive]);
 
-  // Preload next idea on mount
+  // Preload next idea + prepare code on mount
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const idea = await fetchIdeaFromAnthropic();
-      if (!cancelled) setNextIdea(idea);
+      if (cancelled) return;
+      setNextIdea(idea);
+      const token = await prepareGame(idea);
+      if (!cancelled) setNextToken(token);
     })();
     return () => { cancelled = true; };
   }, []);
@@ -156,7 +209,11 @@ function App() {
           if (!isGeneratingRef.current && !nextTriggeringRef.current) {
             nextTriggeringRef.current = true;
             const idea = nextIdea || generateIdeaLocally();
-            updateGameViaFreestyle(idea);
+            if (nextToken) {
+              applyPrepared(nextToken, idea);
+            } else {
+              updateGameViaFreestyle(idea);
+            }
           }
         }
       },
@@ -165,7 +222,7 @@ function App() {
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [nextIdea]);
+  }, [nextIdea, nextToken]);
 
   return (
     <div className="App">

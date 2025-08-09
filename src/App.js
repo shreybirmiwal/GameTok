@@ -8,22 +8,29 @@ function App() {
 
   const updateGameViaFreestyle = async (gameName) => {
     try {
-      const response = await fetch('http://localhost:8080/gamezone/update', {
+      console.log(`Generating game: ${gameName}`);
+      setCurrentGame(`Generating ${gameName}...`);
+      
+      const response = await fetch('http://localhost:8080/generate-game', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ game_name: gameName }),
+        body: JSON.stringify({ game_idea: gameName }),
       });
 
       if (response.ok) {
-        console.log(`Game updated to: ${gameName}`);
+        const result = await response.json();
+        console.log(`Game generated successfully:`, result);
         setCurrentGame(gameName);
       } else {
-        console.error('Failed to update game via Freestyle');
+        const error = await response.json();
+        console.error('Failed to generate game:', error);
+        setCurrentGame(`Failed to generate ${gameName}`);
       }
     } catch (error) {
-      console.error('Error calling Freestyle API:', error);
+      console.error('Error calling game generation API:', error);
+      setCurrentGame(`Error generating ${gameName}`);
     }
   };
 

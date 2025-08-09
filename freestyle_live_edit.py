@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Flask server for interactive live editing of your Freestyle dev server
+With Anthropic AI and Morph fast apply integration
 """
 
 from flask import Flask, request, jsonify
@@ -9,9 +10,22 @@ import freestyle
 import os
 import json
 from datetime import datetime
+import anthropic
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+# Initialize API clients
+anthropic_client = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
+
+morph_client = OpenAI(
+    api_key=os.getenv('MORPH_API_KEY'),
+    base_url="https://api.morphllm.com/v1"
+)
 
 # Global variable to store the dev server connection
 dev_server_wrapper = None
@@ -75,7 +89,8 @@ def home():
             "/status": "GET - Check connection status",
             "/gamezone/read": "GET - Read current GameZone.js content",
             "/gamezone/update": "POST - Update GameZone with new game name (JSON: {'game_name': 'YourGame'})",
-            "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})"
+            "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
+            "/generate-game": "POST - Generate AI game from idea (JSON: {'game_idea': 'snake game'})"
         }
     }
     
@@ -205,10 +220,123 @@ def write_gamezone():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/generate-game', methods=['POST'])
+def generate_game():
+    """Generate AI game using Anthropic and deploy via Morph + Freestyle"""
+    if not dev_server_wrapper:
+        return jsonify({"error": "Not connected to dev server. Use POST /connect first"}), 400
+    
+    data = request.get_json()
+    if not data or 'game_idea' not in data:
+        return jsonify({"error": "Missing 'game_idea' in request body"}), 400
+    
+    game_idea = data['game_idea']
+    
+    try:
+        print(f"🎮 Generating game: {game_idea}")
+        
+        # Step 1: Generate game code with Anthropic
+        game_code = generate_game_with_anthropic(game_idea)
+        if not game_code:
+            return jsonify({"error": "Failed to generate game code"}), 500
+        
+        # Step 2: Apply code with Morph
+        applied_code = apply_code_with_morph(game_code, game_idea)
+        if not applied_code:
+            return jsonify({"error": "Failed to apply code changes"}), 500
+        
+        # Step 3: Deploy to Freestyle
+        if deploy_to_freestyle(applied_code):
+            return jsonify({
+                "success": True,
+                "message": f"Game '{game_idea}' generated and deployed successfully!",
+                "game_idea": game_idea,
+                "app_url": dev_server_wrapper.dev_server.ephemeral_url
+            })
+        else:
+            return jsonify({"error": "Failed to deploy to Freestyle"}), 500
+            
+    except Exception as e:
+        print(f"Error generating game: {e}")
+        return jsonify({"error": str(e)}), 500
+
+def generate_game_with_anthropic(game_idea):
+    """Generate React game code using Anthropic API"""
+    try:
+        system_prompt = """You are a React game developer. Generate complete, working React component code for games. 
+        The code should be a single React functional component that can replace the GameZone component.
+        Include inline styles for a complete, playable game experience.
+        Use only React hooks and standard JavaScript - no external game libraries.
+        Make the game interactive and fun within a 400x300 pixel area."""
+        
+        user_prompt = f"""Create a {game_idea} game as a React component. 
+        Requirements:
+        - Named export as GameZone component
+        - Accept currentGame prop (but can ignore it)
+        - Fully playable game with controls
+        - Use inline styles for all styling
+        - Include game state, scoring, and basic game loop
+        - Responsive to user input (keyboard/mouse)
+        - Should be fun and engaging
+        
+        Return only the complete React component code, no explanations."""
+
+        message = anthropic_client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=2000,
+            temperature=0.7,
+            system=system_prompt,
+            messages=[{
+                "role": "user",
+                "content": user_prompt
+            }]
+        )
+        
+        return message.content[0].text
+        
+    except Exception as e:
+        print(f"Error generating game code: {e}")
+        return None
+
+def apply_code_with_morph(generated_code, instruction):
+    """Apply code changes using Morph's fast apply"""
+    try:
+        # Read current GameZone.js from Freestyle dev server
+        original_code = dev_server_wrapper.read_gamezone()
+        
+        instruction_text = f"I will replace the GameZone component with a new {instruction} game implementation"
+        
+        response = morph_client.chat.completions.create(
+            model="morph-v3-large",
+            messages=[{
+                "role": "user", 
+                "content": f"<instruction>{instruction_text}</instruction>\n<code>{original_code}</code>\n<update>{generated_code}</update>"
+            }]
+        )
+        
+        applied_code = response.choices[0].message.content
+        return applied_code
+        
+    except Exception as e:
+        print(f"Error applying code with Morph: {e}")
+        return None
+
+def deploy_to_freestyle(code):
+    """Deploy code to Freestyle dev server"""
+    try:
+        dev_server_wrapper.write_gamezone(code)
+        print("✅ Code deployed to Freestyle dev server")
+        return True
+        
+    except Exception as e:
+        print(f"Error deploying to Freestyle: {e}")
+        return False
+
 if __name__ == "__main__":
-    print("🚀 Starting Freestyle Live Edit Flask Server...")
+    print("🚀 Starting Freestyle Live Edit Flask Server with AI Game Generation...")
     print("📖 Visit http://localhost:8080 for API documentation")
     print("🔗 Use POST /connect to connect to your GitHub repo")
-    print("🎮 Use POST /gamezone/update with {'game_name': 'YourGame'} to update")
+    print("🎮 Use POST /generate-game with {'game_idea': 'snake game'} to generate AI games")
+    print("🔧 Use POST /gamezone/update with {'game_name': 'YourGame'} for simple updates")
     
     app.run(debug=True, host='0.0.0.0', port=8080)

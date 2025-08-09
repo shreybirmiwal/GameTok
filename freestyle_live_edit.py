@@ -319,36 +319,54 @@ def generate_game_with_anthropic(game_idea):
     try:
         logger.info(f"🤖 Claude generation starting for: '{game_idea}'")
         
-        system_prompt = """You are an HTML5 Canvas game developer. Generate complete, working HTML5 Canvas games. 
-        CRITICAL: The game MUST work as a single standalone HTML snippet with ZERO external dependencies.
-        Use ONLY HTML5 Canvas, vanilla JavaScript, and built-in browser APIs.
-        NO external libraries, NO frameworks, NO dependencies whatsoever.
-        The game will be directly injected into a React component's div as innerHTML."""
+        system_prompt = """You are creating a SIMPLE HTML5 Canvas game that will replace ONLY the htmlContent variable in a React component. 
         
-        user_prompt = f"""Create a {game_idea} game using HTML5 Canvas and vanilla JavaScript. 
-        STRICT Requirements:
-        - Complete HTML snippet with canvas, script, and inline styles
-        - ZERO external dependencies - only vanilla JavaScript and Canvas API
-        - Canvas size should be exactly 400x300 pixels
-        - Include complete game state, scoring, game loop, and controls
-        - Handle keyboard/mouse input appropriately
-        - Use requestAnimationFrame for smooth animation
-        - All styles must be inline CSS within <style> tags
-        - Must be a complete, playable, engaging game
-        - Include game over conditions and restart functionality
+        CRITICAL CONSTRAINTS:
+        - The game MUST work as a single HTML snippet that fits in ONE variable
+        - It will be injected via dangerouslySetInnerHTML={{ __html: htmlContent }}
+        - ZERO external dependencies - only vanilla JavaScript and HTML5 Canvas
+        - Must be SUPER SIMPLE - think classic arcade games like Pong, Snake, simple shooters
+        - Game should be immediately playable without any setup
         
-        Format: Return a complete HTML snippet like this:
-        <div style="text-align: center;">
-            <canvas id="gameCanvas" width="400" height="300" style="border: 2px solid #333;"></canvas>
-            <div>Score: <span id="score">0</span></div>
-            <div>Instructions: [game controls]</div>
+        TARGET: Replace the htmlContent variable content with your game HTML."""
+        
+        user_prompt = f"""Create a SIMPLE {game_idea} game that works in a single HTML block.
+
+        EXACT REQUIREMENTS:
+        1. **Size Constraint**: Canvas max 400x300 pixels
+        2. **Self-Contained**: Everything in ONE HTML block - no external files, CDNs, or imports
+        3. **Simple Mechanics**: Make it as simple as possible while still being fun
+        4. **Instant Play**: Game starts immediately, no loading screens
+        5. **Inline Everything**: All styles in style="" attributes, all JS in <script> tags
+        6. **Unique IDs**: Use unique element IDs to avoid conflicts (e.g., game_{game_idea.replace(' ', '_')}_canvas)
+        
+        STRUCTURE - Return exactly this format:
+        ```
+        <div style="text-align: center; padding: 20px;">
+          <h3>🎮 {game_idea.title()}</h3>
+          <canvas id="game_{game_idea.replace(' ', '_')}_canvas" width="400" height="300" style="border: 2px solid #333; background: #000;"></canvas>
+          <div style="margin: 10px 0;">
+            <strong>Score: <span id="game_{game_idea.replace(' ', '_')}_score">0</span></strong>
+          </div>
+          <div style="font-size: 12px; color: #666;">
+            Controls: [list simple controls like Arrow keys, Space, etc.]
+          </div>
         </div>
         <script>
-        // Complete game logic here
+        // Keep game logic SIMPLE and self-contained
+        // Use unique variable names like {game_idea.replace(' ', '_')}_game
+        // No external dependencies, no complex physics
+        // Example: Snake game = move snake, eat food, avoid walls
         </script>
+        ```
         
-        IMPORTANT: This HTML will be injected directly into a React component - it must be 100% self-contained and work immediately.
-        Return ONLY the complete HTML snippet, no explanations or markdown formatting.
+        EXAMPLES OF SIMPLE GAMES:
+        - Snake: Arrow keys, eat food, grow, avoid walls
+        - Pong: Paddle up/down, ball bounces, score points  
+        - Asteroids: Rotate/thrust ship, shoot rocks
+        - Breakout: Paddle left/right, ball breaks bricks
+        
+        Make it EXTREMELY simple but playable. Return ONLY the HTML block, no explanations.
         """
 
         logger.info(f"📡 Sending request to Claude for '{game_idea}' - Model: claude-sonnet-4-20250514")
@@ -391,7 +409,13 @@ def apply_html_with_morph_to_gamezone(html_content, game_name):
         logger.info(f"📖 Read current GameZone.js - Size: {len(current_gamezone)} chars")
         
         # Create instruction for Morph
-        instruction = f"Replace the htmlContent variable in GameZone.js with the HTML5 Canvas game for '{game_name}'. Keep the same structure but update only the content inside the backticks."
+        instruction = f"""ONLY replace the htmlContent variable content in GameZone.js with the HTML5 Canvas game for '{game_name}'. 
+
+        CRITICAL: 
+        - Keep ALL other code exactly the same
+        - ONLY change what's inside the backticks of: const htmlContent = \`...\`;
+        - Do NOT modify the React component structure, imports, or any other code
+        - The new content should be a complete HTML game that works standalone"""
         
         # Use Morph's fast apply
         logger.info(f"⚡ Sending to Morph fast apply - Game: '{game_name}', HTML size: {len(html_content)} chars")

@@ -3532,3 +3532,245 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 15:30:25,810 - INFO - 🧪 Filling next-game slot with idea: 'pong game'
 2025-08-09 15:30:25,810 - INFO - 🤖 Claude generation starting for: 'pong game'
 2025-08-09 15:30:25,810 - INFO - 📡 Sending request to Claude for 'pong game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:31:26,660 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 15:31:26,661 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 15:31:26,661 - INFO -  * Restarting with stat
+2025-08-09 15:31:28,710 - WARNING -  * Debugger is active!
+2025-08-09 15:31:28,719 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 15:32:20,482 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:20] "POST /connect HTTP/1.1" 200 -
+2025-08-09 15:32:40,668 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:40] "OPTIONS /fill-next HTTP/1.1" 200 -
+2025-08-09 15:32:40,669 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:40] "OPTIONS /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:40,669 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:40] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 15:32:40,670 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:40] "OPTIONS /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:40,673 - INFO - 🧪 Filling next-game slot with idea: 'pong game'
+2025-08-09 15:32:40,673 - INFO - 🤖 Claude generation starting for: 'pong game'
+2025-08-09 15:32:40,673 - INFO - 📡 Sending request to Claude for 'pong game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:32:40,678 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:40,684 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'flappy bird game' - Timestamp: 2025-08-09 15:32:40.684188
+2025-08-09 15:32:40,684 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'flappy bird game'
+2025-08-09 15:32:40,685 - INFO - 🤖 Claude generation starting for: 'flappy bird game'
+2025-08-09 15:32:40,685 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:40,685 - INFO - 📡 Sending request to Claude for 'flappy bird game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:32:44,615 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:44] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:46,668 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:49,667 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:53,611 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:53] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:56,060 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:56] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:32:58,666 - INFO - 127.0.0.1 - - [09/Aug/2025 15:32:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:00,516 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:33:00,534 - INFO - ✅ Claude generated content for 'flappy bird game' - Length: 6079 chars
+2025-08-09 15:33:00,534 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:33:00,534 - INFO - ✅ Claude generated game - Length: 6079 chars, Has Canvas: False, Has Script: False
+2025-08-09 15:33:00,534 - INFO - 🎮 GENERATED GAME CODE for 'flappy bird game':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [bird, setBird] = useState({ y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -8;
+  const PIPE_WIDTH = 60;
+  const PIPE_GAP = 120;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGH...
+--------------------------------------------------
+2025-08-09 15:33:00,535 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'flappy bird game'
+2025-08-09 15:33:01,666 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:01,764 - INFO - 📖 Read current GameZone.js - Size: 1043 chars
+2025-08-09 15:33:01,764 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'flappy bird game', size: 6079 chars
+2025-08-09 15:33:03,111 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:33:03,121 - INFO - ✅ Morph returned updated React component - New size: 6079 chars
+2025-08-09 15:33:03,767 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'flappy bird game'
+2025-08-09 15:33:03,768 - INFO - 🎉 GAME GENERATION SUCCESS - 'flappy bird game' - Duration: 23.08s - Size: 6079 chars
+2025-08-09 15:33:03,768 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:03] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:33:03,774 - INFO - 🧪 Filling next-game slot with idea: 'space shooter'
+2025-08-09 15:33:03,774 - INFO - 🤖 Claude generation starting for: 'space shooter'
+2025-08-09 15:33:03,774 - INFO - 📡 Sending request to Claude for 'space shooter' - Model: claude-sonnet-4-20250514
+2025-08-09 15:33:04,650 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:04,651 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:06,351 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:33:06,353 - INFO - ✅ Claude generated content for 'pong game' - Length: 6578 chars
+2025-08-09 15:33:06,354 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:33:06,354 - INFO - ✅ next-game slot filled
+2025-08-09 15:33:06,354 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:06] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:33:08,610 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:08] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:10,654 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:12,394 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:12] "OPTIONS /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:33:13,126 - INFO - 📝 Direct write of next-game to GameZone.js - Game: 'pong game'
+2025-08-09 15:33:13,126 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:13] "POST /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:33:13,132 - INFO - 🧪 Filling next-game slot with idea: 'space shooter'
+2025-08-09 15:33:13,132 - INFO - 🤖 Claude generation starting for: 'space shooter'
+2025-08-09 15:33:13,132 - INFO - 📡 Sending request to Claude for 'space shooter' - Model: claude-sonnet-4-20250514
+2025-08-09 15:33:13,771 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:13,772 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:16,773 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:19,774 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:22,773 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:23,531 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:33:23,533 - INFO - ✅ Claude generated content for 'space shooter' - Length: 6642 chars
+2025-08-09 15:33:23,534 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:33:23,534 - INFO - ✅ next-game slot filled
+2025-08-09 15:33:23,535 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:23] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:33:25,775 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:28,774 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:31,644 - INFO - 📝 Direct write of next-game to GameZone.js - Game: 'space shooter'
+2025-08-09 15:33:31,644 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:31] "POST /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:33:31,650 - INFO - 🧪 Filling next-game slot with idea: 'brick breaker'
+2025-08-09 15:33:31,650 - INFO - 🤖 Claude generation starting for: 'brick breaker'
+2025-08-09 15:33:31,650 - INFO - 📡 Sending request to Claude for 'brick breaker' - Model: claude-sonnet-4-20250514
+2025-08-09 15:33:31,772 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:32,281 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:32] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:32,283 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:32] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:35,285 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:35] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:35,778 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:33:35,782 - INFO - ✅ Claude generated content for 'space shooter' - Length: 6931 chars
+2025-08-09 15:33:35,784 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:33:35,785 - INFO - ✅ next-game slot filled
+2025-08-09 15:33:35,785 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:35] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:33:38,284 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:38] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:38,773 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 500 Internal Server Error"
+2025-08-09 15:33:38,774 - ERROR - ❌ Claude generation error for 'brick breaker': Error code: 500 - {'type': 'error', 'error': {'type': 'api_error', 'message': 'Internal server error'}}
+2025-08-09 15:33:38,775 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:38] "[35m[1mPOST /fill-next HTTP/1.1[0m" 500 -
+2025-08-09 15:33:41,284 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:41] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:44,607 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:44] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:47,609 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:47] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:50,610 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:50] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:53,284 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:53] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:56,284 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:56] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:33:59,285 - INFO - 127.0.0.1 - - [09/Aug/2025 15:33:59] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:02,293 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:02] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:05,282 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:05] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:08,280 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:08] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:08,826 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:08] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:34:08,827 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'pong' - Timestamp: 2025-08-09 15:34:08.826964
+2025-08-09 15:34:08,827 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'pong'
+2025-08-09 15:34:08,827 - INFO - 🤖 Claude generation starting for: 'pong'
+2025-08-09 15:34:08,827 - INFO - 📡 Sending request to Claude for 'pong' - Model: claude-sonnet-4-20250514
+2025-08-09 15:34:11,282 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:11] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:14,282 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:14] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:17,283 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:17] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:20,283 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:20] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:23,280 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:23] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:26,282 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:26] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:29,282 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:29] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:30,823 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:34:30,833 - INFO - ✅ Claude generated content for 'pong' - Length: 6716 chars
+2025-08-09 15:34:30,833 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:34:30,833 - INFO - ✅ Claude generated game - Length: 6716 chars, Has Canvas: True, Has Script: False
+2025-08-09 15:34:30,833 - INFO - 🎮 GENERATED GAME CODE for 'pong':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState({
+    ballX: 200,
+    ballY: 150,
+    ballVelX: 3,
+    ballVelY: 2,
+    leftPaddleY: 125,
+    rightPaddleY: 125,
+    leftScore: 0,
+    rightScore: 0,
+    gameRunning: false
+  });
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const PADDLE_WIDTH = 10;
+  const PADDLE_HEIGHT = 50;
+  const BALL_SIZE = 8;
+
+  us...
+--------------------------------------------------
+2025-08-09 15:34:30,835 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'pong'
+2025-08-09 15:34:31,956 - INFO - 📖 Read current GameZone.js - Size: 6642 chars
+2025-08-09 15:34:31,956 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'pong', size: 6716 chars
+2025-08-09 15:34:32,285 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:32] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:33,723 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:34:33,725 - INFO - ✅ Morph returned updated React component - New size: 6716 chars
+2025-08-09 15:34:34,416 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'pong'
+2025-08-09 15:34:34,417 - INFO - 🎉 GAME GENERATION SUCCESS - 'pong' - Duration: 25.59s - Size: 6716 chars
+2025-08-09 15:34:34,417 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:34] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:34:34,426 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:34] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:34:35,210 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:35] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:35,213 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:35] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:38,212 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:38] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:39,659 - INFO - 📝 Direct write of next-game to GameZone.js - Game: 'space shooter'
+2025-08-09 15:34:39,660 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:39] "POST /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:34:39,667 - INFO - 🧪 Filling next-game slot with idea: 'snake game'
+2025-08-09 15:34:39,667 - INFO - 🤖 Claude generation starting for: 'snake game'
+2025-08-09 15:34:39,667 - INFO - 📡 Sending request to Claude for 'snake game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:34:40,212 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:40,213 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:43,215 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:48,841 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:48] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:48,842 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:48] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:50,810 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:50] "POST /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:34:50,817 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:50] "OPTIONS /generate-idea HTTP/1.1" 200 -
+2025-08-09 15:34:51,841 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:51] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:52,131 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:34:52,134 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:52] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 15:34:52,142 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'racing car game' - Timestamp: 2025-08-09 15:34:52.142389
+2025-08-09 15:34:52,142 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'racing car game'
+2025-08-09 15:34:52,142 - INFO - 🤖 Claude generation starting for: 'racing car game'
+2025-08-09 15:34:52,142 - INFO - 📡 Sending request to Claude for 'racing car game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:34:54,843 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:54] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:34:57,660 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:34:57,662 - INFO - ✅ Claude generated content for 'snake game' - Length: 5635 chars
+2025-08-09 15:34:57,662 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:34:57,662 - INFO - ✅ next-game slot filled
+2025-08-09 15:34:57,663 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:57] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:34:57,842 - INFO - 127.0.0.1 - - [09/Aug/2025 15:34:57] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:00,842 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:00] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:04,610 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:07,605 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:09,328 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:35:09,330 - INFO - ✅ Claude generated content for 'racing car game' - Length: 6090 chars
+2025-08-09 15:35:09,330 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:35:09,330 - INFO - ✅ Claude generated game - Length: 6090 chars, Has Canvas: False, Has Script: False
+2025-08-09 15:35:09,330 - INFO - 🎮 GENERATED GAME CODE for 'racing car game':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [carPosition, setCarPosition] = useState(200);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameRunning, setGameRunning] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const carWidth = 40;
+  const carHeight = 60;
+  const gameWidth = 400;
+  const gameHeight = 300;
+  const obstacleWidth = 30;
+  const obsta...
+--------------------------------------------------
+2025-08-09 15:35:09,332 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'racing car game'
+2025-08-09 15:35:10,412 - INFO - 📖 Read current GameZone.js - Size: 6931 chars
+2025-08-09 15:35:10,413 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'racing car game', size: 6090 chars
+2025-08-09 15:35:10,604 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:11,884 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:35:11,885 - INFO - ✅ Morph returned updated React component - New size: 6090 chars
+2025-08-09 15:35:12,509 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'racing car game'
+2025-08-09 15:35:12,510 - INFO - 🎉 GAME GENERATION SUCCESS - 'racing car game' - Duration: 20.37s - Size: 6090 chars
+2025-08-09 15:35:12,510 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:12] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:35:12,524 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:12] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:35:13,613 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:14,569 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:14] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:14,571 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:14] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:17,577 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:17] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:20,612 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:20] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:23,614 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:23] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:26,664 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:26] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:29,618 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:29] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:35:32,604 - INFO - 127.0.0.1 - - [09/Aug/2025 15:35:32] "GET /prepared-status HTTP/1.1" 200 -

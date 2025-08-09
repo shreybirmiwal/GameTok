@@ -12125,3 +12125,724 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: flappy bird game - 2025-08-09 15:33:00.535111
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [bird, setBird] = useState({ y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -8;
+  const PIPE_WIDTH = 60;
+  const PIPE_GAP = 120;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+
+  const jump = useCallback(() => {
+    if (!gameStarted) {
+      setGameStarted(true);
+    }
+    if (!gameOver) {
+      setBird(prev => ({ ...prev, velocity: JUMP_FORCE }));
+    }
+  }, [gameStarted, gameOver]);
+
+  const resetGame = () => {
+    setBird({ y: 150, velocity: 0 });
+    setPipes([]);
+    setScore(0);
+    setGameStarted(false);
+    setGameOver(false);
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setBird(prev => {
+        const newY = prev.y + prev.velocity;
+        const newVelocity = prev.velocity + GRAVITY;
+        
+        if (newY <= 0 || newY >= GAME_HEIGHT - 20) {
+          setGameOver(true);
+          return prev;
+        }
+        
+        return { y: newY, velocity: newVelocity };
+      });
+
+      setPipes(prev => {
+        let newPipes = prev.map(pipe => ({ ...pipe, x: pipe.x - 2 }))
+          .filter(pipe => pipe.x > -PIPE_WIDTH);
+
+        if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < GAME_WIDTH - 200) {
+          const gapY = Math.random() * (GAME_HEIGHT - PIPE_GAP - 100) + 50;
+          newPipes.push({
+            x: GAME_WIDTH,
+            topHeight: gapY,
+            bottomY: gapY + PIPE_GAP,
+            scored: false
+          });
+        }
+
+        return newPipes;
+      });
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameStarted, gameOver]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    pipes.forEach(pipe => {
+      if (!pipe.scored && pipe.x + PIPE_WIDTH < 50) {
+        pipe.scored = true;
+        setScore(prev => prev + 1);
+      }
+
+      const birdLeft = 50;
+      const birdRight = 70;
+      const birdTop = bird.y;
+      const birdBottom = bird.y + 20;
+
+      if (birdRight > pipe.x && birdLeft < pipe.x + PIPE_WIDTH) {
+        if (birdTop < pipe.topHeight || birdBottom > pipe.bottomY) {
+          setGameOver(true);
+        }
+      }
+    });
+  }, [bird, pipes, gameStarted, gameOver]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2>Flappy Bird</h2>
+      <div style={{ marginBottom: '10px' }}>Score: {score}</div>
+      
+      <div 
+        onClick={jump}
+        style={{
+          position: 'relative',
+          width: GAME_WIDTH,
+          height: GAME_HEIGHT,
+          backgroundColor: '#87CEEB',
+          border: '2px solid #333',
+          cursor: 'pointer',
+          overflow: 'hidden'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: '50px',
+            top: `${bird.y}px`,
+            width: '20px',
+            height: '20px',
+            backgroundColor: '#FFD700',
+            borderRadius: '50%',
+            border: '2px solid #FFA500'
+          }}
+        />
+
+        {pipes.map((pipe, index) => (
+          <div key={index}>
+            <div
+              style={{
+                position: 'absolute',
+                left: `${pipe.x}px`,
+                top: '0px',
+                width: `${PIPE_WIDTH}px`,
+                height: `${pipe.topHeight}px`,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                left: `${pipe.x}px`,
+                top: `${pipe.bottomY}px`,
+                width: `${PIPE_WIDTH}px`,
+                height: `${GAME_HEIGHT - pipe.bottomY}px`,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+          </div>
+        ))}
+
+        {!gameStarted && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            color: '#333',
+            fontSize: '18px'
+          }}>
+            Click or Press Space to Start
+          </div>
+        )}
+
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '20px',
+            borderRadius: '10px',
+            border: '2px solid #333'
+          }}>
+            <div style={{ fontSize: '24px', color: '#FF0000', marginBottom: '10px' }}>
+              Game Over!
+            </div>
+            <div style={{ marginBottom: '15px' }}>Final Score: {score}</div>
+            <button 
+              onClick={resetGame}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '14px' }}>
+        Click the game area or press Space to jump
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: pong - 2025-08-09 15:34:30.833994
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState({
+    ballX: 200,
+    ballY: 150,
+    ballVelX: 3,
+    ballVelY: 2,
+    leftPaddleY: 125,
+    rightPaddleY: 125,
+    leftScore: 0,
+    rightScore: 0,
+    gameRunning: false
+  });
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const PADDLE_WIDTH = 10;
+  const PADDLE_HEIGHT = 50;
+  const BALL_SIZE = 8;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animationId;
+
+    const gameLoop = () => {
+      if (!gameState.gameRunning) return;
+
+      // Update ball position
+      const newBallX = gameState.ballX + gameState.ballVelX;
+      const newBallY = gameState.ballY + gameState.ballVelY;
+      let newBallVelX = gameState.ballVelX;
+      let newBallVelY = gameState.ballVelY;
+      let newLeftScore = gameState.leftScore;
+      let newRightScore = gameState.rightScore;
+
+      // Ball collision with top/bottom walls
+      if (newBallY <= 0 || newBallY >= CANVAS_HEIGHT - BALL_SIZE) {
+        newBallVelY = -newBallVelY;
+      }
+
+      // Ball collision with paddles
+      if (newBallX <= PADDLE_WIDTH && 
+          newBallY >= gameState.leftPaddleY && 
+          newBallY <= gameState.leftPaddleY + PADDLE_HEIGHT) {
+        newBallVelX = -newBallVelX;
+      }
+
+      if (newBallX >= CANVAS_WIDTH - PADDLE_WIDTH - BALL_SIZE && 
+          newBallY >= gameState.rightPaddleY && 
+          newBallY <= gameState.rightPaddleY + PADDLE_HEIGHT) {
+        newBallVelX = -newBallVelX;
+      }
+
+      // Ball out of bounds (scoring)
+      if (newBallX < 0) {
+        newRightScore++;
+        setGameState(prev => ({
+          ...prev,
+          ballX: 200,
+          ballY: 150,
+          ballVelX: 3,
+          ballVelY: 2,
+          rightScore: newRightScore
+        }));
+        return;
+      }
+
+      if (newBallX > CANVAS_WIDTH) {
+        newLeftScore++;
+        setGameState(prev => ({
+          ...prev,
+          ballX: 200,
+          ballY: 150,
+          ballVelX: -3,
+          ballVelY: 2,
+          leftScore: newLeftScore
+        }));
+        return;
+      }
+
+      // Update game state
+      setGameState(prev => ({
+        ...prev,
+        ballX: newBallX,
+        ballY: newBallY,
+        ballVelX: newBallVelX,
+        ballVelY: newBallVelY
+      }));
+
+      animationId = requestAnimationFrame(gameLoop);
+    };
+
+    if (gameState.gameRunning) {
+      animationId = requestAnimationFrame(gameLoop);
+    }
+
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, [gameState]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    
+    // Clear canvas
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Draw paddles
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, gameState.leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+    ctx.fillRect(CANVAS_WIDTH - PADDLE_WIDTH, gameState.rightPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+
+    // Draw ball
+    ctx.fillRect(gameState.ballX, gameState.ballY, BALL_SIZE, BALL_SIZE);
+
+    // Draw center line
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(CANVAS_WIDTH / 2, 0);
+    ctx.lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT);
+    ctx.stroke();
+
+    // Draw scores
+    ctx.font = '24px Arial';
+    ctx.fillText(gameState.leftScore.toString(), CANVAS_WIDTH / 4, 30);
+    ctx.fillText(gameState.rightScore.toString(), (3 * CANVAS_WIDTH) / 4, 30);
+  }, [gameState]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!gameState.gameRunning) return;
+
+      setGameState(prev => {
+        let newLeftPaddleY = prev.leftPaddleY;
+        let newRightPaddleY = prev.rightPaddleY;
+
+        // Left paddle controls (W/S)
+        if (e.key === 'w' || e.key === 'W') {
+          newLeftPaddleY = Math.max(0, prev.leftPaddleY - 20);
+        }
+        if (e.key === 's' || e.key === 'S') {
+          newLeftPaddleY = Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, prev.leftPaddleY + 20);
+        }
+
+        // Right paddle controls (Arrow keys)
+        if (e.key === 'ArrowUp') {
+          newRightPaddleY = Math.max(0, prev.rightPaddleY - 20);
+        }
+        if (e.key === 'ArrowDown') {
+          newRightPaddleY = Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, prev.rightPaddleY + 20);
+        }
+
+        return {
+          ...prev,
+          leftPaddleY: newLeftPaddleY,
+          rightPaddleY: newRightPaddleY
+        };
+      });
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [gameState.gameRunning]);
+
+  const startGame = () => {
+    setGameState(prev => ({ ...prev, gameRunning: true }));
+  };
+
+  const resetGame = () => {
+    setGameState({
+      ballX: 200,
+      ballY: 150,
+      ballVelX: 3,
+      ballVelY: 2,
+      leftPaddleY: 125,
+      rightPaddleY: 125,
+      leftScore: 0,
+      rightScore: 0,
+      gameRunning: false
+    });
+  };
+
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h2 style={{ color: '#333', marginBottom: '20px' }}>Pong Game</h2>
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        style={{ 
+          border: '2px solid #333',
+          display: 'block',
+          margin: '0 auto 20px'
+        }}
+      />
+      <div style={{ marginBottom: '10px' }}>
+        <button
+          onClick={startGame}
+          disabled={gameState.gameRunning}
+          style={{
+            padding: '10px 20px',
+            margin: '0 10px',
+            fontSize: '16px',
+            backgroundColor: gameState.gameRunning ? '#ccc' : '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: gameState.gameRunning ? 'not-allowed' : 'pointer'
+          }}
+        >
+          Start Game
+        </button>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            margin: '0 10px',
+            fontSize: '16px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset
+        </button>
+      </div>
+      <div style={{ fontSize: '14px', color: '#666' }}>
+        <p>Left Player: W/S keys | Right Player: Arrow Up/Down</p>
+        <p>Score: {gameState.leftScore} - {gameState.rightScore}</p>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: racing car game - 2025-08-09 15:35:09.331196
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [carPosition, setCarPosition] = useState(200);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameRunning, setGameRunning] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const carWidth = 40;
+  const carHeight = 60;
+  const gameWidth = 400;
+  const gameHeight = 300;
+  const obstacleWidth = 30;
+  const obstacleHeight = 40;
+
+  const resetGame = useCallback(() => {
+    setCarPosition(200);
+    setObstacles([]);
+    setScore(0);
+    setGameRunning(false);
+    setGameOver(false);
+  }, []);
+
+  const startGame = useCallback(() => {
+    setGameRunning(true);
+    setGameOver(false);
+  }, []);
+
+  const moveLeft = useCallback(() => {
+    if (gameRunning && !gameOver) {
+      setCarPosition(prev => Math.max(0, prev - 20));
+    }
+  }, [gameRunning, gameOver]);
+
+  const moveRight = useCallback(() => {
+    if (gameRunning && !gameOver) {
+      setCarPosition(prev => Math.min(gameWidth - carWidth, prev + 20));
+    }
+  }, [gameRunning, gameOver]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'ArrowLeft') {
+        moveLeft();
+      } else if (e.key === 'ArrowRight') {
+        moveRight();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [moveLeft, moveRight]);
+
+  useEffect(() => {
+    if (!gameRunning || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setObstacles(prev => {
+        const newObstacles = prev.map(obstacle => ({
+          ...obstacle,
+          y: obstacle.y + 3
+        })).filter(obstacle => obstacle.y < gameHeight);
+
+        if (Math.random() < 0.02) {
+          newObstacles.push({
+            x: Math.random() * (gameWidth - obstacleWidth),
+            y: -obstacleHeight,
+            id: Date.now()
+          });
+        }
+
+        const carRect = {
+          x: carPosition,
+          y: gameHeight - carHeight - 10,
+          width: carWidth,
+          height: carHeight
+        };
+
+        const collision = newObstacles.some(obstacle => {
+          return carRect.x < obstacle.x + obstacleWidth &&
+                 carRect.x + carRect.width > obstacle.x &&
+                 carRect.y < obstacle.y + obstacleHeight &&
+                 carRect.y + carRect.height > obstacle.y;
+        });
+
+        if (collision) {
+          setGameOver(true);
+          setGameRunning(false);
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameRunning, gameOver, carPosition]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0' }}>Racing Car Game</h2>
+      
+      <div style={{ marginBottom: '10px' }}>
+        <span style={{ marginRight: '20px' }}>Score: {score}</span>
+        {gameOver && <span style={{ color: 'red', fontWeight: 'bold' }}>GAME OVER!</span>}
+      </div>
+
+      <div style={{
+        position: 'relative',
+        width: gameWidth,
+        height: gameHeight,
+        backgroundColor: '#333',
+        border: '2px solid #000',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          left: carPosition,
+          bottom: 10,
+          width: carWidth,
+          height: carHeight,
+          backgroundColor: '#ff4444',
+          borderRadius: '5px'
+        }} />
+
+        {obstacles.map(obstacle => (
+          <div
+            key={obstacle.id}
+            style={{
+              position: 'absolute',
+              left: obstacle.x,
+              top: obstacle.y,
+              width: obstacleWidth,
+              height: obstacleHeight,
+              backgroundColor: '#888',
+              borderRadius: '3px'
+            }}
+          />
+        ))}
+
+        {!gameRunning && !gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            textAlign: 'center'
+          }}>
+            <div>Use arrow keys to move</div>
+            <div>Avoid the obstacles!</div>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: '10px' }}>
+        {!gameRunning && !gameOver && (
+          <button onClick={startGame} style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}>
+            Start Game
+          </button>
+        )}
+        
+        {(gameOver || gameRunning) && (
+          <button onClick={resetGame} style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginRight: '10px'
+          }}>
+            Reset
+          </button>
+        )}
+
+        <div style={{ marginTop: '10px' }}>
+          <button onClick={moveLeft} style={{
+            padding: '10px 15px',
+            fontSize: '14px',
+            backgroundColor: '#2196F3',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginRight: '10px'
+          }}>
+            ← Left
+          </button>
+          
+          <button onClick={moveRight} style={{
+            padding: '10px 15px',
+            fontSize: '14px',
+            backgroundColor: '#2196F3',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}>
+            Right →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

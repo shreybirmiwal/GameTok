@@ -686,6 +686,8 @@ def generate_game_with_anthropic(game_idea):
         - Keep the play area near 400x300 and keep mechanics simple.
         - Ensure there are NO unfinished JSX tags; close all elements and return a valid tree.
         - The file must END with: export default GameZone;
+        GUIDANCE:
+        - Prefer recreating classic/famous arcade games when possible (e.g., pong, brick breaker, space invaders, flappy bird, snake) while keeping mechanics simple.
         """
         
         user_prompt = f"""Create a SIMPLE {game_idea} game as a React functional component that REPLACES the entire contents of src/GameZone.js.
@@ -698,6 +700,7 @@ def generate_game_with_anthropic(game_idea):
         - Return ONLY the full file contents of GameZone.js (imports + component + export default).
         - DO NOT wrap the code in markdown fences or any prose.
         - The code must compile without syntax errors.
+        - If the idea is generic, bias toward famous classic versions (e.g., pong, brick breaker, space invaders, flappy bird, snake).
         """
 
         logger.info(f"📡 Sending request to Claude for '{game_idea}' - Model: claude-sonnet-4-20250514")

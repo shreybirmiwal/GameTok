@@ -3,6 +3,7 @@ import React from 'react';
 const GameZone = ({ currentGame }) => {
   // Simple HTML content zone - perfect for Morph apply!
   // Just put your HTML game content here and it will render
+  // this is the html content that will be rendered in the game zone ONLY CHANGE THIS ZONE
   const htmlContent = `
     <div style="text-align: center; padding: 20px;">
       <h2>🎮 HTML Game Zone</h2>

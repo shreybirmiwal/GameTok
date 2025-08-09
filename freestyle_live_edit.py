@@ -9,12 +9,24 @@ from flask_cors import CORS
 import freestyle
 import os
 import json
+import logging
 from datetime import datetime
 import anthropic
 from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Setup logging for game generation tracking
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('game_generation.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
@@ -92,7 +104,8 @@ def home():
             "/gamezone/read": "GET - Read current GameZone.js content",
             "/gamezone/update": "POST - Update GameZone with new game name (JSON: {'game_name': 'YourGame'})",
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
-            "/generate-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - Claude generates, Morph applies!"
+            "/generate-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - Claude generates, Morph applies!",
+            "/game-log": "GET - View recent game generation logs"
         }
     }
     
@@ -235,26 +248,68 @@ def generate_game():
     game_idea = data['game_idea']
     
     try:
+        start_time = datetime.now()
         print(f"🎮 Generating game: {game_idea}")
+        logger.info(f"🎮 GAME GENERATION STARTED - Idea: '{game_idea}' - Timestamp: {start_time}")
         
         # Step 1: Generate HTML5 game with Anthropic
+        logger.info(f"📝 Calling Claude to generate HTML5 Canvas game for: '{game_idea}'")
         game_html = generate_game_with_anthropic(game_idea)
         if not game_html:
+            logger.error(f"❌ Claude generation FAILED for: '{game_idea}'")
             return jsonify({"error": "Failed to generate game HTML"}), 500
         
+        # Log game details
+        game_length = len(game_html)
+        has_canvas = "<canvas" in game_html.lower()
+        has_script = "<script" in game_html.lower()
+        logger.info(f"✅ Claude generated game - Length: {game_length} chars, Has Canvas: {has_canvas}, Has Script: {has_script}")
+        
         # Step 2: Use Morph to apply HTML to GameZone  
+        logger.info(f"⚡ Applying game to GameZone.js using Morph for: '{game_idea}'")
         if apply_html_with_morph_to_gamezone(game_html, game_idea):
+            end_time = datetime.now()
+            duration = (end_time - start_time).total_seconds()
+            logger.info(f"🎉 GAME GENERATION SUCCESS - '{game_idea}' - Duration: {duration:.2f}s - Size: {game_length} chars")
+            
             return jsonify({
                 "success": True,
                 "message": f"Game '{game_idea}' generated and deployed successfully!",
                 "game_idea": game_idea,
-                "app_url": dev_server_wrapper.dev_server.ephemeral_url
+                "app_url": dev_server_wrapper.dev_server.ephemeral_url,
+                "generation_time": f"{duration:.2f}s",
+                "game_size": game_length
             })
         else:
+            logger.error(f"❌ Morph apply FAILED for: '{game_idea}'")
             return jsonify({"error": "Failed to deploy to Freestyle"}), 500
             
     except Exception as e:
+        logger.error(f"💥 GAME GENERATION ERROR for '{game_idea}': {str(e)}")
         print(f"Error generating game: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/game-log')
+def get_game_log():
+    """Get recent game generation logs"""
+    try:
+        if os.path.exists('game_generation.log'):
+            with open('game_generation.log', 'r') as f:
+                lines = f.readlines()
+                # Get last 50 lines for recent activity
+                recent_lines = lines[-50:] if len(lines) > 50 else lines
+                return jsonify({
+                    "success": True,
+                    "log_lines": len(lines),
+                    "recent_logs": [line.strip() for line in recent_lines]
+                })
+        else:
+            return jsonify({
+                "success": True,
+                "message": "No game generation log file found yet",
+                "recent_logs": []
+            })
+    except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 # Removed duplicate /generate-html-game endpoint - using /generate-game instead
@@ -262,6 +317,8 @@ def generate_game():
 def generate_game_with_anthropic(game_idea):
     """Generate completely self-contained HTML5 Canvas game using Anthropic API - zero dependencies"""
     try:
+        logger.info(f"🤖 Claude generation starting for: '{game_idea}'")
+        
         system_prompt = """You are an HTML5 Canvas game developer. Generate complete, working HTML5 Canvas games. 
         CRITICAL: The game MUST work as a single standalone HTML snippet with ZERO external dependencies.
         Use ONLY HTML5 Canvas, vanilla JavaScript, and built-in browser APIs.
@@ -294,6 +351,7 @@ def generate_game_with_anthropic(game_idea):
         Return ONLY the complete HTML snippet, no explanations or markdown formatting.
         """
 
+        logger.info(f"📡 Sending request to Claude for '{game_idea}' - Model: claude-sonnet-4-20250514")
         message = anthropic_client.messages.create(
             model="claude-sonnet-4-20250514",
             max_tokens=2000,
@@ -305,9 +363,20 @@ def generate_game_with_anthropic(game_idea):
             }]
         )
         
-        return message.content[0].text
+        generated_content = message.content[0].text
+        logger.info(f"✅ Claude generated content for '{game_idea}' - Length: {len(generated_content)} chars")
+        
+        # Log some details about what was generated
+        content_lower = generated_content.lower()
+        has_canvas = "<canvas" in content_lower
+        has_script = "<script" in content_lower
+        has_style = "<style" in content_lower or "style=" in content_lower
+        logger.info(f"📊 Generated game analysis - Canvas: {has_canvas}, Script: {has_script}, Styles: {has_style}")
+        
+        return generated_content
         
     except Exception as e:
+        logger.error(f"❌ Claude generation error for '{game_idea}': {str(e)}")
         print(f"Error generating game code: {e}")
         return None
 
@@ -319,11 +388,13 @@ def apply_html_with_morph_to_gamezone(html_content, game_name):
     try:
         # Read current GameZone.js
         current_gamezone = dev_server_wrapper.read_gamezone()
+        logger.info(f"📖 Read current GameZone.js - Size: {len(current_gamezone)} chars")
         
         # Create instruction for Morph
         instruction = f"Replace the htmlContent variable in GameZone.js with the HTML5 Canvas game for '{game_name}'. Keep the same structure but update only the content inside the backticks."
         
         # Use Morph's fast apply
+        logger.info(f"⚡ Sending to Morph fast apply - Game: '{game_name}', HTML size: {len(html_content)} chars")
         response = morph_client.chat.completions.create(
             model="morph-v3-large",  # Using Morph's fast apply model
             messages=[{
@@ -334,13 +405,16 @@ def apply_html_with_morph_to_gamezone(html_content, game_name):
         
         # Get the updated code from Morph
         updated_gamezone = response.choices[0].message.content
+        logger.info(f"✅ Morph returned updated code - New size: {len(updated_gamezone)} chars")
         
         # Apply the changes to Freestyle
         dev_server_wrapper.write_gamezone(updated_gamezone)
+        logger.info(f"📝 Written to Freestyle dev server - Game: '{game_name}' successfully deployed")
         print(f"✅ Used Morph to apply HTML game '{game_name}' to GameZone.js")
         return True
         
     except Exception as e:
+        logger.error(f"❌ Morph apply error for '{game_name}': {str(e)}")
         print(f"Error using Morph to apply HTML: {e}")
         return False
 
@@ -350,5 +424,6 @@ if __name__ == "__main__":
     print("🔗 Use POST /connect to connect to your GitHub repo")
     print("🎮 Use POST /generate-game with {'game_idea': 'snake'} - Claude generates, Morph applies!")
     print("⚡ Now using Morph's fast apply to update GameZone.js automatically!")
+    print("📊 Game generation logging enabled - View logs at GET /game-log")
     
     app.run(debug=True, host='0.0.0.0', port=8080)

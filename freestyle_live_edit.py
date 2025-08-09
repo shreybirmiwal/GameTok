@@ -92,7 +92,7 @@ def home():
             "/gamezone/read": "GET - Read current GameZone.js content",
             "/gamezone/update": "POST - Update GameZone with new game name (JSON: {'game_name': 'YourGame'})",
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
-            "/generate-html-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - perfect for Morph apply to GameZone!"
+            "/generate-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - Claude generates, Morph applies!"
         }
     }
     
@@ -242,13 +242,8 @@ def generate_game():
         if not game_html:
             return jsonify({"error": "Failed to generate game HTML"}), 500
         
-        # Step 2: Wrap HTML in React component
-        applied_code = apply_code_with_morph(game_html, game_idea)
-        if not applied_code:
-            return jsonify({"error": "Failed to create React wrapper"}), 500
-        
-        # Step 3: Deploy to Freestyle
-        if deploy_to_freestyle(applied_code):
+        # Step 2: Use Morph to apply HTML to GameZone  
+        if apply_html_with_morph_to_gamezone(game_html, game_idea):
             return jsonify({
                 "success": True,
                 "message": f"Game '{game_idea}' generated and deployed successfully!",
@@ -262,41 +257,7 @@ def generate_game():
         print(f"Error generating game: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/generate-html-game', methods=['POST'])
-def generate_html_game():
-    """Generate pure HTML5 Canvas game for direct injection - perfect for Morph apply!"""
-    if not dev_server_wrapper:
-        return jsonify({"error": "Not connected to dev server. Use POST /connect first"}), 400
-    
-    data = request.get_json()
-    if not data or 'game_idea' not in data:
-        return jsonify({"error": "Missing 'game_idea' in request body"}), 400
-    
-    game_idea = data['game_idea']
-    
-    try:
-        print(f"🎮 Generating pure HTML game: {game_idea}")
-        
-        # Generate pure HTML5 game with Anthropic
-        game_html = generate_game_with_anthropic(game_idea)
-        if not game_html:
-            return jsonify({"error": "Failed to generate game HTML"}), 500
-        
-        # Deploy HTML directly to Freestyle (no React wrapper needed)
-        if deploy_html_to_freestyle(game_html, game_idea):
-            return jsonify({
-                "success": True,
-                "message": f"Pure HTML game '{game_idea}' generated and deployed successfully!",
-                "game_idea": game_idea,
-                "app_url": dev_server_wrapper.dev_server.ephemeral_url,
-                "html_content": game_html[:200] + "..." if len(game_html) > 200 else game_html
-            })
-        else:
-            return jsonify({"error": "Failed to deploy HTML to Freestyle"}), 500
-            
-    except Exception as e:
-        print(f"Error generating HTML game: {e}")
-        return jsonify({"error": str(e)}), 500
+# Removed duplicate /generate-html-game endpoint - using /generate-game instead
 
 def generate_game_with_anthropic(game_idea):
     """Generate completely self-contained HTML5 Canvas game using Anthropic API - zero dependencies"""
@@ -350,96 +311,44 @@ def generate_game_with_anthropic(game_idea):
         print(f"Error generating game code: {e}")
         return None
 
-def apply_code_with_morph(generated_html, instruction):
-    """Convert HTML5 game to React component using Morph's fast apply"""
+# Removed unused functions: apply_code_with_morph() and deploy_to_freestyle()
+# These were from the old approach before proper Morph integration
+
+def apply_html_with_morph_to_gamezone(html_content, game_name):
+    """Use Morph's fast apply to update GameZone.js with HTML game content"""
     try:
-        # Create a React component that renders the HTML game
-        # Escape the HTML content properly
-        escaped_html = generated_html.replace('`', '\\`').replace('${', '\\${')
+        # Read current GameZone.js
+        current_gamezone = dev_server_wrapper.read_gamezone()
         
-        react_wrapper = f'''import React, {{ useEffect }} from 'react';
-
-const GameZone = ({{ currentGame }}) => {{
-  useEffect(() => {{
-    // Re-initialize game when component mounts or updates
-    const canvas = document.getElementById('gameCanvas');
-    if (canvas) {{
-      // Clear any existing game loops or event listeners
-      // The game script will handle initialization
-    }}
-  }}, []);
-
-  return (
-    <div className="game-zone">
-      <h2 style={{{{ textAlign: 'center', marginBottom: '15px' }}}}>
-        {{currentGame || '{instruction}'}}
-      </h2>
-      <div 
-        dangerouslySetInnerHTML={{{{ __html: `{escaped_html}` }}}}
-      />
-    </div>
-  );
-}};
-
-export default GameZone;'''
+        # Create instruction for Morph
+        instruction = f"Replace the htmlContent variable in GameZone.js with the HTML5 Canvas game for '{game_name}'. Keep the same structure but update only the content inside the backticks."
         
-        return react_wrapper
+        # Use Morph's fast apply
+        response = morph_client.chat.completions.create(
+            model="morph-v3-large",  # Using Morph's fast apply model
+            messages=[{
+                "role": "user", 
+                "content": f"<instruction>{instruction}</instruction>\n<code>{current_gamezone}</code>\n<update>The new htmlContent should be: `{html_content}`</update>"
+            }]
+        )
         
-    except Exception as e:
-        print(f"Error creating React wrapper: {e}")
-        return None
-
-def deploy_to_freestyle(code):
-    """Deploy code to Freestyle dev server"""
-    try:
-        dev_server_wrapper.write_gamezone(code)
-        print("✅ Code deployed to Freestyle dev server")
+        # Get the updated code from Morph
+        updated_gamezone = response.choices[0].message.content
+        
+        # Apply the changes to Freestyle
+        dev_server_wrapper.write_gamezone(updated_gamezone)
+        print(f"✅ Used Morph to apply HTML game '{game_name}' to GameZone.js")
         return True
         
     except Exception as e:
-        print(f"Error deploying to Freestyle: {e}")
-        return False
-
-def deploy_html_to_freestyle(html_content, game_name):
-    """Deploy pure HTML content to Freestyle dev server by updating GameZone"""
-    try:
-        # Escape HTML content for embedding in React
-        escaped_html = html_content.replace('`', '\\`').replace('${', '\\${')
-        
-        # Create a simple React component that renders the HTML
-        react_component = f'''import React from 'react';
-
-const GameZone = ({{ currentGame }}) => {{
-  return (
-    <div className="game-zone">
-      <div className="game-content">
-        <h2 style={{{{ textAlign: 'center', marginBottom: '15px' }}}}>
-          {game_name}
-        </h2>
-        <div dangerouslySetInnerHTML={{{{ __html: `{escaped_html}` }}}} />
-        <div style={{{{ textAlign: 'center', marginTop: '10px', fontSize: '12px', color: '#666' }}}}>
-          🎮 Generated with HTML5 Canvas | Perfect for Morph apply!
-        </div>
-      </div>
-    </div>
-  );
-}};
-
-export default GameZone;'''
-        
-        dev_server_wrapper.write_gamezone(react_component)
-        print("✅ HTML game deployed to Freestyle dev server")
-        return True
-        
-    except Exception as e:
-        print(f"Error deploying HTML to Freestyle: {e}")
+        print(f"Error using Morph to apply HTML: {e}")
         return False
 
 if __name__ == "__main__":
-    print("🚀 Starting Freestyle Live Edit Flask Server with HTML5 Game Generation...")
+    print("🚀 Starting Freestyle Live Edit Flask Server with Claude + Morph Integration...")
     print("📖 Visit http://localhost:8080 for API documentation")
     print("🔗 Use POST /connect to connect to your GitHub repo")
-    print("🎮 Use POST /generate-html-game with {'game_idea': 'snake'} to generate games for Morph apply")
-    print("🔧 GameZone.js is now a simple HTML renderer - perfect for Morph apply!")
+    print("🎮 Use POST /generate-game with {'game_idea': 'snake'} - Claude generates, Morph applies!")
+    print("⚡ Now using Morph's fast apply to update GameZone.js automatically!")
     
     app.run(debug=True, host='0.0.0.0', port=8080)

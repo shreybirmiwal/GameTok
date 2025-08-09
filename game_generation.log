@@ -768,3 +768,85 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 13:24:52,494 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:52] "GET / HTTP/1.1" 200 -
 2025-08-09 13:24:53,378 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:53] "GET / HTTP/1.1" 200 -
 2025-08-09 13:24:53,633 - INFO - 127.0.0.1 - - [09/Aug/2025 13:24:53] "GET / HTTP/1.1" 200 -
+2025-08-09 13:25:09,914 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 13:25:09,914 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 13:25:09,916 - INFO -  * Restarting with stat
+2025-08-09 13:25:11,181 - WARNING -  * Debugger is active!
+2025-08-09 13:25:11,193 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:25:22,805 - INFO - 127.0.0.1 - - [09/Aug/2025 13:25:22] "GET / HTTP/1.1" 200 -
+2025-08-09 13:25:39,217 - INFO - 127.0.0.1 - - [09/Aug/2025 13:25:39] "GET / HTTP/1.1" 200 -
+2025-08-09 13:26:06,252 - INFO - 127.0.0.1 - - [09/Aug/2025 13:26:06] "POST /connect HTTP/1.1" 200 -
+2025-08-09 13:26:09,501 - INFO - 127.0.0.1 - - [09/Aug/2025 13:26:09] "GET / HTTP/1.1" 200 -
+2025-08-09 13:26:27,151 - INFO - 127.0.0.1 - - [09/Aug/2025 13:26:27] "GET / HTTP/1.1" 200 -
+2025-08-09 13:26:30,684 - INFO - 127.0.0.1 - - [09/Aug/2025 13:26:30] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:26:30,689 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'car game' - Timestamp: 2025-08-09 13:26:30.689424
+2025-08-09 13:26:30,689 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'car game'
+2025-08-09 13:26:30,689 - INFO - 🤖 Claude generation starting for: 'car game'
+2025-08-09 13:26:30,689 - INFO - 📡 Sending request to Claude for 'car game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:26:47,757 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:26:47,779 - INFO - ✅ Claude generated content for 'car game' - Length: 4819 chars
+2025-08-09 13:26:47,779 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 13:26:47,779 - INFO - ✅ Claude generated game - Length: 4819 chars, Has Canvas: True, Has Script: False
+2025-08-09 13:26:47,780 - INFO - 🎮 GENERATED GAME CODE for 'car game':
+--------------------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [car, setCar] = useState({ x: 175, y: 250, width: 50, height: 30 });
+  const [obstacles, setObstacles] = useState([]);
+  const [keys, setKeys] = useState({});
+
+  const gameWidth = 400;
+  const gameHeight = 300;
+  const carSpeed = 5;
+  const obsta...
+--------------------------------------------------
+2025-08-09 13:26:47,780 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'car game'
+2025-08-09 13:26:48,941 - INFO - 📖 Read current GameZone.js - Size: 1065 chars
+2025-08-09 13:26:48,941 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'car game', size: 4819 chars
+2025-08-09 13:26:50,204 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:26:50,224 - INFO - ✅ Morph returned updated React component - New size: 4819 chars
+2025-08-09 13:26:50,855 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'car game'
+2025-08-09 13:26:50,855 - INFO - 🎉 GAME GENERATION SUCCESS - 'car game' - Duration: 20.17s - Size: 4819 chars
+2025-08-09 13:26:50,858 - INFO - 127.0.0.1 - - [09/Aug/2025 13:26:50] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:27:41,181 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'pacman' - Timestamp: 2025-08-09 13:27:41.181689
+2025-08-09 13:27:41,183 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'pacman'
+2025-08-09 13:27:41,183 - INFO - 🤖 Claude generation starting for: 'pacman'
+2025-08-09 13:27:41,183 - INFO - 📡 Sending request to Claude for 'pacman' - Model: claude-sonnet-4-20250514
+2025-08-09 13:28:01,139 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:28:01,146 - INFO - ✅ Claude generated content for 'pacman' - Length: 4400 chars
+2025-08-09 13:28:01,147 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: False
+2025-08-09 13:28:01,147 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:28:01,148 - INFO - ✅ Claude generated game - Length: 4400 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:28:01,148 - INFO - 🎮 GENERATED GAME CODE for 'pacman':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const GRID_SIZE = 20;
+  const ROWS = 15;
+  const COLS = 20;
+  
+  const initialMaze = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,1],
+    [1,2,1,1,2,1,1,1,2,1,1,2,1,1,1,2,1,1,2,1],
+    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+    [1,2,1,1,2,1,2,1,1,1,1,1,1,2,1,2,1,1,2,1],
+    [1,2,2,2,2,1,2,2,2,1,1,2,2,2,1,2,2,2,2,1],
+    [1,1,1,1,2,1,1,1,0,...
+--------------------------------------------------
+2025-08-09 13:28:01,149 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'pacman'
+2025-08-09 13:28:02,365 - INFO - 📖 Read current GameZone.js - Size: 4819 chars
+2025-08-09 13:28:02,365 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'pacman', size: 4427 chars
+2025-08-09 13:28:07,592 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:28:07,595 - INFO - ✅ Morph returned updated React component - New size: 6712 chars
+2025-08-09 13:28:08,263 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'pacman'
+2025-08-09 13:28:08,263 - INFO - 🎉 GAME GENERATION SUCCESS - 'pacman' - Duration: 27.08s - Size: 4400 chars
+2025-08-09 13:28:08,264 - INFO - 127.0.0.1 - - [09/Aug/2025 13:28:08] "POST /generate-game HTTP/1.1" 200 -

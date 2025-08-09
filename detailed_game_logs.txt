@@ -484,3 +484,363 @@ export default GameZone;
 ```
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: car game - 2025-08-09 13:26:47.780186
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [car, setCar] = useState({ x: 175, y: 250, width: 50, height: 30 });
+  const [obstacles, setObstacles] = useState([]);
+  const [keys, setKeys] = useState({});
+
+  const gameWidth = 400;
+  const gameHeight = 300;
+  const carSpeed = 5;
+  const obstacleSpeed = 3;
+
+  const resetGame = useCallback(() => {
+    setCar({ x: 175, y: 250, width: 50, height: 30 });
+    setObstacles([]);
+    setScore(0);
+    setGameState('playing');
+  }, []);
+
+  const checkCollision = (rect1, rect2) => {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+  };
+
+  const gameLoop = useCallback(() => {
+    if (gameState !== 'playing') return;
+
+    setCar(prevCar => {
+      let newX = prevCar.x;
+      if (keys['ArrowLeft'] && newX > 0) newX -= carSpeed;
+      if (keys['ArrowRight'] && newX < gameWidth - prevCar.width) newX += carSpeed;
+      return { ...prevCar, x: newX };
+    });
+
+    setObstacles(prevObstacles => {
+      let newObstacles = prevObstacles.map(obs => ({
+        ...obs,
+        y: obs.y + obstacleSpeed
+      })).filter(obs => obs.y < gameHeight);
+
+      if (Math.random() < 0.02) {
+        newObstacles.push({
+          x: Math.random() * (gameWidth - 40),
+          y: -30,
+          width: 40,
+          height: 30
+        });
+      }
+
+      return newObstacles;
+    });
+
+    setScore(prevScore => prevScore + 1);
+  }, [gameState, keys]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      setKeys(prev => ({ ...prev, [e.key]: true }));
+    };
+
+    const handleKeyUp = (e) => {
+      setKeys(prev => ({ ...prev, [e.key]: false }));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(gameLoop, 50);
+    return () => clearInterval(interval);
+  }, [gameLoop]);
+
+  useEffect(() => {
+    obstacles.forEach(obstacle => {
+      if (checkCollision(car, obstacle)) {
+        setGameState('gameOver');
+      }
+    });
+  }, [car, obstacles]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, gameWidth, gameHeight);
+
+    ctx.fillStyle = '#333';
+    ctx.fillRect(0, 0, gameWidth, gameHeight);
+
+    for (let i = 0; i < gameWidth; i += 40) {
+      ctx.fillStyle = '#666';
+      ctx.fillRect(i + 18, 0, 4, gameHeight);
+    }
+
+    ctx.fillStyle = '#00ff00';
+    ctx.fillRect(car.x, car.y, car.width, car.height);
+
+    ctx.fillStyle = '#ff0000';
+    obstacles.forEach(obstacle => {
+      ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+    });
+  });
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0' }}>Simple Car Game</h2>
+      <div style={{ marginBottom: '10px' }}>
+        Score: {score} | Status: {gameState}
+      </div>
+      
+      <canvas
+        ref={canvasRef}
+        width={gameWidth}
+        height={gameHeight}
+        style={{
+          border: '2px solid #000',
+          backgroundColor: '#333'
+        }}
+      />
+      
+      <div style={{ marginTop: '15px' }}>
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginRight: '10px'
+          }}
+        >
+          {gameState === 'gameOver' ? 'Play Again' : 'Restart'}
+        </button>
+      </div>
+      
+      <div style={{ 
+        marginTop: '15px', 
+        textAlign: 'center',
+        fontSize: '14px',
+        color: '#666'
+      }}>
+        Use arrow keys to move left and right<br/>
+        Avoid the red obstacles!
+      </div>
+      
+      {gameState === 'gameOver' && (
+        <div style={{
+          marginTop: '15px',
+          padding: '10px',
+          backgroundColor: '#ffebee',
+          border: '1px solid #f44336',
+          borderRadius: '5px',
+          color: '#d32f2f',
+          fontWeight: 'bold'
+        }}>
+          Game Over! Final Score: {score}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: pacman - 2025-08-09 13:28:01.148852
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const GRID_SIZE = 20;
+  const ROWS = 15;
+  const COLS = 20;
+  
+  const initialMaze = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,1],
+    [1,2,1,1,2,1,1,1,2,1,1,2,1,1,1,2,1,1,2,1],
+    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+    [1,2,1,1,2,1,2,1,1,1,1,1,1,2,1,2,1,1,2,1],
+    [1,2,2,2,2,1,2,2,2,1,1,2,2,2,1,2,2,2,2,1],
+    [1,1,1,1,2,1,1,1,0,1,1,0,1,1,1,2,1,1,1,1],
+    [0,0,0,1,2,1,0,0,0,0,0,0,0,0,1,2,1,0,0,0],
+    [1,1,1,1,2,1,0,1,1,0,0,1,1,0,1,2,1,1,1,1],
+    [1,2,2,2,2,2,0,1,0,0,0,0,1,0,2,2,2,2,2,1],
+    [1,2,1,1,2,1,0,1,1,1,1,1,1,0,1,2,1,1,2,1],
+    [1,2,2,2,2,1,2,2,2,1,1,2,2,2,1,2,2,2,2,1],
+    [1,1,1,2,2,2,2,1,2,1,1,2,1,2,2,2,2,1,1,1],
+    [1,2,2,2,2,2,2,1,2,2,2,2,1,2,2,2,2,2,2,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+  ];
+
+  const [maze, setMaze] = useState(initialMaze);
+  const [pacmanPos, setPacmanPos] = useState({ x: 1, y: 1 });
+  const [ghosts, setGhosts] = useState([
+    { x: 9, y: 8, color: 'red' },
+    { x: 10, y: 8, color: 'pink' }
+  ]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [direction, setDirection] = useState({ x: 0, y: 0 });
+
+  const isValidMove = (x, y) => {
+    return x >= 0 && x < COLS && y >= 0 && y < ROWS && maze[y][x] !== 1;
+  };
+
+  const moveGhosts = useCallback(() => {
+    setGhosts(prevGhosts => 
+      prevGhosts.map(ghost => {
+        const directions = [
+          { x: 0, y: -1 },
+          { x: 0, y: 1 },
+          { x: -1, y: 0 },
+          { x: 1, y: 0 }
+        ];
+        
+        const validMoves = directions.filter(dir => 
+          isValidMove(ghost.x + dir.x, ghost.y + dir.y)
+        );
+        
+        if (validMoves.length > 0) {
+          const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+          return {
+            ...ghost,
+            x: ghost.x + randomMove.x,
+            y: ghost.y + randomMove.y
+          };
+        }
+        return ghost;
+      })
+    );
+  }, [maze]);
+
+  const checkCollision = useCallback(() => {
+    const collision = ghosts.some(ghost => 
+      ghost.x === pacmanPos.x && ghost.y === pacmanPos.y
+    );
+    if (collision) {
+      setGameOver(true);
+    }
+  }, [ghosts, pacmanPos]);
+
+  const movePacman = useCallback(() => {
+    if (direction.x === 0 && direction.y === 0) return;
+    
+    const newX = pacmanPos.x + direction.x;
+    const newY = pacmanPos.y + direction.y;
+    
+    if (isValidMove(newX, newY)) {
+      setPacmanPos({ x: newX, y: newY });
+      
+      if (maze[newY][newX] === 2) {
+        setScore(prev => prev + 10);
+        setMaze(prev => {
+          const newMaze = [...prev];
+          newMaze[newY] = [...newMaze[newY]];
+          newMaze[newY][newX] = 0;
+          return newMaze;
+        });
+      }
+    }
+  }, [direction, pacmanPos, maze]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (gameOver) return;
+      
+      switch(e.key) {
+        case 'ArrowUp':
+          setDirection({ x: 0, y: -1 });
+          break;
+        case 'ArrowDown':
+          setDirection({ x: 0, y: 1 });
+          break;
+        case 'ArrowLeft':
+          setDirection({ x: -1, y: 0 });
+          break;
+        case 'ArrowRight':
+          setDirection({ x: 1, y: 0 });
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameOver]);
+
+  useEffect(() => {
+    if (gameOver) return;
+    
+    const gameLoop = setInterval(() => {
+      movePacman();
+      moveGhosts();
+    }, 200);
+
+    return () => clearInterval(gameLoop);
+  }, [movePacman, moveGhosts, gameOver]);
+
+  useEffect(() => {
+    checkCollision();
+  }, [checkCollision]);
+
+  const resetGame = () => {
+    setMaze(initialMaze);
+    setPacmanPos({ x: 1, y: 1 });
+    setGhosts([
+      { x: 9, y: 8, color: 'red' },
+      { x: 10, y: 8, color: 'pink' }
+    ]);
+    setScore(0);
+    setGameOver(false);
+    setDirection({ x: 0, y: 0 });
+  };
+
+  const getCellContent = (x, y) => {
+    if (pacmanPos.x === x && pacmanPos.y === y) {
+      return '🟡';
+    }
+    
+    const ghost = ghosts.find(g => g.x === x && g.y === y);
+    if (ghost) {
+      return ghost.color === 'red' ? '👻' : '👹';
+    }
+    
+    switch(maze[y][
+----------------------------------------
+

@@ -4453,3 +4453,774 @@ const GameZone = ({ currentGame }) => {
 export
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: Space Runner - 2025-08-09 14:07:58.236654
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerY, setPlayerY] = useState(150);
+  const [obstacles, setObstacles] = useState([]);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const resetGame = useCallback(() => {
+    setGameState('playing');
+    setScore(0);
+    setPlayerY(150);
+    setObstacles([]);
+    setGameSpeed(2);
+  }, []);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setObstacles(prev => {
+        const newObstacles = prev
+          .map(obs => ({ ...obs, x: obs.x - gameSpeed }))
+          .filter(obs => obs.x > -50);
+
+        if (Math.random() < 0.02) {
+          newObstacles.push({
+            x: 450,
+            y: Math.random() * 200 + 50,
+            width: 30,
+            height: 30
+          });
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+      setGameSpeed(prev => prev + 0.001);
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, gameSpeed]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (gameState !== 'playing') return;
+      
+      if (e.key === 'ArrowUp' && playerY > 10) {
+        setPlayerY(prev => prev - 15);
+      } else if (e.key === 'ArrowDown' && playerY < 260) {
+        setPlayerY(prev => prev + 15);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameState, playerY]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const playerRect = { x: 50, y: playerY, width: 30, height: 30 };
+    
+    for (let obstacle of obstacles) {
+      if (
+        playerRect.x < obstacle.x + obstacle.width &&
+        playerRect.x + playerRect.width > obstacle.x &&
+        playerRect.y < obstacle.y + obstacle.height &&
+        playerRect.y + playerRect.height > obstacle.y
+      ) {
+        setGameState('gameOver');
+        break;
+      }
+    }
+  }, [obstacles, playerY, gameState]);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Space Runner</h2>
+      
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '400px',
+        marginBottom: '10px'
+      }}>
+        <div style={{ fontSize: '18px', fontWeight: 'bold' }}>Score: {score}</div>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '5px 15px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          Restart
+        </button>
+      </div>
+
+      <div style={{
+        position: 'relative',
+        width: '400px',
+        height: '300px',
+        backgroundColor: '#000020',
+        border: '2px solid #333',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          left: '50px',
+          top: `${playerY}px`,
+          width: '30px',
+          height: '30px',
+          backgroundColor: '#00FF00',
+          borderRadius: '50%',
+          transition: 'top 0.1s ease'
+        }} />
+
+        {obstacles.map((obstacle, index) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              left: `${obstacle.x}px`,
+              top: `${obstacle.y}px`,
+              width: `${obstacle.width}px`,
+              height: `${obstacle.height}px`,
+              backgroundColor: '#FF4444',
+              borderRadius: '4px'
+            }}
+          />
+        ))}
+
+        {gameState === 'gameOver' && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Game Over!</h3>
+            <p style={{ margin: '0 0 15px 0' }}>Final Score: {score}</p>
+            <button
+              onClick={resetGame}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
+            >
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{
+        marginTop: '10px',
+        fontSize: '14px',
+        color: '#666',
+        textAlign: 'center'
+      }}>
+        Use ↑ and ↓ arrow keys to move
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Gravity Bounce: Guide a bouncing ball through rotating maze platforms by reversing gravity. - 2025-08-09 14:08:17.993930
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+
+  const gameData = useRef({
+    ball: { x: 50, y: 50, vx: 0, vy: 0, radius: 8 },
+    gravity: 0.3,
+    gravityDirection: 1,
+    platforms: [
+      { x: 100, y: 150, width: 80, height: 10, rotation: 0, rotSpeed: 0.02 },
+      { x: 250, y: 100, width: 60, height: 10, rotation: 0, rotSpeed: -0.015 },
+      { x: 150, y: 220, width: 70, height: 10, rotation: 0, rotSpeed: 0.025 },
+      { x: 320, y: 180, width: 50, height: 10, rotation: 0, rotSpeed: -0.03 }
+    ],
+    goal: { x: 350, y: 250, width: 30, height: 30 },
+    keys: {}
+  });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const game = gameData.current;
+
+    const handleKeyDown = (e) => {
+      game.keys[e.key] = true;
+      if (e.key === ' ') {
+        e.preventDefault();
+        game.gravityDirection *= -1;
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      game.keys[e.key] = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    const gameLoop = () => {
+      if (gameState !== 'playing') return;
+
+      // Update ball physics
+      const ball = game.ball;
+      
+      // Apply gravity
+      ball.vy += game.gravity * game.gravityDirection;
+      
+      // Apply horizontal movement
+      if (game.keys['ArrowLeft']) ball.vx -= 0.2;
+      if (game.keys['ArrowRight']) ball.vx += 0.2;
+      
+      // Friction
+      ball.vx *= 0.98;
+      
+      // Update position
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      // Boundary collision
+      if (ball.x - ball.radius <= 0 || ball.x + ball.radius >= canvas.width) {
+        ball.vx *= -0.7;
+        ball.x = Math.max(ball.radius, Math.min(canvas.width - ball.radius, ball.x));
+      }
+      if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= canvas.height) {
+        ball.vy *= -0.7;
+        ball.y = Math.max(ball.radius, Math.min(canvas.height - ball.radius, ball.y));
+      }
+
+      // Update platforms
+      game.platforms.forEach(platform => {
+        platform.rotation += platform.rotSpeed;
+      });
+
+      // Platform collision
+      game.platforms.forEach(platform => {
+        const dx = ball.x - platform.x;
+        const dy = ball.y - platform.y;
+        
+        // Rotate point to platform's local space
+        const cos = Math.cos(-platform.rotation);
+        const sin = Math.sin(-platform.rotation);
+        const localX = dx * cos - dy * sin;
+        const localY = dx * sin + dy * cos;
+        
+        if (Math.abs(localX) < platform.width / 2 + ball.radius && 
+            Math.abs(localY) < platform.height / 2 + ball.radius) {
+          
+          if (Math.abs(localY) > Math.abs(localX)) {
+            ball.vy = localY > 0 ? Math.abs(ball.vy) : -Math.abs(ball.vy);
+            ball.vy *= 0.8;
+            ball.y = platform.y + (localY > 0 ? platform.height / 2 + ball.radius : -platform.height / 2 - ball.radius);
+          } else {
+            ball.vx *= -0.7;
+            ball.x = platform.x + (localX > 0 ? platform.width / 2 + ball.radius : -platform.width / 2 - ball.radius);
+          }
+        }
+      });
+
+      // Goal collision
+      const goal = game.goal;
+      if (ball.x + ball.radius > goal.x && ball.x - ball.radius < goal.x + goal.width &&
+          ball.y + ball.radius > goal.y && ball.y - ball.radius < goal.y + goal.height) {
+        setScore(prev => prev + 1);
+        resetBall();
+      }
+
+      // Render
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw platforms
+      game.platforms.forEach(platform => {
+        ctx.save();
+        ctx.translate(platform.x, platform.y);
+        ctx.rotate(platform.rotation);
+        ctx.fillStyle = '#16213e';
+        ctx.fillRect(-platform.width / 2, -platform.height / 2, platform.width, platform.height);
+        ctx.strokeStyle = '#0f3460';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(-platform.width / 2, -platform.height / 2, platform.width, platform.height);
+        ctx.restore();
+      });
+
+      // Draw goal
+      ctx.fillStyle = '#e94560';
+      ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
+
+      // Draw ball
+      ctx.fillStyle = '#f39c12';
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw gravity indicator
+      ctx.fillStyle = game.gravityDirection > 0 ? '#e74c3c' : '#3498db';
+      ctx.font = '16px Arial';
+      ctx.fillText(game.gravityDirection > 0 ? '↓' : '↑', 10, 25);
+
+      animationRef.current = requestAnimationFrame(gameLoop);
+    };
+
+    gameLoop();
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [gameState]);
+
+  const resetBall = () => {
+    gameData.current.ball = { x: 50, y: 50, vx: 0, vy: 0, radius: 8 };
+  };
+
+  const resetGame = () => {
+    setScore(0);
+    setGameState('playing');
+    resetBall();
+    gameData.current.gravityDirection = 1;
+  };
+
+  return (
+    <div style={{ textAlign: 'center', padding: '20px', backgroundColor: '#0f0f23', color: 'white', minHeight: '100vh' }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#f39c12' }}>Gravity Bounce</h2>
+      <div style={{ marginBottom: '10px' }}>
+        <span style={{ marginRight: '20px' }}>Score: {score}</span>
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#e94560',
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Bubble Bounce: Pop floating bubbles by drawing lines that reflect a bouncing ball before time runs out. - 2025-08-09 14:09:23.501850
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [ball, setBall] = useState({ x: 200, y: 250, vx: 3, vy: -3, radius: 8 });
+  const [bubbles, setBubbles] = useState([]);
+  const [lines, setLines] = useState([]);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [currentLine, setCurrentLine] = useState([]);
+
+  const initializeGame = useCallback(() => {
+    const newBubbles = [];
+    for (let i = 0; i < 8; i++) {
+      newBubbles.push({
+        x: 50 + Math.random() * 300,
+        y: 50 + Math.random() * 200,
+        radius: 15 + Math.random() * 10,
+        id: i
+      });
+    }
+    setBubbles(newBubbles);
+    setBall({ x: 200, y: 250, vx: 3, vy: -3, radius: 8 });
+    setLines([]);
+    setScore(0);
+    setTimeLeft(30);
+    setGameState('playing');
+  }, []);
+
+  useEffect(() => {
+    initializeGame();
+  }, [initializeGame]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          setGameState('gameOver');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [gameState]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setBall(prevBall => {
+        let newBall = { ...prevBall };
+        newBall.x += newBall.vx;
+        newBall.y += newBall.vy;
+
+        // Wall collisions
+        if (newBall.x <= newBall.radius || newBall.x >= 400 - newBall.radius) {
+          newBall.vx = -newBall.vx;
+        }
+        if (newBall.y <= newBall.radius || newBall.y >= 300 - newBall.radius) {
+          newBall.vy = -newBall.vy;
+        }
+
+        // Line collisions
+        lines.forEach(line => {
+          if (line.length < 2) return;
+          
+          for (let i = 0; i < line.length - 1; i++) {
+            const p1 = line[i];
+            const p2 = line[i + 1];
+            
+            const dist = distanceToLineSegment(newBall.x, newBall.y, p1.x, p1.y, p2.x, p2.y);
+            
+            if (dist < newBall.radius) {
+              // Simple reflection
+              const dx = p2.x - p1.x;
+              const dy = p2.y - p1.y;
+              const len = Math.sqrt(dx * dx + dy * dy);
+              const nx = -dy / len;
+              const ny = dx / len;
+              
+              const dot = newBall.vx * nx + newBall.vy * ny;
+              newBall.vx -= 2 * dot * nx;
+              newBall.vy -= 2 * dot * ny;
+            }
+          }
+        });
+
+        // Bubble collisions
+        setBubbles(prevBubbles => {
+          return prevBubbles.filter(bubble => {
+            const dx = newBall.x - bubble.x;
+            const dy = newBall.y - bubble.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < newBall.radius + bubble.radius) {
+              setScore(prev => prev + 10);
+              return false;
+            }
+            return true;
+          });
+        });
+
+        return newBall;
+      });
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, lines]);
+
+  useEffect(() => {
+    if (bubbles.length === 0 && gameState === 'playing') {
+      setGameState('won');
+    }
+  }, [bubbles.length, gameState]);
+
+  const distanceToLineSegment = (px, py, x1, y1, x2, y2) => {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const length = Math.sqrt(dx * dx + dy * dy);
+    
+    if (length === 0) return Math.sqrt((px - x1) * (px - x1) + (py - y1) * (py - y1));
+    
+    const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (length * length)));
+    const projX = x1 + t * dx;
+    const projY = y1 + t * dy;
+    
+    return Math.sqrt((px - projX) * (px - projX) + (py - projY) * (py - projY));
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 400, 300);
+
+    // Draw bubbles
+    bubbles.forEach(bubble => {
+      ctx.beginPath();
+      ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(100, 200, 255, 0.7)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(50, 150, 255, 1)';
+      ctx.stroke();
+    });
+
+    // Draw ball
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff4444';
+    ctx.fill();
+
+    // Draw lines
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 3;
+    lines.forEach(line => {
+      if (line.length < 2) return;
+      ctx.beginPath();
+      ctx.moveTo(line[0].x, line[0].y);
+      for (let i = 1; i < line.length; i++) {
+        ctx.lineTo(line[i].x, line[i].y);
+      }
+      ctx.stroke();
+    });
+
+    // Draw current line being drawn
+    if (currentLine.length > 1) {
+      ctx.strokeStyle = '#666';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(currentLine[0].x, currentLine[0].y);
+      for (let i = 1; i < currentLine.length; i++) {
+        ctx.lineTo(currentLine[i].x, currentLine[i].y);
+      }
+      ctx.stroke();
+    }
+  });
+
+  const handleMouseDown = (e) => {
+    if (gameState !== 'playing') return;
+    
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setIsDrawing(true);
+    setCurrentLine([{ x, y }]);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Color Matcher: Match falling colored blocks with same-colored zones at the bottom by sliding left/right before they land. - 2025-08-09 14:10:05.472111
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [blocks, setBlocks] = useState([]);
+  const [playerX, setPlayerX] = useState(200);
+  const [keys, setKeys] = useState({});
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const ZONE_WIDTH = 80;
+  const ZONE_HEIGHT = 30;
+  const BLOCK_SIZE = 20;
+  const COLORS = ['red', 'blue', 'green', 'yellow'];
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    const handleKeyDown = (e) => {
+      setKeys(prev => ({ ...prev, [e.key]: true }));
+    };
+
+    const handleKeyUp = (e) => {
+      setKeys(prev => ({ ...prev, [e.key]: false }));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setBlocks(prevBlocks => {
+        const newBlocks = prevBlocks.map(block => ({
+          ...block,
+          y: block.y + 2
+        }));
+
+        const activeBlocks = newBlocks.filter(block => {
+          if (block.y >= CANVAS_HEIGHT - ZONE_HEIGHT - BLOCK_SIZE) {
+            const zoneIndex = Math.floor(block.x / (CANVAS_WIDTH / 4));
+            const zoneColor = COLORS[zoneIndex];
+            if (block.color === zoneColor) {
+              setScore(prev => prev + 10);
+              return false;
+            } else {
+              setGameState('gameOver');
+              return false;
+            }
+          }
+          return block.y < CANVAS_HEIGHT;
+        });
+
+        if (Math.random() < 0.02) {
+          activeBlocks.push({
+            x: Math.random() * (CANVAS_WIDTH - BLOCK_SIZE),
+            y: 0,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)]
+          });
+        }
+
+        return activeBlocks;
+      });
+
+      if (keys['ArrowLeft'] && playerX > 0) {
+        setPlayerX(prev => Math.max(0, prev - 5));
+      }
+      if (keys['ArrowRight'] && playerX < CANVAS_WIDTH - BLOCK_SIZE) {
+        setPlayerX(prev => Math.min(CANVAS_WIDTH - BLOCK_SIZE, prev + 5));
+      }
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, keys, playerX]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    for (let i = 0; i < 4; i++) {
+      ctx.fillStyle = COLORS[i];
+      ctx.fillRect(i * (CANVAS_WIDTH / 4), CANVAS_HEIGHT - ZONE_HEIGHT, ZONE_WIDTH, ZONE_HEIGHT);
+      
+      ctx.fillStyle = 'white';
+      ctx.font = '12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(COLORS[i].toUpperCase(), i * (CANVAS_WIDTH / 4) + ZONE_WIDTH / 2, CANVAS_HEIGHT - 10);
+    }
+
+    blocks.forEach(block => {
+      ctx.fillStyle = block.color;
+      ctx.fillRect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE);
+    });
+
+    ctx.fillStyle = 'black';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Score: ${score}`, 10, 20);
+
+    if (gameState === 'gameOver') {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.fillStyle = 'white';
+      ctx.font = '24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Game Over!', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 20);
+      ctx.fillText(`Final Score: ${score}`, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 10);
+    }
+  }, [blocks, score, gameState]);
+
+  const resetGame = () => {
+    setGameState('playing');
+    setScore(0);
+    setBlocks([]);
+    setPlayerX(200);
+    setKeys({});
+  };
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Color Matcher</h2>
+      <p style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#666' }}>
+        Use arrow keys to move. Match falling blocks with same-colored zones!
+      </p>
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        style={{
+          border: '2px solid #333',
+          backgroundColor: '#f0f0f0',
+          marginBottom: '10px'
+        }}
+      />
+      <button
+        onClick={resetGame}
+        style={{
+          padding: '10px 20px',
+          fontSize: '16px',
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+        onMouseOver={(e) => e.target.style.backgroundColor = '#45a049'}
+        onMouseOut={(e) => e.target.style.backgroundColor = '#4CAF50'}
+      >
+        {gameState === 'gameOver' ? 'Play Again' : 'Restart'}
+      </button>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

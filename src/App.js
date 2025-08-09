@@ -6,6 +6,7 @@ function App() {
   const [currentGame, setCurrentGame] = useState('Your Game');
   const [gameInput, setGameInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [lastPrompt, setLastPrompt] = useState('');
 
   const sentinelRef = useRef(null);
   const isGeneratingRef = useRef(false);
@@ -15,6 +16,7 @@ function App() {
     try {
       setIsGenerating(true);
       isGeneratingRef.current = true;
+      setLastPrompt(gameName);
       setCurrentGame(`Generating ${gameName}...`);
 
       const response = await fetch('http://localhost:8080/generate-game', {
@@ -146,6 +148,12 @@ function App() {
         {/* Sentinel for infinite scroll */}
         <div ref={sentinelRef} className="scroll-sentinel" />
       </div>
+
+      {lastPrompt && (
+        <div className="prompt-footer" title={lastPrompt}>
+          {lastPrompt}
+        </div>
+      )}
 
       {isGenerating && <div className="generate-status">Generating...</div>}
     </div>

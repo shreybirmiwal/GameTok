@@ -238,7 +238,7 @@ function App() {
     <div className="App">
       <div className="content-container">
         <div className="game-input-section">
-          <h2>What game do you want to play?</h2>
+          <h2>What do you want to play?</h2>
           <form onSubmit={handleGameSubmit}>
             <input
               type="text"

@@ -4275,3 +4275,361 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 15:52:13,315 - INFO - 127.0.0.1 - - [09/Aug/2025 15:52:13] "GET /prepared-status HTTP/1.1" 200 -
 2025-08-09 15:52:16,316 - INFO - 127.0.0.1 - - [09/Aug/2025 15:52:16] "GET /prepared-status HTTP/1.1" 200 -
 2025-08-09 15:52:19,316 - INFO - 127.0.0.1 - - [09/Aug/2025 15:52:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:22,388 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 15:55:22,389 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 15:55:22,390 - INFO -  * Restarting with stat
+2025-08-09 15:55:23,269 - WARNING -  * Debugger is active!
+2025-08-09 15:55:23,277 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 15:55:23,432 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:23] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:25,613 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:28,571 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:31,568 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:34,574 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:34] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:37,352 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:37] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:38,208 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:38] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:38,209 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:38] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:41,206 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:41] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:55:44,224 - INFO - 127.0.0.1 - - [09/Aug/2025 15:55:44] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:56:29,072 - INFO - 127.0.0.1 - - [09/Aug/2025 15:56:29] "POST /connect HTTP/1.1" 200 -
+2025-08-09 15:57:18,417 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:18] "OPTIONS /fill-next HTTP/1.1" 200 -
+2025-08-09 15:57:18,417 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:18] "OPTIONS /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:18,418 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:18] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 15:57:18,419 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:18] "OPTIONS /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:18,420 - INFO - 🧪 Filling prefetch queue with idea: 'space shooter' (size before: 0)
+2025-08-09 15:57:18,421 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:18] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:18,421 - INFO - 🤖 Claude generation starting for: 'space shooter'
+2025-08-09 15:57:18,421 - INFO - 📡 Sending request to Claude for 'space shooter' - Model: claude-sonnet-4-20250514
+2025-08-09 15:57:18,425 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'flappy bird game' - Timestamp: 2025-08-09 15:57:18.425170
+2025-08-09 15:57:18,429 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:18] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:18,429 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'flappy bird game'
+2025-08-09 15:57:18,431 - INFO - 🤖 Claude generation starting for: 'flappy bird game'
+2025-08-09 15:57:18,432 - INFO - 📡 Sending request to Claude for 'flappy bird game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:57:21,415 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:21] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:24,562 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:24] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:27,417 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:27] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:30,417 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:30] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:33,572 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:33] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:36,565 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:36] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:39,565 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:39] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:39,574 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:57:39,588 - INFO - ✅ Claude generated content for 'space shooter' - Length: 5627 chars
+2025-08-09 15:57:39,588 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:57:39,588 - INFO - ✅ queued next-game (size now: 1)
+2025-08-09 15:57:39,588 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:39] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:57:42,565 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:42] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:44,469 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:57:44,476 - INFO - ✅ Claude generated content for 'flappy bird game' - Length: 5964 chars
+2025-08-09 15:57:44,476 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:57:44,476 - INFO - ✅ Claude generated game - Length: 5964 chars, Has Canvas: True, Has Script: False
+2025-08-09 15:57:44,476 - INFO - 🎮 GENERATED GAME CODE for 'flappy bird game':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('ready');
+  const [score, setScore] = useState(0);
+  const [bird, setBird] = useState({ x: 50, y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const gameLoopRef = useRef();
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const BIRD_SIZE = 20;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 1...
+--------------------------------------------------
+2025-08-09 15:57:44,476 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'flappy bird game'
+2025-08-09 15:57:45,564 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:45] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:45,645 - INFO - 📖 Read current GameZone.js - Size: 1043 chars
+2025-08-09 15:57:45,645 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'flappy bird game', size: 5964 chars
+2025-08-09 15:57:46,812 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:57:46,824 - INFO - ✅ Morph returned updated React component - New size: 5964 chars
+2025-08-09 15:57:47,441 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'flappy bird game'
+2025-08-09 15:57:47,441 - INFO - 🎉 GAME GENERATION SUCCESS - 'flappy bird game' - Duration: 29.02s - Size: 5964 chars
+2025-08-09 15:57:47,442 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:47] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:57:47,452 - INFO - 🧪 Filling prefetch queue with idea: 'endless runner' (size before: 1)
+2025-08-09 15:57:47,452 - INFO - 🧪 Filling prefetch queue with idea: 'endless runner' (size before: 1)
+2025-08-09 15:57:47,452 - INFO - 🤖 Claude generation starting for: 'endless runner'
+2025-08-09 15:57:47,452 - INFO - 🤖 Claude generation starting for: 'endless runner'
+2025-08-09 15:57:47,452 - INFO - 📡 Sending request to Claude for 'endless runner' - Model: claude-sonnet-4-20250514
+2025-08-09 15:57:47,452 - INFO - 📡 Sending request to Claude for 'endless runner' - Model: claude-sonnet-4-20250514
+2025-08-09 15:57:48,574 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:48] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:48,953 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:48] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:48,956 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:48] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:51,957 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:51] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:54,960 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:54] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:57:57,955 - INFO - 127.0.0.1 - - [09/Aug/2025 15:57:57] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:00,955 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:00] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:03,954 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:03] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:06,954 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:06] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:09,282 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:09,285 - INFO - ✅ Claude generated content for 'endless runner' - Length: 7008 chars
+2025-08-09 15:58:09,285 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:09,285 - INFO - ✅ queued next-game (size now: 2)
+2025-08-09 15:58:09,286 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:09] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:58:09,959 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:09] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:10,203 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:10,205 - INFO - ✅ Claude generated content for 'endless runner' - Length: 7105 chars
+2025-08-09 15:58:10,206 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:10,206 - INFO - ✅ queued next-game (size now: 3)
+2025-08-09 15:58:10,206 - INFO - 🧪 Filling prefetch queue with idea: 'pong game' (size before: 3)
+2025-08-09 15:58:10,206 - INFO - 🤖 Claude generation starting for: 'pong game'
+2025-08-09 15:58:10,206 - INFO - 📡 Sending request to Claude for 'pong game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:58:12,959 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:12] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:15,955 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:15] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:18,958 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:18] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:21,959 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:21] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:22,966 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:22] "OPTIONS /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:58:23,686 - INFO - 📝 Direct write of next-game to GameZone.js - Game: 'space shooter' (queue remaining: 2)
+2025-08-09 15:58:23,687 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:23] "POST /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:58:23,695 - INFO - 🧪 Filling prefetch queue with idea: 'space shooter' (size before: 2)
+2025-08-09 15:58:23,695 - INFO - 🧪 Filling prefetch queue with idea: 'space shooter' (size before: 2)
+2025-08-09 15:58:23,695 - INFO - 🤖 Claude generation starting for: 'space shooter'
+2025-08-09 15:58:23,696 - INFO - 🤖 Claude generation starting for: 'space shooter'
+2025-08-09 15:58:23,696 - INFO - 📡 Sending request to Claude for 'space shooter' - Model: claude-sonnet-4-20250514
+2025-08-09 15:58:23,696 - INFO - 📡 Sending request to Claude for 'space shooter' - Model: claude-sonnet-4-20250514
+2025-08-09 15:58:24,293 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:24] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:24,294 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:24] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:27,297 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:27] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:27,613 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:27,618 - INFO - ✅ Claude generated content for 'pong game' - Length: 5179 chars
+2025-08-09 15:58:27,618 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:27,618 - INFO - ✅ queued next-game (size now: 3)
+2025-08-09 15:58:27,618 - INFO - 🧪 Filling prefetch queue with idea: 'endless runner' (size before: 3)
+2025-08-09 15:58:27,618 - INFO - 🤖 Claude generation starting for: 'endless runner'
+2025-08-09 15:58:27,618 - INFO - 📡 Sending request to Claude for 'endless runner' - Model: claude-sonnet-4-20250514
+2025-08-09 15:58:30,301 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:30] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:32,603 - INFO - 📝 Direct write of next-game to GameZone.js - Game: 'endless runner' (queue remaining: 2)
+2025-08-09 15:58:32,603 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:32] "POST /scroll-apply HTTP/1.1" 200 -
+2025-08-09 15:58:32,611 - INFO - 🧪 Filling prefetch queue with idea: 'endless runner' (size before: 2)
+2025-08-09 15:58:32,612 - INFO - 🧪 Filling prefetch queue with idea: 'endless runner' (size before: 2)
+2025-08-09 15:58:32,612 - INFO - 🤖 Claude generation starting for: 'endless runner'
+2025-08-09 15:58:32,612 - INFO - 🤖 Claude generation starting for: 'endless runner'
+2025-08-09 15:58:32,612 - INFO - 📡 Sending request to Claude for 'endless runner' - Model: claude-sonnet-4-20250514
+2025-08-09 15:58:32,612 - INFO - 📡 Sending request to Claude for 'endless runner' - Model: claude-sonnet-4-20250514
+2025-08-09 15:58:33,193 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:33] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:33,194 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:33] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:36,195 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:36] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:39,196 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:39] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:39,671 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:39,673 - INFO - ✅ Claude generated content for 'space shooter' - Length: 4558 chars
+2025-08-09 15:58:39,674 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:39,674 - INFO - ✅ queued next-game (size now: 3)
+2025-08-09 15:58:39,674 - INFO - 🧪 Filling prefetch queue with idea: 'snake game' (size before: 3)
+2025-08-09 15:58:39,674 - INFO - 🤖 Claude generation starting for: 'snake game'
+2025-08-09 15:58:39,674 - INFO - 📡 Sending request to Claude for 'snake game' - Model: claude-sonnet-4-20250514
+2025-08-09 15:58:42,195 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:42] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:43,486 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:43,488 - INFO - ✅ Claude generated content for 'space shooter' - Length: 6642 chars
+2025-08-09 15:58:43,489 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:43,489 - INFO - ✅ queued next-game (size now: 4)
+2025-08-09 15:58:43,489 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:43] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:58:45,198 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:45] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:48,196 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:48] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:49,220 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:49,223 - INFO - ✅ Claude generated content for 'endless runner' - Length: 6547 chars
+2025-08-09 15:58:49,223 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:49,223 - INFO - ✅ queued next-game (size now: 5)
+2025-08-09 15:58:49,224 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:49] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:58:51,197 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:51] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:51,674 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:51,677 - INFO - ✅ Claude generated content for 'endless runner' - Length: 5636 chars
+2025-08-09 15:58:51,677 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:51,677 - INFO - ✅ queued next-game (size now: 6)
+2025-08-09 15:58:51,678 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:51] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:58:53,722 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:53,724 - INFO - ✅ Claude generated content for 'endless runner' - Length: 6047 chars
+2025-08-09 15:58:53,724 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 15:58:53,725 - INFO - ✅ queued next-game (size now: 7)
+2025-08-09 15:58:53,725 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:53] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:58:54,194 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:54] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:57,195 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:57] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:58:58,127 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:58:58,130 - INFO - ✅ Claude generated content for 'snake game' - Length: 5404 chars
+2025-08-09 15:58:58,130 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:58:58,130 - INFO - ✅ queued next-game (size now: 8)
+2025-08-09 15:58:58,131 - INFO - 127.0.0.1 - - [09/Aug/2025 15:58:58] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:59:00,197 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:00] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:03,197 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:03] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:06,196 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:06] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:09,194 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:09] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:12,193 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:12] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:14,333 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'spaceshooters' - Timestamp: 2025-08-09 15:59:14.332004
+2025-08-09 15:59:14,333 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:14] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:59:14,333 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'spaceshooters'
+2025-08-09 15:59:14,334 - INFO - 🤖 Claude generation starting for: 'spaceshooters'
+2025-08-09 15:59:14,334 - INFO - 📡 Sending request to Claude for 'spaceshooters' - Model: claude-sonnet-4-20250514
+2025-08-09 15:59:15,196 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:15] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:18,196 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:18] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:21,196 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:21] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:24,197 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:24] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:27,198 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:27] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:30,194 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:30] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:33,195 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:33] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:36,194 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:36] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:36,375 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 15:59:36,383 - INFO - ✅ Claude generated content for 'spaceshooters' - Length: 7003 chars
+2025-08-09 15:59:36,383 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 15:59:36,383 - INFO - ✅ Claude generated game - Length: 7003 chars, Has Canvas: False, Has Script: False
+2025-08-09 15:59:36,384 - INFO - 🎮 GENERATED GAME CODE for 'spaceshooters':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('menu');
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(3);
+  const [player, setPlayer] = useState({ x: 200, y: 250 });
+  const [bullets, setBullets] = useState([]);
+  const [enemies, setEnemies] = useState([]);
+  const [keys, setKeys] = useState({});
+
+  const gameWidth = 400;
+  const gameHeight = 300;
+
+  const reset...
+--------------------------------------------------
+2025-08-09 15:59:36,385 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'spaceshooters'
+2025-08-09 15:59:37,653 - INFO - 📖 Read current GameZone.js - Size: 7008 chars
+2025-08-09 15:59:37,653 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'spaceshooters', size: 7003 chars
+2025-08-09 15:59:39,126 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 15:59:39,126 - INFO - ✅ Morph returned updated React component - New size: 7003 chars
+2025-08-09 15:59:39,193 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:39] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:39,806 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'spaceshooters'
+2025-08-09 15:59:39,806 - INFO - 🎉 GAME GENERATION SUCCESS - 'spaceshooters' - Duration: 25.47s - Size: 7003 chars
+2025-08-09 15:59:39,807 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:39] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 15:59:39,816 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:39] "POST /fill-next HTTP/1.1" 200 -
+2025-08-09 15:59:40,531 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:40,538 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:43,590 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:46,560 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:49,561 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:52,559 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:52] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:55,513 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:55] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:59:58,513 - INFO - 127.0.0.1 - - [09/Aug/2025 15:59:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:01,512 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:04,512 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:07,513 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:10,512 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:13,516 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:16,513 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:19,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:22,518 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:25,515 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:28,514 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:31,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:34,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:34] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:37,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:37] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:40,512 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:43,513 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:46,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:49,513 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:52,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:52] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:55,512 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:55] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:00:58,512 - INFO - 127.0.0.1 - - [09/Aug/2025 16:00:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:01,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:04,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:07,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:10,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:13,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:16,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:19,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:22,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:25,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:28,512 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:31,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:34,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:34] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:37,511 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:37] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:40,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:43,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:46,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:49,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:52,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:52] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:55,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:55] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:01:58,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:01:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:01,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:04,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:07,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:10,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:13,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:16,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:19,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:22,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:25,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:28,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:31,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:34,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:34] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:37,509 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:37] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:40,508 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:43,510 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:46,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:49,506 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:52,505 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:52] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:55,508 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:55] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:02:58,508 - INFO - 127.0.0.1 - - [09/Aug/2025 16:02:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:01,506 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:04,508 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:07,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:10,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:13,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:16,508 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:19,507 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:22,506 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:25,506 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:28,505 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:31,505 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:34,505 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:34] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:37,506 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:37] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:40,506 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:43,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:46,505 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:49,505 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:52,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:52] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:55,504 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:55] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:03:58,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:03:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:01,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:04,505 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:07,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:10,504 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:13,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:16,504 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:19,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:22,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:25,501 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:28,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:31,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:34,502 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:34] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:37,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:37] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:40,501 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:43,504 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:46,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:49,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:52,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:52] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:55,501 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:55] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:04:58,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:04:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:01,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:04,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:07,504 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:10,501 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:13,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:16,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:19,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:22,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:25,503 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:28,501 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:28] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:31,500 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:31] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:34,499 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:34] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:37,500 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:37] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:42,985 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:42] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:45,982 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:45] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:48,982 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:48] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:51,982 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:51] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:54,982 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:54] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:05:57,982 - INFO - 127.0.0.1 - - [09/Aug/2025 16:05:57] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:06:00,982 - INFO - 127.0.0.1 - - [09/Aug/2025 16:06:00] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:06:04,575 - INFO - 127.0.0.1 - - [09/Aug/2025 16:06:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 16:06:07,552 - INFO - 127.0.0.1 - - [09/Aug/2025 16:06:07] "GET /prepared-status HTTP/1.1" 200 -

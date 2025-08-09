@@ -59,9 +59,10 @@ last_generation_debug = {
     "written_code": None
 }
 
-# In-memory next game storage (single-slot)
-next_game = None  # {"idea": str, "code": str, "created_at": iso str}
+# In-memory next game storage (queue up to MAX_PREFETCH)
+next_queue = []  # list of {"idea": str, "code": str, "created_at": iso str}
 PREPARED_TTL_SECS = 600
+MAX_PREFETCH = 5
 PREPARE_DEFAULT_IDEAS = [
     "pong game",
     "brick breaker",
@@ -70,52 +71,46 @@ PREPARE_DEFAULT_IDEAS = [
     "snake game",
 ]
 
+
+def _expire_stale_from_queue():
+    global next_queue
+    now = datetime.utcnow()
+    fresh = []
+    for item in next_queue:
+        try:
+            ts = datetime.fromisoformat(item.get("created_at", now.isoformat()))
+            if now - ts <= timedelta(seconds=PREPARED_TTL_SECS):
+                fresh.append(item)
+        except Exception:
+            continue
+    next_queue = fresh
+
+
 def fill_next_game(idea: str = None):
-    global next_game
+    """Fill one slot if capacity allows; returns dict with filled flag and idea."""
+    global next_queue
     try:
-        # If slot is occupied and fresh, skip
-        if next_game:
-            try:
-                ts = datetime.fromisoformat(next_game.get("created_at", datetime.utcnow().isoformat()))
-                if datetime.utcnow() - ts <= timedelta(seconds=PREPARED_TTL_SECS):
-                    return {"filled": False, "reason": "slot_fresh"}
-            except Exception:
-                pass
+        _expire_stale_from_queue()
+        if len(next_queue) >= MAX_PREFETCH:
+            return {"filled": False, "reason": "queue_full", "count": len(next_queue)}
         chosen_idea = (idea or PREPARE_DEFAULT_IDEAS[datetime.utcnow().second % len(PREPARE_DEFAULT_IDEAS)]).strip()
-        logger.info(f"🧪 Filling next-game slot with idea: '{chosen_idea}'")
+        logger.info(f"🧪 Filling prefetch queue with idea: '{chosen_idea}' (size before: {len(next_queue)})")
         game_html = generate_game_with_anthropic(chosen_idea)
         if not game_html:
-            return {"filled": False, "reason": "generation_failed"}
+            return {"filled": False, "reason": "generation_failed", "count": len(next_queue)}
         sanitized_code, _ = sanitize_react_code(game_html, "Claude")
         if not sanitized_code:
-            return {"filled": False, "reason": "sanitization_failed"}
-        next_game = {
+            return {"filled": False, "reason": "sanitization_failed", "count": len(next_queue)}
+        next_queue.append({
             "idea": chosen_idea,
             "code": sanitized_code,
             "created_at": datetime.utcnow().isoformat(),
-        }
-        logger.info("✅ next-game slot filled")
-        return {"filled": True, "idea": chosen_idea}
+        })
+        logger.info(f"✅ queued next-game (size now: {len(next_queue)})")
+        return {"filled": True, "idea": chosen_idea, "count": len(next_queue)}
     except Exception as e:
         logger.error(f"❌ fill_next_game error: {e}")
-        return {"filled": False, "reason": str(e)}
-
-
-def _cleanup_prepared():
-    now = datetime.utcnow()
-    # Remove expired or overflow
-    expired = []
-    for token, rec in list(prepared_games.items()):
-        ts = datetime.fromisoformat(rec.get("created_at"))
-        if now - ts > timedelta(seconds=PREPARED_TTL_SECS):
-            expired.append(token)
-    for t in expired:
-        prepared_games.pop(t, None)
-    # Trim if over capacity (oldest first)
-    if len(prepared_games) > PREPARED_MAX:
-        oldest_first = sorted(prepared_games.items(), key=lambda kv: kv[1].get("created_at"))
-        for t, _ in oldest_first[: len(prepared_games) - PREPARED_MAX]:
-            prepared_games.pop(t, None)
+        return {"filled": False, "reason": str(e), "count": len(next_queue)}
 
 
 # --------------------
@@ -240,8 +235,8 @@ def home():
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
             "/generate-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - Claude generates, Morph applies!",
             "/scroll-apply": "POST - Apply next-game instantly if available; otherwise returns not-ready",
-            "/prepared-status": "GET - Inspect next-game slot",
-            "/fill-next": "POST - Fill the next-game slot (optional JSON: {'idea': 'snake game'})",
+            "/prepared-status": "GET - Inspect prefetch queue (has_next, count, sample)",
+            "/fill-next": "POST - Fill the prefetch queue (optional JSON: {'idea': 'snake game', 'count': 1})",
             "/game-log": "GET - View recent game generation logs",
             "/detailed-log": "GET - View detailed game code and before/after comparisons",
             "/last-debug": "GET - View last Claude output, Morph result, and written code"
@@ -557,25 +552,23 @@ def get_last_debug():
 
 @app.route('/prepared-status')
 def prepared_status():
-    """Inspect next-game slot."""
+    """Inspect prefetch queue."""
     try:
-        # Expire if stale
-        global next_game
-        if next_game:
-            try:
-                ts = datetime.fromisoformat(next_game.get("created_at", datetime.utcnow().isoformat()))
-                if datetime.utcnow() - ts > timedelta(seconds=PREPARED_TTL_SECS):
-                    next_game = None
-            except Exception:
-                pass
+        _expire_stale_from_queue()
         sample_view = None
-        if next_game:
+        if next_queue:
+            head = next_queue[0]
             sample_view = {
-                "idea": next_game.get("idea"),
-                "created_at": next_game.get("created_at"),
-                "code_preview": (next_game.get("code", "")[:120] + ("..." if len(next_game.get("code", "")) > 120 else ""))
+                "idea": head.get("idea"),
+                "created_at": head.get("created_at"),
+                "code_preview": (head.get("code", "")[:120] + ("..." if len(head.get("code", "")) > 120 else ""))
             }
-        return jsonify({"success": True, "has_next": bool(next_game), "sample": sample_view})
+        return jsonify({
+            "success": True,
+            "has_next": bool(next_queue),
+            "count": len(next_queue),
+            "sample": sample_view
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -584,9 +577,25 @@ def prepared_status():
 def fill_next():
     data = request.get_json(silent=True) or {}
     idea = (data.get('idea') or '').strip() or None
-    result = fill_next_game(idea)
-    status = 200 if result.get('filled') or result.get('reason') == 'slot_fresh' else 500
-    return jsonify(result), status
+    count = data.get('count')
+    try:
+        n = int(count) if count is not None else 1
+        n = max(1, min(n, MAX_PREFETCH))
+    except Exception:
+        n = 1
+    results = []
+    for _ in range(n):
+        res = fill_next_game(idea if idea else None)
+        results.append(res)
+        # if queue is full or generation failed, break early
+        if res.get('reason') == 'queue_full':
+            break
+    _expire_stale_from_queue()
+    return jsonify({
+        "filled_items": sum(1 for r in results if r.get('filled')),
+        "queue_count": len(next_queue),
+        "last": results[-1] if results else None
+    }), 200
 
 
 @app.route('/scroll-apply', methods=['POST'])
@@ -595,11 +604,12 @@ def scroll_apply():
     if not dev_server_wrapper:
         return jsonify({"error": "Not connected to dev server. Use POST /connect first"}), 400
     try:
-        global next_game
-        if not next_game:
+        _expire_stale_from_queue()
+        if not next_queue:
             return jsonify({"success": False, "used_next": False, "reason": "not_ready"}), 200
-        idea = next_game.get("idea")
-        code = next_game.get("code")
+        rec = next_queue.pop(0)
+        idea = rec.get("idea")
+        code = rec.get("code")
         # Ensure React file contract, then write directly
         sanitized_code, _meta = sanitize_react_code(code, "NextSlot")
         dev_server_wrapper.write_gamezone(sanitized_code)
@@ -607,10 +617,8 @@ def scroll_apply():
         last_generation_debug["morph_code_raw"] = None
         last_generation_debug["morph_code"] = None
         last_generation_debug["written_code"] = sanitized_code
-        # Consume slot only after successful write
-        next_game = None
-        logger.info(f"📝 Direct write of next-game to GameZone.js - Game: '{idea}'")
-        return jsonify({"success": True, "used_next": True, "game_idea": idea, "app_url": dev_server_wrapper.dev_server.ephemeral_url})
+        logger.info(f"📝 Direct write of next-game to GameZone.js - Game: '{idea}' (queue remaining: {len(next_queue)})")
+        return jsonify({"success": True, "used_next": True, "game_idea": idea, "app_url": dev_server_wrapper.dev_server.ephemeral_url, "remaining": len(next_queue)})
     except Exception as e:
         logger.error(f"scroll-apply error: {e}")
         return jsonify({"error": str(e)}), 500

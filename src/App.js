@@ -9,6 +9,7 @@ function App() {
   const [lastPrompt, setLastPrompt] = useState('');
   const [isSwiping, setIsSwiping] = useState(false);
   const [hasNextReady, setHasNextReady] = useState(false);
+  const [prefetchCount, setPrefetchCount] = useState(0);
 
   const isGeneratingRef = useRef(false);
   const gameContainerRef = useRef(null);
@@ -100,6 +101,8 @@ function App() {
     await updateGameViaFreestyle(idea);
     // After a full generate, prefill the next-game slot for fast scroll
     fillNextSlot().catch(() => { });
+    // Top off to 5 in the background
+    topOffPrefetch().catch(() => { });
   };
 
   // Prevent page scroll from stealing controls while game is active/focused/hovered
@@ -148,6 +151,8 @@ function App() {
         await updateGameViaFreestyle(idea);
         // Prefill the next-game slot right after initial generate
         fillNextSlot().catch(() => { });
+        // Top off to 5 in the background
+        topOffPrefetch().catch(() => { });
       } catch (e) {
         console.warn('Auto-init failed', e);
       }
@@ -160,6 +165,25 @@ function App() {
       if (!res.ok) return;
       const data = await res.json();
       setHasNextReady(Boolean(data?.has_next));
+      setPrefetchCount(Number(data?.count || 0));
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  // Top-off prefetch queue to target size
+  const topOffPrefetch = async (target = 5) => {
+    try {
+      // ask backend to fill up to 'target' by passing remaining count guess
+      const remaining = Math.max(0, target - prefetchCount);
+      if (remaining <= 0) return;
+      await fetch('http://localhost:8080/fill-next', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count: remaining }),
+      });
+      // refresh status after top-off
+      pollPreparedStatus();
     } catch (e) {
       // ignore
     }
@@ -189,6 +213,8 @@ function App() {
         setTimeout(() => { try { window.location.reload(); } catch { } }, 150);
         // Refill the next slot in the background for the following scroll
         fillNextSlot().catch(() => { });
+        // Top off after consuming one
+        topOffPrefetch().catch(() => { });
         return;
       }
 
@@ -197,6 +223,8 @@ function App() {
       await updateGameViaFreestyle(idea);
       // Refill after full generate
       fillNextSlot().catch(() => { });
+      // Top off in the background
+      topOffPrefetch().catch(() => { });
     } catch (e) {
       console.warn('Next click flow failed', e);
     } finally {
@@ -243,6 +271,9 @@ function App() {
           <span>Swipe for next</span>
           {hasNextReady && <span className="ready-dot" />}
         </button>
+        <div style={{ fontSize: 10, opacity: 0.6, marginTop: 4 }}>
+          Prefetched: {prefetchCount}
+        </div>
       </div>
 
       {lastPrompt && (

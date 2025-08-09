@@ -3991,3 +3991,23 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 15:42:37,586 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:37] "GET /prepared-status HTTP/1.1" 200 -
 2025-08-09 15:42:38,611 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:38] "GET /prepared-status HTTP/1.1" 200 -
 2025-08-09 15:42:40,585 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:40] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:42:43,584 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:43] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:42:46,588 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:46] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:42:49,586 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:49] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:42:52,586 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:52] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:42:55,586 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:55] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:42:58,585 - INFO - 127.0.0.1 - - [09/Aug/2025 15:42:58] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:01,586 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:01] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:04,584 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:04] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:07,603 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:07] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:08,627 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 15:43:08,784 - INFO -  * Restarting with stat
+2025-08-09 15:43:09,896 - WARNING -  * Debugger is active!
+2025-08-09 15:43:09,902 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 15:43:10,590 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:10] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:13,588 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:13] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:16,586 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:16] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:19,584 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:19] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:22,590 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:22] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:25,587 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:25] "GET /prepared-status HTTP/1.1" 200 -
+2025-08-09 15:43:28,606 - INFO - 127.0.0.1 - - [09/Aug/2025 15:43:28] "GET /prepared-status HTTP/1.1" 200 -

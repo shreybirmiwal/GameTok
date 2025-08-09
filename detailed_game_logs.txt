@@ -8649,3 +8649,1194 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: flappy bird game - 2025-08-09 14:53:35.946094
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [bird, setBird] = useState({ x: 50, y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_STRENGTH = -8;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 120;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+
+  const jump = useCallback(() => {
+    if (!gameStarted) {
+      setGameStarted(true);
+    }
+    if (!gameOver) {
+      setBird(prev => ({ ...prev, velocity: JUMP_STRENGTH }));
+    }
+  }, [gameStarted, gameOver]);
+
+  const resetGame = () => {
+    setBird({ x: 50, y: 150, velocity: 0 });
+    setPipes([]);
+    setScore(0);
+    setGameStarted(false);
+    setGameOver(false);
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setBird(prev => {
+        const newY = prev.y + prev.velocity;
+        const newVelocity = prev.velocity + GRAVITY;
+        
+        if (newY <= 0 || newY >= GAME_HEIGHT - 20) {
+          setGameOver(true);
+          return prev;
+        }
+        
+        return { ...prev, y: newY, velocity: newVelocity };
+      });
+
+      setPipes(prev => {
+        let newPipes = prev.map(pipe => ({ ...pipe, x: pipe.x - 2 }));
+        
+        newPipes = newPipes.filter(pipe => pipe.x > -PIPE_WIDTH);
+        
+        if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < GAME_WIDTH - 200) {
+          const gapY = Math.random() * (GAME_HEIGHT - PIPE_GAP - 40) + 20;
+          newPipes.push({
+            x: GAME_WIDTH,
+            topHeight: gapY,
+            bottomY: gapY + PIPE_GAP,
+            passed: false
+          });
+        }
+        
+        return newPipes;
+      });
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameStarted, gameOver]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    pipes.forEach(pipe => {
+      if (
+        bird.x + 20 > pipe.x &&
+        bird.x < pipe.x + PIPE_WIDTH &&
+        (bird.y < pipe.topHeight || bird.y + 20 > pipe.bottomY)
+      ) {
+        setGameOver(true);
+      }
+      
+      if (!pipe.passed && bird.x > pipe.x + PIPE_WIDTH) {
+        pipe.passed = true;
+        setScore(prev => prev + 1);
+      }
+    });
+  }, [bird, pipes, gameStarted, gameOver]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Flappy Bird</h2>
+      
+      <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+        Score: {score}
+      </div>
+      
+      <div 
+        onClick={jump}
+        style={{
+          position: 'relative',
+          width: GAME_WIDTH,
+          height: GAME_HEIGHT,
+          backgroundColor: '#87CEEB',
+          border: '2px solid #333',
+          cursor: 'pointer',
+          overflow: 'hidden'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: bird.x,
+            top: bird.y,
+            width: 20,
+            height: 20,
+            backgroundColor: '#FFD700',
+            borderRadius: '50%',
+            border: '2px solid #FFA500'
+          }}
+        />
+        
+        {pipes.map((pipe, index) => (
+          <div key={index}>
+            <div
+              style={{
+                position: 'absolute',
+                left: pipe.x,
+                top: 0,
+                width: PIPE_WIDTH,
+                height: pipe.topHeight,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                left: pipe.x,
+                top: pipe.bottomY,
+                width: PIPE_WIDTH,
+                height: GAME_HEIGHT - pipe.bottomY,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+          </div>
+        ))}
+        
+        {!gameStarted && !gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            color: '#333',
+            fontSize: '16px',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '10px',
+            borderRadius: '5px'
+          }}>
+            Click or press SPACE to start!
+          </div>
+        )}
+        
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            color: '#333',
+            fontSize: '16px',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '15px',
+            borderRadius: '5px'
+          }}>
+            <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+              Game Over!
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              Final Score: {score}
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <div style={{ marginTop: '10px' }}>
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
+      
+      <div style={{ 
+        marginTop: '10px', 
+        fontSize: '12px', 
+        color: '#666',
+        textAlign: 'center'
+      }}>
+        Click the game area or press SPACE to jump
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: racing car game - 2025-08-09 14:54:16.400366
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [carPosition, setCarPosition] = useState(200);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameRunning, setGameRunning] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const gameWidth = 400;
+  const gameHeight = 300;
+  const carWidth = 30;
+  const carHeight = 20;
+  const obstacleWidth = 25;
+  const obstacleHeight = 25;
+
+  const resetGame = useCallback(() => {
+    setCarPosition(200);
+    setObstacles([]);
+    setScore(0);
+    setGameRunning(false);
+    setGameOver(false);
+  }, []);
+
+  const startGame = useCallback(() => {
+    setGameRunning(true);
+    setGameOver(false);
+  }, []);
+
+  const handleKeyPress = useCallback((e) => {
+    if (!gameRunning || gameOver) return;
+    
+    if (e.key === 'ArrowLeft' && carPosition > 0) {
+      setCarPosition(prev => Math.max(0, prev - 20));
+    } else if (e.key === 'ArrowRight' && carPosition < gameWidth - carWidth) {
+      setCarPosition(prev => Math.min(gameWidth - carWidth, prev + 20));
+    }
+  }, [gameRunning, gameOver, carPosition, gameWidth, carWidth]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
+
+  useEffect(() => {
+    if (!gameRunning || gameOver) return;
+
+    const gameInterval = setInterval(() => {
+      setObstacles(prev => {
+        const newObstacles = prev.map(obstacle => ({
+          ...obstacle,
+          y: obstacle.y + 3
+        })).filter(obstacle => obstacle.y < gameHeight);
+
+        if (Math.random() < 0.3) {
+          newObstacles.push({
+            x: Math.random() * (gameWidth - obstacleWidth),
+            y: -obstacleHeight,
+            id: Date.now()
+          });
+        }
+
+        const carRect = {
+          x: carPosition,
+          y: gameHeight - carHeight - 10,
+          width: carWidth,
+          height: carHeight
+        };
+
+        const collision = newObstacles.some(obstacle => {
+          return carRect.x < obstacle.x + obstacleWidth &&
+                 carRect.x + carRect.width > obstacle.x &&
+                 carRect.y < obstacle.y + obstacleHeight &&
+                 carRect.y + carRect.height > obstacle.y;
+        });
+
+        if (collision) {
+          setGameOver(true);
+          setGameRunning(false);
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+    }, 100);
+
+    return () => clearInterval(gameInterval);
+  }, [gameRunning, gameOver, carPosition, gameWidth, gameHeight, carWidth, carHeight, obstacleWidth, obstacleHeight]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Racing Car Game</h2>
+      
+      <div style={{ marginBottom: '10px' }}>
+        <span style={{ marginRight: '20px', fontWeight: 'bold' }}>Score: {score}</span>
+        {!gameRunning && !gameOver && (
+          <button 
+            onClick={startGame}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginRight: '10px'
+            }}
+          >
+            Start Game
+          </button>
+        )}
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset
+        </button>
+      </div>
+
+      <div 
+        style={{
+          width: gameWidth,
+          height: gameHeight,
+          backgroundColor: '#333',
+          position: 'relative',
+          border: '2px solid #666',
+          overflow: 'hidden'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: carPosition,
+            bottom: 10,
+            width: carWidth,
+            height: carHeight,
+            backgroundColor: '#ff4444',
+            borderRadius: '3px'
+          }}
+        />
+
+        {obstacles.map(obstacle => (
+          <div
+            key={obstacle.id}
+            style={{
+              position: 'absolute',
+              left: obstacle.x,
+              top: obstacle.y,
+              width: obstacleWidth,
+              height: obstacleHeight,
+              backgroundColor: '#ffff44',
+              borderRadius: '2px'
+            }}
+          />
+        ))}
+
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Game Over!</h3>
+            <p style={{ margin: '0 0 10px 0' }}>Final Score: {score}</p>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
+        Use ← → arrow keys to move your car (red) and avoid obstacles (yellow)
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: porn app - 2025-08-09 14:54:57.508621
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+I can't create adult content or pornographic games. Instead, I can help you create other types of games like:
+
+- A simple puzzle game
+- A memory matching game
+- A word guessing game
+- A number guessing game
+- A simple arcade-style game
+- A trivia game
+
+Would you like me to create one of these alternatives instead? I'd be happy to make a fun, engaging game that meets all your technical requirements.
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: flappy bird game - 2025-08-09 14:58:14.271583
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [birdY, setBirdY] = useState(150);
+  const [birdVelocity, setBirdVelocity] = useState(0);
+  const [pipes, setPipes] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameRunning, setGameRunning] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_STRENGTH = -8;
+  const PIPE_WIDTH = 60;
+  const PIPE_GAP = 120;
+  const BIRD_SIZE = 20;
+
+  const jump = useCallback(() => {
+    if (gameRunning && !gameOver) {
+      setBirdVelocity(JUMP_STRENGTH);
+    }
+  }, [gameRunning, gameOver]);
+
+  const startGame = () => {
+    setBirdY(150);
+    setBirdVelocity(0);
+    setPipes([]);
+    setScore(0);
+    setGameRunning(true);
+    setGameOver(false);
+  };
+
+  const resetGame = () => {
+    setGameRunning(false);
+    setGameOver(false);
+    setBirdY(150);
+    setBirdVelocity(0);
+    setPipes([]);
+    setScore(0);
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
+
+  useEffect(() => {
+    if (!gameRunning || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setBirdY(prev => {
+        const newY = prev + birdVelocity;
+        if (newY <= 0 || newY >= 280) {
+          setGameOver(true);
+          setGameRunning(false);
+        }
+        return newY;
+      });
+
+      setBirdVelocity(prev => prev + GRAVITY);
+
+      setPipes(prev => {
+        let newPipes = prev.map(pipe => ({
+          ...pipe,
+          x: pipe.x - 2
+        })).filter(pipe => pipe.x > -PIPE_WIDTH);
+
+        if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < 200) {
+          const gapY = Math.random() * (200 - PIPE_GAP) + 50;
+          newPipes.push({
+            x: 400,
+            gapY: gapY,
+            passed: false
+          });
+        }
+
+        newPipes.forEach(pipe => {
+          if (!pipe.passed && pipe.x + PIPE_WIDTH < 50) {
+            pipe.passed = true;
+            setScore(s => s + 1);
+          }
+
+          const birdLeft = 50;
+          const birdRight = 50 + BIRD_SIZE;
+          const birdTop = birdY;
+          const birdBottom = birdY + BIRD_SIZE;
+
+          if (birdRight > pipe.x && birdLeft < pipe.x + PIPE_WIDTH) {
+            if (birdTop < pipe.gapY || birdBottom > pipe.gapY + PIPE_GAP) {
+              setGameOver(true);
+              setGameRunning(false);
+            }
+          }
+        });
+
+        return newPipes;
+      });
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameRunning, gameOver, birdY, birdVelocity]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2>Flappy Bird</h2>
+      <div style={{ marginBottom: '10px' }}>
+        Score: {score}
+      </div>
+      
+      <div 
+        style={{
+          position: 'relative',
+          width: '400px',
+          height: '300px',
+          backgroundColor: '#87CEEB',
+          border: '2px solid #333',
+          overflow: 'hidden',
+          cursor: 'pointer'
+        }}
+        onClick={jump}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: '50px',
+            top: `${birdY}px`,
+            width: `${BIRD_SIZE}px`,
+            height: `${BIRD_SIZE}px`,
+            backgroundColor: '#FFD700',
+            borderRadius: '50%',
+            border: '2px solid #FFA500',
+            transition: gameRunning ? 'none' : 'top 0.1s'
+          }}
+        />
+
+        {pipes.map((pipe, index) => (
+          <div key={index}>
+            <div
+              style={{
+                position: 'absolute',
+                left: `${pipe.x}px`,
+                top: '0px',
+                width: `${PIPE_WIDTH}px`,
+                height: `${pipe.gapY}px`,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                left: `${pipe.x}px`,
+                top: `${pipe.gapY + PIPE_GAP}px`,
+                width: `${PIPE_WIDTH}px`,
+                height: `${300 - (pipe.gapY + PIPE_GAP)}px`,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+          </div>
+        ))}
+
+        {!gameRunning && !gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '20px',
+            borderRadius: '10px'
+          }}>
+            <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+              Flappy Bird
+            </div>
+            <div style={{ marginBottom: '15px', fontSize: '14px' }}>
+              Click or press Space to flap!
+            </div>
+            <button 
+              onClick={startGame}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Start Game
+            </button>
+          </div>
+        )}
+
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '20px',
+            borderRadius: '10px'
+          }}>
+            <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold', color: '#FF0000' }}>
+              Game Over!
+            </div>
+            <div style={{ marginBottom: '10px', fontSize: '16px' }}>
+              Final Score: {score}
+            </div>
+            <button 
+              onClick={resetGame}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+        Click the game area or press Space to jump
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: cookinggame - 2025-08-09 14:58:55.969185
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [gameActive, setGameActive] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [inventory, setInventory] = useState({
+    bread: 0,
+    meat: 0,
+    cheese: 0,
+    lettuce: 0
+  });
+  const [message, setMessage] = useState('Click Start to begin cooking!');
+
+  const ingredients = ['bread', 'meat', 'cheese', 'lettuce'];
+  const recipes = [
+    { name: 'Sandwich', ingredients: ['bread', 'meat', 'cheese'], points: 10 },
+    { name: 'Burger', ingredients: ['bread', 'meat', 'lettuce'], points: 15 },
+    { name: 'Club', ingredients: ['bread', 'meat', 'cheese', 'lettuce'], points: 20 }
+  ];
+
+  useEffect(() => {
+    let timer;
+    if (gameActive && timeLeft > 0) {
+      timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setGameActive(false);
+      setMessage(`Game Over! Final Score: ${score}`);
+    }
+    return () => clearTimeout(timer);
+  }, [gameActive, timeLeft, score]);
+
+  useEffect(() => {
+    let orderTimer;
+    if (gameActive && orders.length < 3) {
+      orderTimer = setTimeout(() => {
+        const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+        setOrders(prev => [...prev, { ...randomRecipe, id: Date.now() }]);
+      }, Math.random() * 5000 + 2000);
+    }
+    return () => clearTimeout(orderTimer);
+  }, [gameActive, orders]);
+
+  const startGame = () => {
+    setScore(0);
+    setTimeLeft(60);
+    setGameActive(true);
+    setOrders([]);
+    setInventory({ bread: 0, meat: 0, cheese: 0, lettuce: 0 });
+    setMessage('Cook and serve orders to earn points!');
+  };
+
+  const addIngredient = (ingredient) => {
+    if (gameActive) {
+      setInventory(prev => ({
+        ...prev,
+        [ingredient]: prev[ingredient] + 1
+      }));
+    }
+  };
+
+  const serveOrder = (order) => {
+    const hasAllIngredients = order.ingredients.every(ing => inventory[ing] > 0);
+    
+    if (hasAllIngredients) {
+      const newInventory = { ...inventory };
+      order.ingredients.forEach(ing => {
+        newInventory[ing] -= 1;
+      });
+      setInventory(newInventory);
+      setScore(prev => prev + order.points);
+      setOrders(prev => prev.filter(o => o.id !== order.id));
+      setMessage(`Served ${order.name}! +${order.points} points`);
+    } else {
+      setMessage('Missing ingredients for this order!');
+    }
+  };
+
+  return (
+    <div style={{
+      width: '400px',
+      height: '300px',
+      border: '2px solid #8B4513',
+      borderRadius: '10px',
+      padding: '10px',
+      backgroundColor: '#FFF8DC',
+      fontFamily: 'Arial, sans-serif',
+      position: 'relative'
+    }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '10px',
+        fontSize: '14px',
+        fontWeight: 'bold'
+      }}>
+        <span>Score: {score}</span>
+        <span>Time: {timeLeft}s</span>
+      </div>
+
+      <div style={{
+        height: '20px',
+        fontSize: '12px',
+        color: '#333',
+        marginBottom: '10px'
+      }}>
+        {message}
+      </div>
+
+      {!gameActive ? (
+        <div style={{
+          textAlign: 'center',
+          marginTop: '50px'
+        }}>
+          <button
+            onClick={startGame}
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#FF6B35',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Start Cooking
+          </button>
+        </div>
+      ) : (
+        <div>
+          <div style={{
+            marginBottom: '10px'
+          }}>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '5px' }}>
+              Ingredients:
+            </div>
+            <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+              {ingredients.map(ing => (
+                <button
+                  key={ing}
+                  onClick={() => addIngredient(ing)}
+                  style={{
+                    padding: '5px 8px',
+                    fontSize: '10px',
+                    backgroundColor: '#90EE90',
+                    border: '1px solid #228B22',
+                    borderRadius: '3px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  +{ing} ({inventory[ing]})
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{
+            marginBottom: '10px'
+          }}>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '5px' }}>
+              Orders:
+            </div>
+            <div style={{ 
+              height: '80px', 
+              overflowY: 'auto',
+              border: '1px solid #ccc',
+              padding: '5px',
+              backgroundColor: 'white'
+            }}>
+              {orders.map(order => (
+                <div
+                  key={order.id}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '3px',
+                    marginBottom: '3px',
+                    backgroundColor: '#FFE4B5',
+                    borderRadius: '3px',
+                    fontSize: '10px'
+                  }}
+                >
+                  <span>
+                    {order.name}: {order.ingredients.join(', ')} ({order.points}pts)
+                  </span>
+                  <button
+                    onClick={() => serveOrder(order)}
+                    style={{
+                      padding: '2px 6px',
+                      fontSize: '9px',
+                      backgroundColor: '#FF6B35',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '2px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Serve
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              setGameActive(false);
+              setMessage('Game stopped. Click Start to play again.');
+            }}
+            style={{
+              padding: '5px 10px',
+              fontSize: '12px',
+              backgroundColor: '#DC143C',
+              color: 'white',
+              border: 'none',
+              borderRadius: '3px',
+              cursor: 'pointer'
+            }}
+          >
+            Stop Game
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: racing car game - 2025-08-09 14:59:45.325825
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [carPosition, setCarPosition] = useState(200);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameRunning, setGameRunning] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const gameWidth = 400;
+  const gameHeight = 300;
+  const carWidth = 30;
+  const carHeight = 20;
+  const obstacleWidth = 25;
+  const obstacleHeight = 25;
+
+  const resetGame = useCallback(() => {
+    setCarPosition(200);
+    setObstacles([]);
+    setScore(0);
+    setGameRunning(false);
+    setGameOver(false);
+  }, []);
+
+  const startGame = useCallback(() => {
+    setGameRunning(true);
+    setGameOver(false);
+  }, []);
+
+  useEffect(() => {
+    if (!gameRunning || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setObstacles(prev => {
+        const newObstacles = prev.map(obs => ({
+          ...obs,
+          y: obs.y + 3
+        })).filter(obs => obs.y < gameHeight);
+
+        if (Math.random() < 0.02) {
+          newObstacles.push({
+            x: Math.random() * (gameWidth - obstacleWidth),
+            y: -obstacleHeight,
+            id: Date.now()
+          });
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameRunning, gameOver, gameWidth, gameHeight, obstacleWidth, obstacleHeight]);
+
+  useEffect(() => {
+    if (!gameRunning || gameOver) return;
+
+    const checkCollisions = () => {
+      obstacles.forEach(obstacle => {
+        const carLeft = carPosition;
+        const carRight = carPosition + carWidth;
+        const carTop = gameHeight - 50;
+        const carBottom = gameHeight - 30;
+
+        const obsLeft = obstacle.x;
+        const obsRight = obstacle.x + obstacleWidth;
+        const obsTop = obstacle.y;
+        const obsBottom = obstacle.y + obstacleHeight;
+
+        if (carLeft < obsRight && carRight > obsLeft && carTop < obsBottom && carBottom > obsTop) {
+          setGameOver(true);
+          setGameRunning(false);
+        }
+      });
+    };
+
+    checkCollisions();
+  }, [obstacles, carPosition, gameRunning, gameOver, carWidth, gameHeight, obstacleWidth, obstacleHeight]);
+
+  useEffect(() => {
+    if (!gameRunning) return;
+
+    const handleKeyPress = (e) => {
+      if (e.key === 'ArrowLeft' && carPosition > 0) {
+        setCarPosition(prev => Math.max(0, prev - 15));
+      } else if (e.key === 'ArrowRight' && carPosition < gameWidth - carWidth) {
+        setCarPosition(prev => Math.min(gameWidth - carWidth, prev + 15));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameRunning, carPosition, gameWidth, carWidth]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Racing Car Game</h2>
+      
+      <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+        Score: {score}
+      </div>
+
+      <div style={{
+        position: 'relative',
+        width: `${gameWidth}px`,
+        height: `${gameHeight}px`,
+        backgroundColor: '#333',
+        border: '2px solid #000',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          top: '0',
+          width: '4px',
+          height: '100%',
+          backgroundColor: '#fff',
+          transform: 'translateX(-50%)'
+        }} />
+
+        <div style={{
+          position: 'absolute',
+          left: `${carPosition}px`,
+          bottom: '30px',
+          width: `${carWidth}px`,
+          height: `${carHeight}px`,
+          backgroundColor: '#ff4444',
+          borderRadius: '3px'
+        }} />
+
+        {obstacles.map(obstacle => (
+          <div
+            key={obstacle.id}
+            style={{
+              position: 'absolute',
+              left: `${obstacle.x}px`,
+              top: `${obstacle.y}px`,
+              width: `${obstacleWidth}px`,
+              height: `${obstacleHeight}px`,
+              backgroundColor: '#ffaa00',
+              borderRadius: '2px'
+            }}
+          />
+        ))}
+
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}>Game Over!</div>
+            <div style={{ fontSize: '16px' }}>Final Score: {score}</div>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
+        {!gameRunning && !gameOver && (
+          <button
+            onClick={startGame}
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Start Game
+          </button>
+        )}
+        
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset
+        </button>
+      </div>
+
+      {gameRunning && (
+        <div style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
+          Use ← → arrow keys to move
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

@@ -17,7 +17,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS - for development allow all origins, for production specify React app origin
+CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000", "*"])
 
 # Initialize API clients
 anthropic_client = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))

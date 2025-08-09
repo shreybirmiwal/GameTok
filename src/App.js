@@ -10,7 +10,7 @@ function App() {
     try {
       console.log(`Generating game: ${gameName}`);
       setCurrentGame(`Generating ${gameName}...`);
-      
+
       const response = await fetch('http://localhost:8080/generate-game', {
         method: 'POST',
         headers: {

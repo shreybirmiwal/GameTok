@@ -2095,3 +2095,87 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 14:26:26,748 - INFO -  * Restarting with stat
 2025-08-09 14:26:28,041 - WARNING -  * Debugger is active!
 2025-08-09 14:26:28,050 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:26:56,374 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 14:26:56,375 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 14:26:56,375 - INFO -  * Restarting with stat
+2025-08-09 14:26:57,683 - WARNING -  * Debugger is active!
+2025-08-09 14:26:57,692 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:27:55,009 - INFO - 127.0.0.1 - - [09/Aug/2025 14:27:55] "POST /connect HTTP/1.1" 200 -
+2025-08-09 14:29:00,981 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:00] "OPTIONS /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:29:00,982 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:00] "OPTIONS /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:29:03,700 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:03] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 14:29:03,703 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.' - Timestamp: 2025-08-09 14:29:03.703606
+2025-08-09 14:29:03,703 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.'
+2025-08-09 14:29:03,703 - INFO - 🤖 Claude generation starting for: 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.'
+2025-08-09 14:29:03,704 - INFO - 📡 Sending request to Claude for 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.' - Model: claude-sonnet-4-20250514
+2025-08-09 14:29:04,098 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:29:04,118 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:04] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:29:04,123 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:04] "OPTIONS /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:29:04,126 - INFO - 🧪 Preparing game (generate only) for idea: 'Circle Chase: Move white 20px circle with Arrow keys at 5px/step to catch randomly-moving red 15px circles that spawn every 2 seconds, scoring +1 per catch while avoiding black 25px circles that end the game on contact.'
+2025-08-09 14:29:04,127 - INFO - 🤖 Claude generation starting for: 'Circle Chase: Move white 20px circle with Arrow keys at 5px/step to catch randomly-moving red 15px circles that spawn every 2 seconds, scoring +1 per catch while avoiding black 25px circles that end the game on contact.'
+2025-08-09 14:29:04,127 - INFO - 📡 Sending request to Claude for 'Circle Chase: Move white 20px circle with Arrow keys at 5px/step to catch randomly-moving red 15px circles that spawn every 2 seconds, scoring +1 per catch while avoiding black 25px circles that end the game on contact.' - Model: claude-sonnet-4-20250514
+2025-08-09 14:29:04,672 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:29:04,674 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:04] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:29:23,329 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:29:23,342 - INFO - ✅ Claude generated content for 'Circle Chase: Move white 20px circle with Arrow keys at 5px/step to catch randomly-moving red 15px circles that spawn every 2 seconds, scoring +1 per catch while avoiding black 25px circles that end the game on contact.' - Length: 5938 chars
+2025-08-09 14:29:23,343 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:29:23,343 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 14:29:23,343 - INFO - ✅ Prepared game stored with token: 0a2a63e6543c422687847693b127cea3
+2025-08-09 14:29:23,345 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:23] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:29:25,303 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:29:25,305 - INFO - ✅ Claude generated content for 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.' - Length: 6020 chars
+2025-08-09 14:29:25,305 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 14:29:25,305 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 14:29:25,306 - INFO - ✅ Claude generated game - Length: 6020 chars, Has Canvas: True, Has Script: False
+2025-08-09 14:29:25,306 - INFO - 🎮 GENERATED GAME CODE for 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.':
+--------------------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerLane, setPlayerLane] = useState(1);
+  const [obstacles, setObstacles] = useState([]);
+  const [gameSpeed, setGameSpeed] = useState(2);
+  
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const LANES = 3;
+  const LANE_WIDTH = CANV...
+--------------------------------------------------
+2025-08-09 14:29:25,307 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.'
+2025-08-09 14:29:26,427 - INFO - 📖 Read current GameZone.js - Size: 1053 chars
+2025-08-09 14:29:26,428 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.', size: 6047 chars
+2025-08-09 14:29:27,041 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:29:27,042 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:27] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:29:27,048 - INFO - 🧪 Preparing game (generate only) for idea: 'DotChase: Move white 20px circle with Arrow keys (speed: 5px/frame) to catch randomly-spawning red 10px dots (spawn every 2sec) while avoiding black 15px circles (spawn every 3sec, move 3px/frame towards player) - score 1 point per dot, lose on enemy collision.'
+2025-08-09 14:29:27,048 - INFO - 🤖 Claude generation starting for: 'DotChase: Move white 20px circle with Arrow keys (speed: 5px/frame) to catch randomly-spawning red 10px dots (spawn every 2sec) while avoiding black 15px circles (spawn every 3sec, move 3px/frame towards player) - score 1 point per dot, lose on enemy collision.'
+2025-08-09 14:29:27,048 - INFO - 📡 Sending request to Claude for 'DotChase: Move white 20px circle with Arrow keys (speed: 5px/frame) to catch randomly-spawning red 10px dots (spawn every 2sec) while avoiding black 15px circles (spawn every 3sec, move 3px/frame towards player) - score 1 point per dot, lose on enemy collision.' - Model: claude-sonnet-4-20250514
+2025-08-09 14:29:28,650 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 14:29:28,669 - INFO - ✅ Morph returned updated React component - New size: 6046 chars
+2025-08-09 14:29:29,295 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.'
+2025-08-09 14:29:29,295 - INFO - 🎉 GAME GENERATION SUCCESS - 'Turbo Glider: swipe to change lanes and avoid traffic in retro space.' - Duration: 25.59s - Size: 6020 chars
+2025-08-09 14:29:29,296 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:29] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 14:29:32,134 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:29:32,138 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:32] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:29:45,495 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:29:45,501 - INFO - ✅ Claude generated content for 'DotChase: Move white 20px circle with Arrow keys (speed: 5px/frame) to catch randomly-spawning red 10px dots (spawn every 2sec) while avoiding black 15px circles (spawn every 3sec, move 3px/frame towards player) - score 1 point per dot, lose on enemy collision.' - Length: 5931 chars
+2025-08-09 14:29:45,502 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 14:29:45,502 - INFO - ✅ Prepared game stored with token: d600490a3a5e4b5d8099979113458389
+2025-08-09 14:29:45,503 - INFO - 127.0.0.1 - - [09/Aug/2025 14:29:45] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:30:43,136 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:30:43,436 - INFO -  * Restarting with stat
+2025-08-09 14:30:45,134 - WARNING -  * Debugger is active!
+2025-08-09 14:30:45,146 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:30:50,612 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:30:50,804 - INFO -  * Restarting with stat
+2025-08-09 14:30:52,374 - WARNING -  * Debugger is active!
+2025-08-09 14:30:52,382 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:30:57,868 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:30:58,055 - INFO -  * Restarting with stat
+2025-08-09 14:30:59,608 - WARNING -  * Debugger is active!
+2025-08-09 14:30:59,615 - INFO -  * Debugger PIN: 803-561-142

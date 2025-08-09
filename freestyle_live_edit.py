@@ -418,24 +418,19 @@ def generate_idea():
     try:
         data = request.get_json(silent=True) or {}
         prompt = data.get('prompt') or (
-            "Generate an implementation-ready, tiny HTML5 canvas game idea that an LLM can build in one pass with 100% accuracy. "
-            "Return a single line formatted as: \"<Title>: <explicit mechanic spec>\". "
-            "Keep the title short, but make the mechanic spec explicit (1–2 sentences max) with concrete controls and numbers."
+            "Generate a short, generic game idea label (2-6 words). Examples: shooting game, chess game, temple run type of game, pong game. "
+            "Return ONLY the phrase. No punctuation. No quotes. Lowercase."
         )
         recent_ideas = data.get('recentIdeas') or []
 
         system_prompt = (
-            "You are a creative assistant producing implementation-ready specs for tiny HTML5 canvas games. "
-            "Output must be ONE line idea suitable for a quick canvas prototype. The mechanic spec MUST include: "
-            "- exact control scheme (e.g., Arrow keys to move, Space to jump) "
-            "- clear win/lose or score condition "
-            "- concrete parameters (e.g., speeds, spawn rates, sizes) where relevant "
-            "Avoid vague pitches (e.g., 'neon dodge')."
+            "You are a naming assistant. Output a minimal, generic game idea label. "
+            "Constraints: 2-6 words, lowercase, no punctuation, no quotes."
         )
 
         # Compose user prompt with recent ideas to avoid duplicates
         avoid = ("\nRecent ideas (avoid repeating):\n- " + "\n- ".join(recent_ideas)) if recent_ideas else ""
-        user_prompt = f"{prompt}{avoid}\nReturn only one line with the exact format '<Title>: <explicit mechanic spec>'. No extra text."
+        user_prompt = f"{prompt}{avoid}\nReturn only the phrase. No extra text."
 
         idea_text = None
         try:

@@ -1,5 +1,5 @@
 .App {
-  min-height: 300vh; /* Make page scrollable */
+  min-height: 100vh;
   background-color: #000;
 }
 
@@ -65,19 +65,7 @@
   font-size: 16px;
 }
 
-.scroll-indicator {
-  position: absolute;
-  bottom: 30px;
-  text-align: center;
-  color: white;
-  z-index: 10;
-}
-
-.scroll-indicator p {
-  margin: 5px 0;
-  font-size: 14px;
-  opacity: 0.8;
-}
+/* Removed scroll indicator styles */
 
 .game-input-section {
   background-color: rgba(255, 255, 255, 0.1);

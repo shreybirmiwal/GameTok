@@ -10,6 +10,7 @@ import freestyle
 import os
 import json
 import logging
+import re
 from datetime import datetime
 import anthropic
 from openai import OpenAI
@@ -105,7 +106,8 @@ def home():
             "/gamezone/update": "POST - Update GameZone with new game name (JSON: {'game_name': 'YourGame'})",
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
             "/generate-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - Claude generates, Morph applies!",
-            "/game-log": "GET - View recent game generation logs"
+            "/game-log": "GET - View recent game generation logs",
+            "/detailed-log": "GET - View detailed game code and before/after comparisons"
         }
     }
     
@@ -259,11 +261,27 @@ def generate_game():
             logger.error(f"❌ Claude generation FAILED for: '{game_idea}'")
             return jsonify({"error": "Failed to generate game HTML"}), 500
         
-        # Log game details
+        # Log game details and actual generated code
         game_length = len(game_html)
         has_canvas = "<canvas" in game_html.lower()
         has_script = "<script" in game_html.lower()
         logger.info(f"✅ Claude generated game - Length: {game_length} chars, Has Canvas: {has_canvas}, Has Script: {has_script}")
+        
+        # Log the actual generated game code (truncated for readability)
+        game_preview = game_html[:500] + "..." if len(game_html) > 500 else game_html
+        logger.info(f"🎮 GENERATED GAME CODE for '{game_idea}':\n{'-'*50}\n{game_preview}\n{'-'*50}")
+        
+        # Save full game code to detailed log file
+        try:
+            with open('detailed_game_logs.txt', 'a', encoding='utf-8') as f:
+                f.write(f"\n{'='*80}\n")
+                f.write(f"GAME GENERATION: {game_idea} - {datetime.now()}\n")
+                f.write(f"{'='*80}\n")
+                f.write(f"FULL CLAUDE GENERATED CODE:\n{'-'*40}\n")
+                f.write(game_html)
+                f.write(f"\n{'-'*40}\n\n")
+        except Exception as e:
+            logger.error(f"❌ Failed to write detailed log: {e}")
         
         # Step 2: Use Morph to apply HTML to GameZone  
         logger.info(f"⚡ Applying game to GameZone.js using Morph for: '{game_idea}'")
@@ -308,6 +326,31 @@ def get_game_log():
                 "success": True,
                 "message": "No game generation log file found yet",
                 "recent_logs": []
+            })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/detailed-log')
+def get_detailed_log():
+    """Get detailed game code and before/after comparisons"""
+    try:
+        if os.path.exists('detailed_game_logs.txt'):
+            with open('detailed_game_logs.txt', 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Split into individual game generations
+                games = content.split('=' * 80)
+                # Get last 3 game generations to avoid overwhelming response
+                recent_games = games[-3:] if len(games) > 3 else games
+                return jsonify({
+                    "success": True,
+                    "total_games": len(games) - 1,  # Subtract 1 for empty first split
+                    "recent_detailed_logs": recent_games
+                })
+        else:
+            return jsonify({
+                "success": True,
+                "message": "No detailed game log file found yet",
+                "recent_detailed_logs": []
             })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -408,6 +451,10 @@ def apply_html_with_morph_to_gamezone(html_content, game_name):
         current_gamezone = dev_server_wrapper.read_gamezone()
         logger.info(f"📖 Read current GameZone.js - Size: {len(current_gamezone)} chars")
         
+        # Log the current GameZone content (before Morph changes)
+        current_preview = current_gamezone[:300] + "..." if len(current_gamezone) > 300 else current_gamezone
+        logger.info(f"📄 BEFORE MORPH - Current GameZone.js:\n{'-'*50}\n{current_preview}\n{'-'*50}")
+        
         # Create instruction for Morph
         instruction = f"""ONLY replace the htmlContent variable content in GameZone.js with the HTML5 Canvas game for '{game_name}'. 
 
@@ -431,6 +478,46 @@ def apply_html_with_morph_to_gamezone(html_content, game_name):
         updated_gamezone = response.choices[0].message.content
         logger.info(f"✅ Morph returned updated code - New size: {len(updated_gamezone)} chars")
         
+        # Log the updated GameZone content (after Morph changes)
+        updated_preview = updated_gamezone[:500] + "..." if len(updated_gamezone) > 500 else updated_gamezone
+        logger.info(f"📝 AFTER MORPH - Updated GameZone.js:\n{'-'*50}\n{updated_preview}\n{'-'*50}")
+        
+        # Log what specifically changed
+        if current_gamezone != updated_gamezone:
+            logger.info(f"🔄 MORPH CHANGES DETECTED for '{game_name}':")
+            logger.info(f"   Original size: {len(current_gamezone)} chars")
+            logger.info(f"   Updated size: {len(updated_gamezone)} chars")
+            logger.info(f"   Size difference: {len(updated_gamezone) - len(current_gamezone):+d} chars")
+            
+            # Try to extract and compare just the htmlContent sections
+            try:
+                old_html_match = re.search(r'const htmlContent = `([^`]+)`', current_gamezone, re.DOTALL)
+                new_html_match = re.search(r'const htmlContent = `([^`]+)`', updated_gamezone, re.DOTALL)
+                
+                if old_html_match and new_html_match:
+                    old_html = old_html_match.group(1).strip()
+                    new_html = new_html_match.group(1).strip()
+                    
+                    logger.info(f"🔍 HTML CONTENT COMPARISON for '{game_name}':")
+                    logger.info(f"📤 OLD htmlContent ({len(old_html)} chars):\n{old_html[:200]}...")
+                    logger.info(f"📥 NEW htmlContent ({len(new_html)} chars):\n{new_html[:200]}...")
+                else:
+                    logger.warning(f"⚠️ Could not extract htmlContent sections for comparison")
+            except Exception as e:
+                logger.error(f"❌ Error comparing htmlContent sections: {e}")
+        else:
+            logger.warning(f"⚠️ NO CHANGES DETECTED - Morph returned identical content for '{game_name}'")
+        
+        # Save detailed before/after to detailed log file
+        try:
+            with open('detailed_game_logs.txt', 'a', encoding='utf-8') as f:
+                f.write(f"MORPH BEFORE/AFTER COMPARISON:\n{'-'*40}\n")
+                f.write(f"BEFORE (GameZone.js):\n{current_gamezone}\n\n")
+                f.write(f"AFTER (GameZone.js):\n{updated_gamezone}\n\n")
+                f.write(f"{'='*80}\n\n")
+        except Exception as e:
+            logger.error(f"❌ Failed to write detailed before/after log: {e}")
+        
         # Apply the changes to Freestyle
         dev_server_wrapper.write_gamezone(updated_gamezone)
         logger.info(f"📝 Written to Freestyle dev server - Game: '{game_name}' successfully deployed")
@@ -449,5 +536,6 @@ if __name__ == "__main__":
     print("🎮 Use POST /generate-game with {'game_idea': 'snake'} - Claude generates, Morph applies!")
     print("⚡ Now using Morph's fast apply to update GameZone.js automatically!")
     print("📊 Game generation logging enabled - View logs at GET /game-log")
+    print("🔍 Detailed code logging enabled - View at GET /detailed-log")
     
     app.run(debug=True, host='0.0.0.0', port=8080)

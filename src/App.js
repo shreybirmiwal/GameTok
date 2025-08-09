@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import GameZone from './GameZone';
 
@@ -42,25 +42,7 @@ function App() {
     }
   };
 
-  const handleScroll = () => {
-    console.log('Scroll detected - calling Freestyle update function');
-
-    const scrollY = window.scrollY;
-    const scrollThreshold = 200;
-
-    if (scrollY > scrollThreshold) {
-      updateGameViaFreestyle("Advanced Game Mode");
-    } else {
-      updateGameViaFreestyle("Your Game");
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  // Removed scroll functionality
 
   return (
     <div className="App">
@@ -83,9 +65,7 @@ function App() {
 
         <GameZone currentGame={currentGame} />
 
-        <div className="scroll-indicator">
-          <p>Scroll to interact with the game!</p>
-        </div>
+        {/* Removed scroll indicator */}
       </div>
     </div>
   );

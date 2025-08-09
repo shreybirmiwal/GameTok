@@ -18,3 +18,563 @@
 2025-08-09 12:55:17,117 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
 2025-08-09 12:55:18,834 - WARNING -  * Debugger is active!
 2025-08-09 12:55:18,842 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 12:57:06,849 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 12:57:06,850 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 12:57:06,851 - INFO -  * Restarting with stat
+2025-08-09 12:57:08,191 - WARNING -  * Debugger is active!
+2025-08-09 12:57:08,208 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 12:57:12,461 - INFO - 127.0.0.1 - - [09/Aug/2025 12:57:12] "GET / HTTP/1.1" 200 -
+2025-08-09 12:57:54,085 - INFO - 127.0.0.1 - - [09/Aug/2025 12:57:54] "GET / HTTP/1.1" 200 -
+2025-08-09 12:58:01,447 - INFO - 127.0.0.1 - - [09/Aug/2025 12:58:01] "POST /connect HTTP/1.1" 200 -
+2025-08-09 12:58:22,430 - INFO - 127.0.0.1 - - [09/Aug/2025 12:58:22] "GET / HTTP/1.1" 200 -
+2025-08-09 12:58:46,770 - INFO - 127.0.0.1 - - [09/Aug/2025 12:58:46] "GET / HTTP/1.1" 200 -
+2025-08-09 12:58:49,377 - INFO - 127.0.0.1 - - [09/Aug/2025 12:58:49] "GET / HTTP/1.1" 200 -
+2025-08-09 12:58:50,796 - INFO - 127.0.0.1 - - [09/Aug/2025 12:58:50] "GET / HTTP/1.1" 200 -
+2025-08-09 12:59:01,225 - INFO - 127.0.0.1 - - [09/Aug/2025 12:59:01] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 12:59:01,230 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'tiktactoe' - Timestamp: 2025-08-09 12:59:01.230003
+2025-08-09 12:59:01,230 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'tiktactoe'
+2025-08-09 12:59:01,230 - INFO - 🤖 Claude generation starting for: 'tiktactoe'
+2025-08-09 12:59:01,230 - INFO - 📡 Sending request to Claude for 'tiktactoe' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:16,805 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 12:59:16,814 - INFO - ✅ Claude generated content for 'tiktactoe' - Length: 4340 chars
+2025-08-09 12:59:16,814 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 12:59:16,814 - INFO - ✅ Claude generated game - Length: 4340 chars, Has Canvas: True, Has Script: True
+2025-08-09 12:59:16,814 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'tiktactoe'
+2025-08-09 12:59:18,137 - INFO - 📖 Read current GameZone.js - Size: 1508 chars
+2025-08-09 12:59:18,137 - INFO - ⚡ Sending to Morph fast apply - Game: 'tiktactoe', HTML size: 4340 chars
+2025-08-09 12:59:24,178 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 12:59:24,190 - INFO - ✅ Morph returned updated code - New size: 5492 chars
+2025-08-09 12:59:24,997 - INFO - 📝 Written to Freestyle dev server - Game: 'tiktactoe' successfully deployed
+2025-08-09 12:59:24,997 - INFO - 🎉 GAME GENERATION SUCCESS - 'tiktactoe' - Duration: 23.77s - Size: 4340 chars
+2025-08-09 12:59:24,999 - INFO - 127.0.0.1 - - [09/Aug/2025 12:59:24] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 12:59:43,523 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:43.523210
+2025-08-09 12:59:43,524 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:43,524 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:43,524 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:43,537 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:43.537546
+2025-08-09 12:59:43,537 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:43,537 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:43,537 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:43,552 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:43.552505
+2025-08-09 12:59:43,552 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:43,552 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:43,552 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:43,568 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:43.568849
+2025-08-09 12:59:43,569 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:43,569 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:43,569 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:43,586 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:43.586274
+2025-08-09 12:59:43,586 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:43,586 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:43,586 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:43,601 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:43.601914
+2025-08-09 12:59:43,602 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:43,602 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:43,602 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:54,460 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 12:59:54,463 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2634 chars
+2025-08-09 12:59:54,463 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 12:59:54,463 - INFO - ✅ Claude generated game - Length: 2634 chars, Has Canvas: True, Has Script: True
+2025-08-09 12:59:54,463 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 12:59:54,482 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 12:59:54,485 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2681 chars
+2025-08-09 12:59:54,486 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 12:59:54,486 - INFO - ✅ Claude generated game - Length: 2681 chars, Has Canvas: True, Has Script: True
+2025-08-09 12:59:54,486 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 12:59:54,753 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 12:59:54,755 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2833 chars
+2025-08-09 12:59:54,755 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 12:59:54,755 - INFO - ✅ Claude generated game - Length: 2833 chars, Has Canvas: True, Has Script: True
+2025-08-09 12:59:54,755 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 12:59:55,763 - INFO - 📖 Read current GameZone.js - Size: 5492 chars
+2025-08-09 12:59:55,763 - INFO - 📖 Read current GameZone.js - Size: 5492 chars
+2025-08-09 12:59:55,764 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2681 chars
+2025-08-09 12:59:55,764 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2634 chars
+2025-08-09 12:59:55,770 - INFO - 📖 Read current GameZone.js - Size: 5492 chars
+2025-08-09 12:59:55,770 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2833 chars
+2025-08-09 12:59:57,048 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 12:59:57,049 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 12:59:57,050 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 12:59:57,052 - INFO - ✅ Morph returned updated code - New size: 3427 chars
+2025-08-09 12:59:57,055 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3866 chars
+2025-08-09 12:59:57,055 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 12:59:57,056 - INFO - ✅ Claude generated game - Length: 3866 chars, Has Canvas: True, Has Script: True
+2025-08-09 12:59:57,056 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 12:59:57,057 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3731 chars
+2025-08-09 12:59:57,058 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 12:59:57,058 - INFO - ✅ Claude generated game - Length: 3731 chars, Has Canvas: True, Has Script: True
+2025-08-09 12:59:57,058 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 12:59:57,702 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 12:59:57,702 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 14.13s - Size: 2833 chars
+2025-08-09 12:59:57,703 - INFO - 127.0.0.1 - - [09/Aug/2025 12:59:57] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 12:59:57,724 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:57.724637
+2025-08-09 12:59:57,724 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:57,724 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:57,725 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 12:59:57,937 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 12:59:57,942 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3936 chars
+2025-08-09 12:59:57,942 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 12:59:57,943 - INFO - ✅ Claude generated game - Length: 3936 chars, Has Canvas: True, Has Script: True
+2025-08-09 12:59:57,943 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 12:59:58,008 - INFO - 📖 Read current GameZone.js - Size: 3427 chars
+2025-08-09 12:59:58,008 - INFO - 📖 Read current GameZone.js - Size: 3427 chars
+2025-08-09 12:59:58,009 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3866 chars
+2025-08-09 12:59:58,009 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3731 chars
+2025-08-09 12:59:58,867 - INFO - 📖 Read current GameZone.js - Size: 3427 chars
+2025-08-09 12:59:58,868 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3936 chars
+2025-08-09 12:59:59,202 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 12:59:59,206 - INFO - ✅ Morph returned updated code - New size: 4325 chars
+2025-08-09 12:59:59,343 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 12:59:59,344 - INFO - ✅ Morph returned updated code - New size: 4460 chars
+2025-08-09 12:59:59,544 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 12:59:59,545 - INFO - ✅ Morph returned updated code - New size: 3522 chars
+2025-08-09 12:59:59,818 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 12:59:59,818 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.27s - Size: 3731 chars
+2025-08-09 12:59:59,818 - INFO - 127.0.0.1 - - [09/Aug/2025 12:59:59] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 12:59:59,823 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 12:59:59.823104
+2025-08-09 12:59:59,823 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 12:59:59,823 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 12:59:59,823 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:00,001 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:00,001 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.46s - Size: 3866 chars
+2025-08-09 13:00:00,001 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:00] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:00,009 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:00.009395
+2025-08-09 13:00:00,009 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:00,009 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:00,009 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:00,273 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:00,275 - INFO - ✅ Morph returned updated code - New size: 4530 chars
+2025-08-09 13:00:00,344 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:00,345 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.76s - Size: 2634 chars
+2025-08-09 13:00:00,345 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:00] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:00,349 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:00.349488
+2025-08-09 13:00:00,349 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:00,349 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:00,349 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:00,880 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:00,880 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 17.36s - Size: 3936 chars
+2025-08-09 13:00:00,880 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:00] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:00,884 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:00.884850
+2025-08-09 13:00:00,885 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:00,885 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:00,885 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:01,047 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:01,048 - INFO - ✅ Morph returned updated code - New size: 3601 chars
+2025-08-09 13:00:01,654 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:01,655 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 18.05s - Size: 2681 chars
+2025-08-09 13:00:01,655 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:01] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:01,660 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:01.660383
+2025-08-09 13:00:01,660 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:01,660 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:01,660 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:10,896 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:10,897 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3303 chars
+2025-08-09 13:00:10,897 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:10,897 - INFO - ✅ Claude generated game - Length: 3303 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:10,898 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:11,049 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:11,050 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2675 chars
+2025-08-09 13:00:11,050 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:11,050 - INFO - ✅ Claude generated game - Length: 2675 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:11,050 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:11,131 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:11,140 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2778 chars
+2025-08-09 13:00:11,140 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:11,140 - INFO - ✅ Claude generated game - Length: 2778 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:11,140 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:12,049 - INFO - 📖 Read current GameZone.js - Size: 3601 chars
+2025-08-09 13:00:12,049 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2675 chars
+2025-08-09 13:00:12,056 - INFO - 📖 Read current GameZone.js - Size: 3601 chars
+2025-08-09 13:00:12,056 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3303 chars
+2025-08-09 13:00:12,061 - INFO - 📖 Read current GameZone.js - Size: 3601 chars
+2025-08-09 13:00:12,061 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2778 chars
+2025-08-09 13:00:12,365 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:12,367 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3567 chars
+2025-08-09 13:00:12,367 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:12,368 - INFO - ✅ Claude generated game - Length: 3567 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:12,368 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:13,210 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:13,211 - INFO - ✅ Morph returned updated code - New size: 3601 chars
+2025-08-09 13:00:13,275 - INFO - 📖 Read current GameZone.js - Size: 3601 chars
+2025-08-09 13:00:13,275 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3567 chars
+2025-08-09 13:00:13,747 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:13,748 - INFO - ✅ Morph returned updated code - New size: 3575 chars
+2025-08-09 13:00:13,825 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:13,825 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 13.48s - Size: 2778 chars
+2025-08-09 13:00:13,826 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:13] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:13,828 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:13.828392
+2025-08-09 13:00:13,828 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:13,828 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:13,828 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:14,456 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:14,456 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 13.57s - Size: 2675 chars
+2025-08-09 13:00:14,456 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:14] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:14,460 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:14.460467
+2025-08-09 13:00:14,460 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:14,460 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:14,460 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:14,755 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:14,756 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3956 chars
+2025-08-09 13:00:14,756 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:14,756 - INFO - ✅ Claude generated game - Length: 3956 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:14,756 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:15,696 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:15,698 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3606 chars
+2025-08-09 13:00:15,698 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:15,699 - INFO - ✅ Claude generated game - Length: 3606 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:15,699 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:15,730 - INFO - 📖 Read current GameZone.js - Size: 3575 chars
+2025-08-09 13:00:15,730 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3956 chars
+2025-08-09 13:00:16,607 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:16,608 - INFO - ✅ Morph returned updated code - New size: 4267 chars
+2025-08-09 13:00:16,651 - INFO - 📖 Read current GameZone.js - Size: 3575 chars
+2025-08-09 13:00:16,651 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3606 chars
+2025-08-09 13:00:17,321 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:17,321 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 19.60s - Size: 3303 chars
+2025-08-09 13:00:17,322 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:17] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:17,330 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:17.330094
+2025-08-09 13:00:17,330 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:17,330 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:17,330 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:18,186 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:18,187 - INFO - ✅ Morph returned updated code - New size: 4555 chars
+2025-08-09 13:00:18,803 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:18,803 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 18.98s - Size: 3567 chars
+2025-08-09 13:00:18,804 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:18] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:18,807 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:18.807733
+2025-08-09 13:00:18,807 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:18,807 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:18,807 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:21,334 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:21,335 - INFO - ✅ Morph returned updated code - New size: 4578 chars
+2025-08-09 13:00:21,441 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:21,442 - INFO - ✅ Morph returned updated code - New size: 5064 chars
+2025-08-09 13:00:22,035 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:22,035 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 20.38s - Size: 3606 chars
+2025-08-09 13:00:22,036 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:22] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:22,040 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:22.040276
+2025-08-09 13:00:22,040 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:22,040 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:22,040 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:22,130 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:22,131 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 22.12s - Size: 3956 chars
+2025-08-09 13:00:22,131 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:22] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:22,133 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:22.133585
+2025-08-09 13:00:22,133 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:22,133 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:22,133 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:25,575 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:25,576 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2840 chars
+2025-08-09 13:00:25,576 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:25,576 - INFO - ✅ Claude generated game - Length: 2840 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:25,576 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:26,640 - INFO - 📖 Read current GameZone.js - Size: 5064 chars
+2025-08-09 13:00:26,640 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2840 chars
+2025-08-09 13:00:27,133 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:27,134 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3584 chars
+2025-08-09 13:00:27,134 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:27,134 - INFO - ✅ Claude generated game - Length: 3584 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:27,134 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:28,004 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:28,011 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2845 chars
+2025-08-09 13:00:28,011 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:28,012 - INFO - ✅ Claude generated game - Length: 2845 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:28,012 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:28,069 - INFO - 📖 Read current GameZone.js - Size: 5064 chars
+2025-08-09 13:00:28,070 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3584 chars
+2025-08-09 13:00:29,305 - INFO - 📖 Read current GameZone.js - Size: 5064 chars
+2025-08-09 13:00:29,306 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2845 chars
+2025-08-09 13:00:31,455 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:31,456 - INFO - ✅ Morph returned updated code - New size: 3820 chars
+2025-08-09 13:00:32,160 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:32,160 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 17.70s - Size: 2840 chars
+2025-08-09 13:00:32,160 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:32] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:32,164 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:32.164192
+2025-08-09 13:00:32,164 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:32,164 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:32,164 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:32,730 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:32,731 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3916 chars
+2025-08-09 13:00:32,732 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:32,732 - INFO - ✅ Claude generated game - Length: 3916 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:32,732 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:33,313 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:33,314 - INFO - ✅ Morph returned updated code - New size: 3773 chars
+2025-08-09 13:00:33,468 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:33,469 - INFO - ✅ Morph returned updated code - New size: 4640 chars
+2025-08-09 13:00:34,011 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:34,011 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.68s - Size: 2845 chars
+2025-08-09 13:00:34,012 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:34] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:34,013 - INFO - 📖 Read current GameZone.js - Size: 3773 chars
+2025-08-09 13:00:34,013 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3916 chars
+2025-08-09 13:00:34,016 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:34.016729
+2025-08-09 13:00:34,016 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:34,016 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:34,017 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:34,424 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:34,424 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 20.60s - Size: 3584 chars
+2025-08-09 13:00:34,424 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:34] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:34,428 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:34.428409
+2025-08-09 13:00:34,428 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:34,428 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:34,428 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:34,598 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:34,601 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3001 chars
+2025-08-09 13:00:34,601 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:34,601 - INFO - ✅ Claude generated game - Length: 3001 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:34,601 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:34,701 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:34,702 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3756 chars
+2025-08-09 13:00:34,702 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:34,702 - INFO - ✅ Claude generated game - Length: 3756 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:34,702 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:35,293 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:35,294 - INFO - ✅ Morph returned updated code - New size: 4510 chars
+2025-08-09 13:00:35,492 - INFO - 📖 Read current GameZone.js - Size: 4640 chars
+2025-08-09 13:00:35,492 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3001 chars
+2025-08-09 13:00:35,601 - INFO - 📖 Read current GameZone.js - Size: 4640 chars
+2025-08-09 13:00:35,602 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3756 chars
+2025-08-09 13:00:35,891 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:35,891 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 17.08s - Size: 3916 chars
+2025-08-09 13:00:35,891 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:35] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:35,898 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:35.898130
+2025-08-09 13:00:35,898 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:35,898 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:35,898 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:36,743 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:36,744 - INFO - ✅ Morph returned updated code - New size: 4350 chars
+2025-08-09 13:00:37,496 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:37,496 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 15.36s - Size: 3756 chars
+2025-08-09 13:00:37,496 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:37] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:37,500 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:37.500026
+2025-08-09 13:00:37,500 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:37,500 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:37,500 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:38,162 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:38,162 - INFO - ✅ Morph returned updated code - New size: 4009 chars
+2025-08-09 13:00:38,755 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:38,755 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.72s - Size: 3001 chars
+2025-08-09 13:00:38,755 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:38] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:38,759 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:38.759624
+2025-08-09 13:00:38,759 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:38,759 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:38,759 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:42,565 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:42,567 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2565 chars
+2025-08-09 13:00:42,567 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:42,567 - INFO - ✅ Claude generated game - Length: 2565 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:42,567 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:44,655 - INFO - 📖 Read current GameZone.js - Size: 4009 chars
+2025-08-09 13:00:44,656 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2565 chars
+2025-08-09 13:00:45,732 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:45,732 - INFO - ✅ Morph returned updated code - New size: 3159 chars
+2025-08-09 13:00:46,404 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:46,404 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 14.24s - Size: 2565 chars
+2025-08-09 13:00:46,405 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:46] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:46,409 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:46.409185
+2025-08-09 13:00:46,409 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:46,409 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:46,409 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:46,511 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:46,512 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3440 chars
+2025-08-09 13:00:46,512 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:46,512 - INFO - ✅ Claude generated game - Length: 3440 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:46,512 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:46,571 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:46,573 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2584 chars
+2025-08-09 13:00:46,573 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:46,573 - INFO - ✅ Claude generated game - Length: 2584 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:46,573 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:47,534 - INFO - 📖 Read current GameZone.js - Size: 3159 chars
+2025-08-09 13:00:47,534 - INFO - 📖 Read current GameZone.js - Size: 3159 chars
+2025-08-09 13:00:47,534 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3440 chars
+2025-08-09 13:00:47,534 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2584 chars
+2025-08-09 13:00:48,308 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:48,309 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3884 chars
+2025-08-09 13:00:48,309 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:48,309 - INFO - ✅ Claude generated game - Length: 3884 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:48,309 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:48,627 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:48,628 - INFO - ✅ Morph returned updated code - New size: 3178 chars
+2025-08-09 13:00:48,660 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:48,661 - INFO - ✅ Morph returned updated code - New size: 4040 chars
+2025-08-09 13:00:48,921 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:48,925 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2835 chars
+2025-08-09 13:00:48,925 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:48,925 - INFO - ✅ Claude generated game - Length: 2835 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:48,925 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:49,271 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:49,271 - INFO - 📖 Read current GameZone.js - Size: 3178 chars
+2025-08-09 13:00:49,271 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:49,271 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 13.37s - Size: 2584 chars
+2025-08-09 13:00:49,272 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3884 chars
+2025-08-09 13:00:49,272 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 15.26s - Size: 3440 chars
+2025-08-09 13:00:49,272 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:49] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:49,274 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:49] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:49,280 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:49.280311
+2025-08-09 13:00:49,280 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:49.280577
+2025-08-09 13:00:49,280 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:49,280 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:49,280 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:49,280 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:49,280 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:49,280 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:49,988 - INFO - 📖 Read current GameZone.js - Size: 4040 chars
+2025-08-09 13:00:49,988 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2835 chars
+2025-08-09 13:00:50,362 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:50,365 - INFO - ✅ Morph returned updated code - New size: 4478 chars
+2025-08-09 13:00:51,118 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:51,120 - INFO - ✅ Morph returned updated code - New size: 3439 chars
+2025-08-09 13:00:51,202 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:51,203 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.77s - Size: 3884 chars
+2025-08-09 13:00:51,203 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:51] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:51,206 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:51.206527
+2025-08-09 13:00:51,206 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:51,206 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:51,206 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:51,832 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:51,832 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 14.33s - Size: 2835 chars
+2025-08-09 13:00:51,833 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:51] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:51,836 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:51.836929
+2025-08-09 13:00:51,837 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:51,837 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:51,837 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:52,242 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:52,243 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3760 chars
+2025-08-09 13:00:52,244 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:52,244 - INFO - ✅ Claude generated game - Length: 3760 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:52,244 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:53,167 - INFO - 📖 Read current GameZone.js - Size: 3439 chars
+2025-08-09 13:00:53,167 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3760 chars
+2025-08-09 13:00:54,325 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:54,326 - INFO - ✅ Morph returned updated code - New size: 4364 chars
+2025-08-09 13:00:54,943 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:54,943 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.18s - Size: 3760 chars
+2025-08-09 13:00:54,943 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:54] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:54,946 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:54.946948
+2025-08-09 13:00:54,947 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:54,947 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:54,947 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:00:56,583 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:00:56,587 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2590 chars
+2025-08-09 13:00:56,587 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:00:56,587 - INFO - ✅ Claude generated game - Length: 2590 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:00:56,587 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:00:57,490 - INFO - 📖 Read current GameZone.js - Size: 4364 chars
+2025-08-09 13:00:57,490 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2590 chars
+2025-08-09 13:00:58,431 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:00:58,431 - INFO - ✅ Morph returned updated code - New size: 3194 chars
+2025-08-09 13:00:59,041 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:00:59,041 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 12.63s - Size: 2590 chars
+2025-08-09 13:00:59,041 - INFO - 127.0.0.1 - - [09/Aug/2025 13:00:59] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:00:59,044 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:00:59.044785
+2025-08-09 13:00:59,044 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:00:59,044 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:00:59,044 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:01:00,337 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:00,338 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2784 chars
+2025-08-09 13:01:00,338 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:00,338 - INFO - ✅ Claude generated game - Length: 2784 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:00,338 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:01,358 - INFO - 📖 Read current GameZone.js - Size: 3194 chars
+2025-08-09 13:01:01,359 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2784 chars
+2025-08-09 13:01:02,380 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:02,382 - INFO - ✅ Morph returned updated code - New size: 3388 chars
+2025-08-09 13:01:03,095 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:03,095 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 13.82s - Size: 2784 chars
+2025-08-09 13:01:03,096 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:03] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:01:03,099 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:01:03.099610
+2025-08-09 13:01:03,099 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:01:03,099 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:01:03,099 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:01:03,456 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:03,457 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3954 chars
+2025-08-09 13:01:03,457 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:03,457 - INFO - ✅ Claude generated game - Length: 3954 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:03,458 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:03,576 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:03,578 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3731 chars
+2025-08-09 13:01:03,578 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:03,578 - INFO - ✅ Claude generated game - Length: 3731 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:03,578 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:03,585 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:03,587 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2776 chars
+2025-08-09 13:01:03,587 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:03,587 - INFO - ✅ Claude generated game - Length: 2776 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:03,587 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:04,429 - INFO - 📖 Read current GameZone.js - Size: 3388 chars
+2025-08-09 13:01:04,429 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3954 chars
+2025-08-09 13:01:04,489 - INFO - 📖 Read current GameZone.js - Size: 3388 chars
+2025-08-09 13:01:04,489 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3731 chars
+2025-08-09 13:01:04,494 - INFO - 📖 Read current GameZone.js - Size: 3388 chars
+2025-08-09 13:01:04,494 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2776 chars
+2025-08-09 13:01:05,651 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:05,652 - INFO - ✅ Morph returned updated code - New size: 4558 chars
+2025-08-09 13:01:05,690 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:05,691 - INFO - ✅ Morph returned updated code - New size: 4335 chars
+2025-08-09 13:01:05,712 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:05,713 - INFO - ✅ Morph returned updated code - New size: 3380 chars
+2025-08-09 13:01:06,263 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:06,263 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 16.98s - Size: 3954 chars
+2025-08-09 13:01:06,263 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:06] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:01:06,266 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Your Game' - Timestamp: 2025-08-09 13:01:06.266887
+2025-08-09 13:01:06,266 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Your Game'
+2025-08-09 13:01:06,266 - INFO - 🤖 Claude generation starting for: 'Your Game'
+2025-08-09 13:01:06,267 - INFO - 📡 Sending request to Claude for 'Your Game' - Model: claude-sonnet-4-20250514
+2025-08-09 13:01:06,270 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:06,270 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 15.06s - Size: 3731 chars
+2025-08-09 13:01:06,270 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:06] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:01:06,280 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:06,280 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 14.44s - Size: 2776 chars
+2025-08-09 13:01:06,281 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:06] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:01:07,307 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:07,314 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3733 chars
+2025-08-09 13:01:07,314 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:07,314 - INFO - ✅ Claude generated game - Length: 3733 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:07,314 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:08,300 - INFO - 📖 Read current GameZone.js - Size: 3380 chars
+2025-08-09 13:01:08,300 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3733 chars
+2025-08-09 13:01:09,548 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:09,549 - INFO - ✅ Morph returned updated code - New size: 4337 chars
+2025-08-09 13:01:10,165 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:10,165 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 15.22s - Size: 3733 chars
+2025-08-09 13:01:10,165 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:10] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:01:14,566 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:14,568 - INFO - ✅ Claude generated content for 'Your Game' - Length: 2722 chars
+2025-08-09 13:01:14,568 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:14,568 - INFO - ✅ Claude generated game - Length: 2722 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:14,568 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:14,679 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:14,679 - INFO - ✅ Claude generated content for 'Your Game' - Length: 4432 chars
+2025-08-09 13:01:14,680 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:14,680 - INFO - ✅ Claude generated game - Length: 4432 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:14,680 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:15,590 - INFO - 📖 Read current GameZone.js - Size: 4337 chars
+2025-08-09 13:01:15,590 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 2722 chars
+2025-08-09 13:01:15,602 - INFO - 📖 Read current GameZone.js - Size: 4337 chars
+2025-08-09 13:01:15,602 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 4432 chars
+2025-08-09 13:01:16,716 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:16,717 - INFO - ✅ Morph returned updated code - New size: 3326 chars
+2025-08-09 13:01:17,091 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:17,092 - INFO - ✅ Morph returned updated code - New size: 5036 chars
+2025-08-09 13:01:17,304 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:17,305 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 14.21s - Size: 2722 chars
+2025-08-09 13:01:17,305 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:17] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:01:17,931 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:17,931 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 18.89s - Size: 4432 chars
+2025-08-09 13:01:17,931 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:17] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:01:19,280 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:01:19,281 - INFO - ✅ Claude generated content for 'Your Game' - Length: 3732 chars
+2025-08-09 13:01:19,281 - INFO - 📊 Generated game analysis - Canvas: True, Script: True, Styles: True
+2025-08-09 13:01:19,281 - INFO - ✅ Claude generated game - Length: 3732 chars, Has Canvas: True, Has Script: True
+2025-08-09 13:01:19,281 - INFO - ⚡ Applying game to GameZone.js using Morph for: 'Your Game'
+2025-08-09 13:01:20,197 - INFO - 📖 Read current GameZone.js - Size: 5036 chars
+2025-08-09 13:01:20,198 - INFO - ⚡ Sending to Morph fast apply - Game: 'Your Game', HTML size: 3732 chars
+2025-08-09 13:01:21,429 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:01:21,431 - INFO - ✅ Morph returned updated code - New size: 4336 chars
+2025-08-09 13:01:22,144 - INFO - 📝 Written to Freestyle dev server - Game: 'Your Game' successfully deployed
+2025-08-09 13:01:22,144 - INFO - 🎉 GAME GENERATION SUCCESS - 'Your Game' - Duration: 15.88s - Size: 3732 chars
+2025-08-09 13:01:22,145 - INFO - 127.0.0.1 - - [09/Aug/2025 13:01:22] "POST /generate-game HTTP/1.1" 200 -

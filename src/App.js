@@ -3,69 +3,85 @@ import './App.css';
 import GameZone from './GameZone';
 
 function App() {
-  const [currentGame, setCurrentGame] = useState("Your Game");
-  const [gameInput, setGameInput] = useState("");
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [connectStatus, setConnectStatus] = useState("");
-
-  // History of generated games
-  const [gameHistory, setGameHistory] = useState(() => {
-    try {
-      const raw = localStorage.getItem('gameHistory');
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  // Pending pre-generated ideas queue
-  const [preGenQueue, setPreGenQueue] = useState([]);
+  const [currentGame, setCurrentGame] = useState('Your Game');
+  const [gameInput, setGameInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const sentinelRef = useRef(null);
   const isGeneratingRef = useRef(false);
+  const canScrollTriggerRef = useRef(true);
 
-  useEffect(() => {
-    localStorage.setItem('gameHistory', JSON.stringify(gameHistory));
-  }, [gameHistory]);
-
-  const updateGameViaFreestyle = async (gameName, options = { silent: false }) => {
-    const { silent } = options;
+  const updateGameViaFreestyle = async (gameName) => {
     try {
-      console.log(`Generating game: ${gameName} ${silent ? '(silent)' : ''}`);
-      if (!silent) {
-        setIsGenerating(true);
-        setCurrentGame(`Generating ${gameName}...`);
-      }
+      setIsGenerating(true);
       isGeneratingRef.current = true;
+      setCurrentGame(`Generating ${gameName}...`);
 
       const response = await fetch('http://localhost:8080/generate-game', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ game_idea: gameName }),
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log(`Game generated successfully:`, result);
-        if (!silent) setCurrentGame(gameName);
-        setGameHistory((prev) => [
-          { id: Date.now(), idea: gameName, meta: { createdAt: new Date().toISOString(), result } },
-          ...prev,
-        ]);
+        console.log('Game generated successfully:', result);
+        setCurrentGame(gameName);
       } else {
         const error = await response.json();
         console.error('Failed to generate game:', error);
-        if (!silent) setCurrentGame(`Failed to generate ${gameName}`);
+        setCurrentGame(`Failed to generate ${gameName}`);
       }
     } catch (error) {
       console.error('Error calling game generation API:', error);
-      if (!silent) setCurrentGame(`Error generating ${gameName}`);
+      setCurrentGame(`Error generating ${gameName}`);
     } finally {
-      if (!silent) setIsGenerating(false);
+      setIsGenerating(false);
       isGeneratingRef.current = false;
+    }
+  };
+
+  // Local fallback idea generator
+  const generateIdeaLocally = () => {
+    const adjectives = ['Tiny', 'Cosmic', 'Retro', 'Neon', 'Shadow', 'Pixel', 'Turbo', 'Mystic', 'Swift', 'Lucky'];
+    const nouns = ['Runner', 'Climber', 'Racer', 'Dodger', 'Miner', 'Glider', 'Jumper', 'Fisher', 'Courier', 'Knight'];
+    const mechanics = [
+      'tap to jump over obstacles and collect coins',
+      'hold to charge a jump and time landings on moving platforms',
+      'swipe to change lanes and avoid traffic',
+      'drag to slingshot between anchors while avoiding spikes',
+      'tap to hook and swing past gaps',
+      'tap to dive and resurface to collect treasures',
+      'hold-and-release to dash through breakable walls',
+      'tap to flip gravity and stay on the track',
+      'tap to fish and upgrade your rod between runs',
+      'tap to deliver packages while dodging drones',
+    ];
+    const worlds = ['in a neon city', 'in a haunted forest', 'on floating islands', 'in retro space', 'inside a cave', 'on rooftops'];
+    const a = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const n = nouns[Math.floor(Math.random() * nouns.length)];
+    const m = mechanics[Math.floor(Math.random() * mechanics.length)];
+    const w = worlds[Math.floor(Math.random() * worlds.length)];
+    return `${a} ${n}: ${m} ${w}.`;
+  };
+
+  // Fetch a concise idea from backend Anthropic endpoint
+  const fetchIdeaFromAnthropic = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/generate-idea', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      if (!res.ok) throw new Error('Bad response');
+      const data = await res.json();
+      if (data && typeof data.idea === 'string' && data.idea.trim().length > 0) {
+        return data.idea.trim();
+      }
+      throw new Error('No idea in response');
+    } catch (e) {
+      console.warn('Anthropic idea endpoint failed, using local fallback', e);
+      return generateIdeaLocally();
     }
   };
 
@@ -73,87 +89,28 @@ function App() {
     e.preventDefault();
     if (gameInput.trim()) {
       updateGameViaFreestyle(gameInput.trim());
-      setGameInput("");
+      setGameInput('');
     }
   };
 
-  const handleReconnect = async () => {
-    try {
-      setIsConnecting(true);
-      setConnectStatus("Connecting...");
-      const res = await fetch('http://localhost:8080/connect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await res.json();
-      if (data.success) {
-        setConnectStatus('Connected');
-      } else {
-        setConnectStatus(`Failed: ${data.error || 'Unknown error'}`);
-      }
-    } catch (err) {
-      console.error('Reconnect error', err);
-      setConnectStatus('Error connecting');
-    } finally {
-      setIsConnecting(false);
-      setTimeout(() => setConnectStatus(""), 4000);
-    }
-  };
-
-  // Export history as JSON file
-  const handleExportHistory = () => {
-    try {
-      const blob = new Blob([JSON.stringify(gameHistory, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `game-history-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.json`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      console.error('Failed to export history', e);
-    }
-  };
-
-  // Seed pre-generated ideas on mount for faster subsequent loads
+  // Bottom scroll: when sentinel enters viewport, generate one new idea
   useEffect(() => {
-    const seeds = [
-      'Space Runner',
-      'Jungle Jump',
-      'Neon Racer',
-      'Pixel Pirates',
-      'Dungeon Dash',
-      'Skyline Skater',
-      'Astro Harvest',
-      'Cyber Courier',
-      'Robo Rally',
-      'Mystic Merge',
-    ];
-    setPreGenQueue(seeds);
-
-    // kick off a couple silently to warm the cache/history without changing current view
-    const warm = async () => {
-      const toWarm = seeds.slice(0, 2);
-      for (const idea of toWarm) {
-        await updateGameViaFreestyle(idea, { silent: true });
-      }
+    const handler = async () => {
+      if (isGeneratingRef.current) return;
+      if (!canScrollTriggerRef.current) return;
+      canScrollTriggerRef.current = false;
+      const idea = await fetchIdeaFromAnthropic();
+      await updateGameViaFreestyle(idea);
     };
-    warm();
-  }, []);
 
-  // Infinite scroll: when user scrolls near bottom, auto-generate next queued idea
-  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
         if (entry.isIntersecting) {
-          if (!isGeneratingRef.current && preGenQueue.length > 0) {
-            const [next, ...rest] = preGenQueue;
-            setPreGenQueue(rest);
-            updateGameViaFreestyle(next);
-          }
+          handler();
+        } else {
+          // Reset once the sentinel leaves the viewport so user must scroll back to bottom again
+          canScrollTriggerRef.current = true;
         }
       },
       { root: null, rootMargin: '100px', threshold: 0 }
@@ -161,90 +118,33 @@ function App() {
 
     if (sentinelRef.current) observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [preGenQueue]);
-
-  // Click a history item to go back to it
-  const handleSelectHistory = (item) => {
-    setCurrentGame(item.idea);
-  };
-
-  const historyEmpty = gameHistory.length === 0;
+  }, []);
 
   return (
     <div className="App">
-      <button
-        onClick={handleReconnect}
-        disabled={isConnecting}
-        style={{
-          position: 'fixed',
-          top: 12,
-          right: 12,
-          zIndex: 1000,
-          padding: '8px 12px',
-          background: '#222',
-          color: '#fff',
-          border: '1px solid #444',
-          borderRadius: 8,
-          cursor: isConnecting ? 'not-allowed' : 'pointer'
-        }}
-        aria-label="Reconnect to dev server"
-      >
-        {isConnecting ? 'Reconnecting...' : 'Reconnect'}
-      </button>
-      {connectStatus && (
-        <div style={{ position: 'fixed', top: 52, right: 12, zIndex: 1000, fontSize: 12, color: '#ccc' }}>
-          {connectStatus}
-        </div>
-      )}
-
       <div className="content-container">
-        <aside className="history-sidebar">
-          <div className="history-header">
-            <div className="history-title">Game History</div>
-            <button className="export-button" onClick={handleExportHistory} disabled={historyEmpty}>
-              Export JSON
+        <div className="game-input-section">
+          <h2>What game do you want to play?</h2>
+          <form onSubmit={handleGameSubmit}>
+            <input
+              type="text"
+              value={gameInput}
+              onChange={(e) => setGameInput(e.target.value)}
+              placeholder="Enter game idea..."
+              className="game-input"
+            />
+            <button type="submit" className="submit-button">
+              Generate Game
             </button>
-          </div>
-          <div className="history-list">
-            {historyEmpty ? (
-              <div style={{ color: '#aaa', fontSize: 13 }}>No games yet</div>
-            ) : (
-              gameHistory.map((item) => (
-                <div
-                  key={item.id}
-                  className="history-item"
-                  onClick={() => handleSelectHistory(item)}
-                  title={`Generated at ${item.meta?.createdAt || ''}`}
-                >
-                  {item.idea}
-                </div>
-              ))
-            )}
-          </div>
-        </aside>
+          </form>
+        </div>
 
-        <main className="main-area">
-          <div className="game-input-section sticky-input">
-            <h2>What game do you want to play?</h2>
-            <form onSubmit={handleGameSubmit}>
-              <input
-                type="text"
-                value={gameInput}
-                onChange={(e) => setGameInput(e.target.value)}
-                placeholder="Enter game idea..."
-                className="game-input"
-              />
-              <button type="submit" className="submit-button">
-                Generate Game
-              </button>
-            </form>
-          </div>
+        <GameZone currentGame={currentGame} />
 
-          <GameZone currentGame={currentGame} />
-
-          {/* Sentinel for infinite scroll */}
-          <div ref={sentinelRef} className="scroll-sentinel" />
-        </main>
+        {/* Spacer to enable scrolling to bottom on simple screens */}
+        <div className="scroll-spacer" />
+        {/* Sentinel for infinite scroll */}
+        <div ref={sentinelRef} className="scroll-sentinel" />
       </div>
 
       {isGenerating && <div className="generate-status">Generating...</div>}

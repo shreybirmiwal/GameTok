@@ -1636,3 +1636,2820 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: boxinggame - 2025-08-09 13:47:17.378117
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerHealth, setPlayerHealth] = useState(100);
+  const [opponentHealth, setOpponentHealth] = useState(100);
+  const [playerStamina, setPlayerStamina] = useState(100);
+  const [gameState, setGameState] = useState('ready'); // ready, fighting, gameOver
+  const [message, setMessage] = useState('Press Fight to start!');
+  const [round, setRound] = useState(1);
+  const [playerWins, setPlayerWins] = useState(0);
+  const [opponentWins, setOpponentWins] = useState(0);
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+  const [actionCooldown, setActionCooldown] = useState(false);
+
+  const resetGame = useCallback(() => {
+    setPlayerHealth(100);
+    setOpponentHealth(100);
+    setPlayerStamina(100);
+    setGameState('ready');
+    setMessage('Press Fight to start!');
+    setRound(1);
+    setIsPlayerTurn(true);
+    setActionCooldown(false);
+  }, []);
+
+  const resetMatch = useCallback(() => {
+    setPlayerHealth(100);
+    setOpponentHealth(100);
+    setPlayerStamina(100);
+    setGameState('ready');
+    setMessage('Press Fight to start next round!');
+    setIsPlayerTurn(true);
+    setActionCooldown(false);
+  }, []);
+
+  const getDamage = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const playerAttack = (attackType) => {
+    if (gameState !== 'fighting' || !isPlayerTurn || actionCooldown || playerStamina < 10) return;
+
+    setActionCooldown(true);
+    let damage = 0;
+    let staminaCost = 0;
+
+    switch (attackType) {
+      case 'jab':
+        damage = getDamage(8, 15);
+        staminaCost = 10;
+        break;
+      case 'hook':
+        damage = getDamage(12, 20);
+        staminaCost = 20;
+        break;
+      case 'uppercut':
+        damage = getDamage(15, 25);
+        staminaCost = 30;
+        break;
+      default:
+        return;
+    }
+
+    setPlayerStamina(prev => Math.max(0, prev - staminaCost));
+    setOpponentHealth(prev => Math.max(0, prev - damage));
+    setMessage(`You hit with a ${attackType} for ${damage} damage!`);
+    setIsPlayerTurn(false);
+
+    setTimeout(() => {
+      setActionCooldown(false);
+    }, 800);
+  };
+
+  const defend = () => {
+    if (gameState !== 'fighting' || !isPlayerTurn || actionCooldown) return;
+
+    setActionCooldown(true);
+    setPlayerStamina(prev => Math.min(100, prev + 15));
+    setMessage('You defend and recover stamina!');
+    setIsPlayerTurn(false);
+
+    setTimeout(() => {
+      setActionCooldown(false);
+    }, 800);
+  };
+
+  const startFight = () => {
+    if (gameState === 'ready') {
+      setGameState('fighting');
+      setMessage('Fight!');
+      setIsPlayerTurn(true);
+    }
+  };
+
+  useEffect(() => {
+    if (gameState === 'fighting' && !isPlayerTurn && !actionCooldown) {
+      const opponentAttack = () => {
+        const attacks = ['jab', 'hook', 'uppercut'];
+        const attack = attacks[Math.floor(Math.random() * attacks.length)];
+        let damage = 0;
+
+        switch (attack) {
+          case 'jab':
+            damage = getDamage(6, 12);
+            break;
+          case 'hook':
+            damage = getDamage(10, 16);
+            break;
+          case 'uppercut':
+            damage = getDamage(12, 20);
+            break;
+        }
+
+        setPlayerHealth(prev => Math.max(0, prev - damage));
+        setMessage(`Opponent hits you with a ${attack} for ${damage} damage!`);
+        setIsPlayerTurn(true);
+      };
+
+      const timer = setTimeout(opponentAttack, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [isPlayerTurn, gameState, actionCooldown]);
+
+  useEffect(() => {
+    if (playerHealth <= 0 || opponentHealth <= 0) {
+      setGameState('gameOver');
+      if (playerHealth <= 0) {
+        setOpponentWins(prev => prev + 1);
+        setMessage('You lose this round!');
+      } else {
+        setPlayerWins(prev => prev + 1);
+        setMessage('You win this round!');
+      }
+      setRound(prev => prev + 1);
+    }
+  }, [playerHealth, opponentHealth]);
+
+  useEffect(() => {
+    if (playerStamina < 100 && gameState === 'fighting') {
+      const staminaTimer = setInterval(() => {
+        setPlayerStamina(prev => Math.min(100, prev + 2));
+      }, 1000);
+      return () => clearInterval(staminaTimer);
+    }
+  }, [playerStamina, gameState]);
+
+  const getHealthBarColor = (health) => {
+    if (health > 60) return '#4CAF50';
+    if (health > 30) return '#FFC107';
+    return '#F44336';
+  };
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#1a1a1a',
+      color: 'white',
+      minHeight: '100vh'
+    }}>
+      <h1 style={{ marginBottom: '20px', color: '#FFD700' }}>Boxing Game</h1>
+      
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '400px',
+        marginBottom: '20px'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h3>You</h3>
+          <div>Wins: {playerWins}</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <h3>Round {round}</h3>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <h3>Opponent</h3>
+          <div>Wins: {opponentWins}</div>
+        </div>
+      </div>
+
+      <div style={{
+        width: '400px',
+        height: '300px',
+        border: '3px solid #333',
+        borderRadius: '10px',
+        backgroundColor: '#2a2a2a',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: '20px',
+        marginBottom: '20px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '60px', marginBottom: '10px' }}>🥊</div>
+            <div>YOU</div>
+            <div style={{
+              width: '80px',
+              height: '10px',
+              backgroundColor: '#333',
+              borderRadius: '5px',
+              overflow: 'hidden',
+              margin: '5px auto'
+            }}>
+              <div style={{
+                width: `
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Space Runner - 2025-08-09 13:50:37.586564
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('menu');
+  const [player, setPlayer] = useState({ x: 50, y: 150 });
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const resetGame = useCallback(() => {
+    setPlayer({ x: 50, y: 150 });
+    setObstacles([]);
+    setScore(0);
+    setGameSpeed(2);
+    setGameState('playing');
+  }, []);
+
+  const gameOver = useCallback(() => {
+    setGameState('gameOver');
+  }, []);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setObstacles(prev => {
+        const newObstacles = prev
+          .map(obs => ({ ...obs, x: obs.x - gameSpeed }))
+          .filter(obs => obs.x > -20);
+
+        if (Math.random() < 0.02) {
+          newObstacles.push({
+            x: 400,
+            y: Math.random() * 200 + 50,
+            width: 20,
+            height: 40
+          });
+        }
+
+        const collision = newObstacles.some(obs => 
+          player.x < obs.x + obs.width &&
+          player.x + 20 > obs.x &&
+          player.y < obs.y + obs.height &&
+          player.y + 20 > obs.y
+        );
+
+        if (collision) {
+          gameOver();
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+      setGameSpeed(prev => prev + 0.001);
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, player, gameSpeed, gameOver]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const handleKeyPress = (e) => {
+      if (e.key === 'ArrowUp') {
+        setPlayer(prev => ({ ...prev, y: Math.max(0, prev.y - 15) }));
+      } else if (e.key === 'ArrowDown') {
+        setPlayer(prev => ({ ...prev, y: Math.min(280, prev.y + 15) }));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameState]);
+
+  const containerStyle = {
+    width: '400px',
+    height: '300px',
+    border: '2px solid #333',
+    position: 'relative',
+    backgroundColor: '#001122',
+    overflow: 'hidden',
+    margin: '20px auto',
+    fontFamily: 'Arial, sans-serif'
+  };
+
+  const playerStyle = {
+    position: 'absolute',
+    left: `${player.x}px`,
+    top: `${player.y}px`,
+    width: '20px',
+    height: '20px',
+    backgroundColor: '#00ff00',
+    borderRadius: '50%',
+    transition: 'top 0.1s ease'
+  };
+
+  const obstacleStyle = (obs) => ({
+    position: 'absolute',
+    left: `${obs.x}px`,
+    top: `${obs.y}px`,
+    width: `${obs.width}px`,
+    height: `${obs.height}px`,
+    backgroundColor: '#ff0000'
+  });
+
+  const overlayStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    textAlign: 'center'
+  };
+
+  const buttonStyle = {
+    padding: '10px 20px',
+    fontSize: '16px',
+    backgroundColor: '#0066cc',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    margin: '5px'
+  };
+
+  const scoreStyle = {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    color: 'white',
+    fontSize: '16px',
+    fontWeight: 'bold'
+  };
+
+  if (gameState === 'menu') {
+    return (
+      <div style={containerStyle}>
+        <div style={overlayStyle}>
+          <h2>Space Runner</h2>
+          <p>Use arrow keys to avoid obstacles!</p>
+          <button style={buttonStyle} onClick={resetGame}>
+            Start Game
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (gameState === 'gameOver') {
+    return (
+      <div style={containerStyle}>
+        <div style={overlayStyle}>
+          <h2>Game Over!</h2>
+          <p>Final Score: {score}</p>
+          <button style={buttonStyle} onClick={resetGame}>
+            Play Again
+          </button>
+          <button style={buttonStyle} onClick={() => setGameState('menu')}>
+            Main Menu
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={containerStyle}>
+      <div style={scoreStyle}>Score: {score}</div>
+      <div style={playerStyle}></div>
+      {obstacles.map((obs, index) => (
+        <div key={index} style={obstacleStyle(obs)}></div>
+      ))}
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Space Runner - 2025-08-09 13:50:41.000205
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerY, setPlayerY] = useState(150);
+  const [obstacles, setObstacles] = useState([]);
+  const [stars, setStars] = useState([]);
+  const gameLoopRef = useRef();
+  const keysRef = useRef({ up: false, down: false });
+
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+  const PLAYER_SIZE = 20;
+  const OBSTACLE_WIDTH = 15;
+  const OBSTACLE_HEIGHT = 40;
+  const PLAYER_SPEED = 3;
+  const OBSTACLE_SPEED = 2;
+
+  const initializeGame = useCallback(() => {
+    setGameState('playing');
+    setScore(0);
+    setPlayerY(150);
+    setObstacles([]);
+    setStars(Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      x: Math.random() * GAME_WIDTH,
+      y: Math.random() * GAME_HEIGHT,
+      size: Math.random() * 2 + 1
+    })));
+  }, []);
+
+  const checkCollision = useCallback((player, obstacle) => {
+    return player.x < obstacle.x + obstacle.width &&
+           player.x + player.width > obstacle.x &&
+           player.y < obstacle.y + obstacle.height &&
+           player.y + player.height > obstacle.y;
+  }, []);
+
+  const gameLoop = useCallback(() => {
+    if (gameState !== 'playing') return;
+
+    setPlayerY(prevY => {
+      let newY = prevY;
+      if (keysRef.current.up && newY > 0) newY -= PLAYER_SPEED;
+      if (keysRef.current.down && newY < GAME_HEIGHT - PLAYER_SIZE) newY += PLAYER_SPEED;
+      return newY;
+    });
+
+    setObstacles(prevObstacles => {
+      let newObstacles = prevObstacles.map(obs => ({
+        ...obs,
+        x: obs.x - OBSTACLE_SPEED
+      })).filter(obs => obs.x > -OBSTACLE_WIDTH);
+
+      if (Math.random() < 0.02) {
+        newObstacles.push({
+          id: Date.now(),
+          x: GAME_WIDTH,
+          y: Math.random() * (GAME_HEIGHT - OBSTACLE_HEIGHT),
+          width: OBSTACLE_WIDTH,
+          height: OBSTACLE_HEIGHT
+        });
+      }
+
+      return newObstacles;
+    });
+
+    setStars(prevStars => 
+      prevStars.map(star => ({
+        ...star,
+        x: star.x - 0.5 < 0 ? GAME_WIDTH : star.x - 0.5
+      }))
+    );
+
+    setScore(prevScore => prevScore + 1);
+  }, [gameState]);
+
+  useEffect(() => {
+    if (gameState === 'playing') {
+      const player = { x: 20, y: playerY, width: PLAYER_SIZE, height: PLAYER_SIZE };
+      
+      for (let obstacle of obstacles) {
+        if (checkCollision(player, obstacle)) {
+          setGameState('gameOver');
+          break;
+        }
+      }
+    }
+  }, [playerY, obstacles, gameState, checkCollision]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+        keysRef.current.up = true;
+        e.preventDefault();
+      }
+      if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+        keysRef.current.down = true;
+        e.preventDefault();
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+        keysRef.current.up = false;
+      }
+      if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+        keysRef.current.down = false;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    initializeGame();
+  }, [initializeGame]);
+
+  useEffect(() => {
+    if (gameState === 'playing') {
+      gameLoopRef.current = setInterval(gameLoop, 16);
+    } else {
+      clearInterval(gameLoopRef.current);
+    }
+
+    return () => clearInterval(gameLoopRef.current);
+  }, [gameState, gameLoop]);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#fff' }}>Space Runner</h2>
+      
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: `${GAME_WIDTH}px`,
+        marginBottom: '10px',
+        color: '#fff'
+      }}>
+        <div>Score: {score}</div>
+        <button 
+          onClick={initializeGame}
+          style={{
+            padding: '5px 15px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '3px',
+            cursor: 'pointer'
+          }}
+        >
+          Restart
+        </button>
+      </div>
+
+      <div style={{
+        position: 'relative',
+        width: `${GAME_WIDTH}px`,
+        height: `${GAME_HEIGHT}px`,
+        backgroundColor: '#000',
+        border: '2px solid #333',
+        overflow: 'hidden'
+      }}>
+        {stars.map(star => (
+          <div
+            key={star.id}
+            style={{
+              position: 'absolute',
+              left: `${star.x}px`,
+              top: `${star.y}px`,
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+              backgroundColor: '#fff',
+              borderRadius: '50%'
+            }}
+          />
+        ))}
+
+        <div style={{
+          position: 'absolute',
+          left: '20px',
+          top: `${playerY}px`,
+          width: `${PLAYER_SIZE}px`,
+          height: `${PLAYER_SIZE}px`,
+          backgroundColor: '#00ff00',
+          clipPath: 'polygon(0% 50%, 100% 0%, 80% 50%, 100% 100%)'
+        }} />
+
+        {obstacles.map(obstacle => (
+          <div
+            key={obstacle.id}
+            style={{
+              position: 'absolute',
+              left: `${obstacle.x}px`,
+              top: `${obstacle.y}px`,
+              width: `${obstacle.width}px`,
+              height: `${obstacle.height}px`,
+              backgroundColor: '#ff4444'
+            }}
+          />
+        ))}
+
+        {gameState === 'gameOver' && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: '#fff',
+            
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Jungle Jump - 2025-08-09 13:51:02.021997
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('menu');
+  const [playerY, setPlayerY] = useState(250);
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [platforms, setPlatforms] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const GRAVITY = 0.8;
+  const JUMP_FORCE = -15;
+  const PLAYER_SIZE = 20;
+  const GROUND_Y = 270;
+
+  const initializePlatforms = useCallback(() => {
+    const initialPlatforms = [];
+    for (let i = 0; i < 5; i++) {
+      initialPlatforms.push({
+        x: 500 + i * 200,
+        y: Math.random() * 150 + 100,
+        width: 80,
+        height: 20,
+        id: i
+      });
+    }
+    return initialPlatforms;
+  }, []);
+
+  const resetGame = useCallback(() => {
+    setPlayerY(250);
+    setPlayerVelocity(0);
+    setPlatforms(initializePlatforms());
+    setScore(0);
+    setGameSpeed(2);
+    setGameState('playing');
+  }, [initializePlatforms]);
+
+  const startGame = () => {
+    resetGame();
+  };
+
+  const jump = useCallback(() => {
+    if (gameState === 'playing') {
+      setPlayerVelocity(JUMP_FORCE);
+    }
+  }, [gameState]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setPlayerY(prevY => {
+        let newY = prevY + playerVelocity;
+        
+        if (newY >= GROUND_Y) {
+          newY = GROUND_Y;
+          setPlayerVelocity(0);
+        }
+        
+        return newY;
+      });
+
+      setPlayerVelocity(prevVel => prevVel + GRAVITY);
+
+      setPlatforms(prevPlatforms => {
+        const newPlatforms = prevPlatforms.map(platform => ({
+          ...platform,
+          x: platform.x - gameSpeed
+        })).filter(platform => platform.x > -100);
+
+        if (newPlatforms.length < 5) {
+          const lastPlatform = newPlatforms[newPlatforms.length - 1];
+          const newX = lastPlatform ? lastPlatform.x + 200 : 500;
+          newPlatforms.push({
+            x: newX,
+            y: Math.random() * 150 + 100,
+            width: 80,
+            height: 20,
+            id: Date.now()
+          });
+        }
+
+        return newPlatforms;
+      });
+
+      setScore(prevScore => prevScore + 1);
+      
+      if (score > 0 && score % 500 === 0) {
+        setGameSpeed(prevSpeed => prevSpeed + 0.5);
+      }
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, playerVelocity, gameSpeed, score]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    platforms.forEach(platform => {
+      if (
+        50 < platform.x + platform.width &&
+        50 + PLAYER_SIZE > platform.x &&
+        playerY < platform.y + platform.height &&
+        playerY + PLAYER_SIZE > platform.y &&
+        playerVelocity > 0
+      ) {
+        setPlayerY(platform.y - PLAYER_SIZE);
+        setPlayerVelocity(JUMP_FORCE * 0.8);
+      }
+    });
+
+    if (playerY > 300) {
+      setGameState('gameOver');
+    }
+  }, [playerY, platforms, playerVelocity, gameState]);
+
+  if (gameState === 'menu') {
+    return (
+      <div style={{
+        width: '400px',
+        height: '300px',
+        backgroundColor: '#87CEEB',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontFamily: 'Arial, sans-serif',
+        position: 'relative'
+      }}>
+        <h1 style={{ color: '#2F4F2F', marginBottom: '20px' }}>🐒 Jungle Jump</h1>
+        <p style={{ color: '#2F4F2F', marginBottom: '20px', textAlign: 'center' }}>
+          Press SPACE or ↑ to jump on platforms!<br />
+          Avoid falling to the ground!
+        </p>
+        <button
+          onClick={startGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '18px',
+            backgroundColor: '#32CD32',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Start Game
+        </button>
+      </div>
+    );
+  }
+
+  if (gameState === 'gameOver') {
+    return (
+      <div style={{
+        width: '400px',
+        height: '300px',
+        backgroundColor: '#87CEEB',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        <h1 style={{ color: '#DC143C', marginBottom: '20px' }}>Game Over!</h1>
+        <p style={{ color: '#2F4F2F', marginBottom: '20px' }}>Score: {score}</p>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '18px',
+            backgroundColor: '#32CD32',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Play Again
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      style={{
+        width: '400px',
+        height: '300px',
+        backgroundColor: '#87CEEB',
+        position: 'relative',
+        overflow: 'hidden',
+        fontFamily: 'Arial, sans-serif'
+      }}
+      onClick={jump}
+    >
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        left: '10px',
+        color: '#2F4F2F',
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }}>
+        Score: {score}
+      </div>
+
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        right: '10px',
+        color: '#2F4F2F',
+        fontSize: '12px'
+      }}>
+        SPACE/↑ to Jump
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          left: '50px',
+          top: `${playerY}px`,
+          width: `${PLAYER_SIZE}px`,
+          height: `${PLAYER_SIZE}px`,
+          backgroundColor: '#8B4513',
+          borderRadius: '50%
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Jungle Jump - 2025-08-09 13:51:07.033367
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerY, setPlayerY] = useState(200);
+  const [playerVelY, setPlayerVelY] = useState(0);
+  const [obstacles, setObstacles] = useState([]);
+  const [gameTime, setGameTime] = useState(0);
+  const [keys, setKeys] = useState({});
+
+  const GRAVITY = 0.8;
+  const JUMP_FORCE = -15;
+  const GROUND_Y = 250;
+  const PLAYER_SIZE = 30;
+  const OBSTACLE_WIDTH = 20;
+  const OBSTACLE_HEIGHT = 40;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+
+  const resetGame = useCallback(() => {
+    setGameState('playing');
+    setScore(0);
+    setPlayerY(200);
+    setPlayerVelY(0);
+    setObstacles([]);
+    setGameTime(0);
+  }, []);
+
+  const jump = useCallback(() => {
+    if (playerY >= GROUND_Y - PLAYER_SIZE) {
+      setPlayerVelY(JUMP_FORCE);
+    }
+  }, [playerY]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      setKeys(prev => ({ ...prev, [e.code]: true }));
+      if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      setKeys(prev => ({ ...prev, [e.code]: false }));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [jump]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setGameTime(prev => prev + 1);
+
+      setPlayerY(prevY => {
+        const newY = prevY + playerVelY;
+        return Math.min(newY, GROUND_Y - PLAYER_SIZE);
+      });
+
+      setPlayerVelY(prevVel => {
+        if (playerY >= GROUND_Y - PLAYER_SIZE && prevVel > 0) {
+          return 0;
+        }
+        return prevVel + GRAVITY;
+      });
+
+      setObstacles(prevObstacles => {
+        let newObstacles = prevObstacles
+          .map(obs => ({ ...obs, x: obs.x - 3 }))
+          .filter(obs => obs.x > -OBSTACLE_WIDTH);
+
+        if (Math.random() < 0.02) {
+          newObstacles.push({
+            x: GAME_WIDTH,
+            y: GROUND_Y - OBSTACLE_HEIGHT,
+            width: OBSTACLE_WIDTH,
+            height: OBSTACLE_HEIGHT
+          });
+        }
+
+        const playerLeft = 50;
+        const playerRight = playerLeft + PLAYER_SIZE;
+        const playerTop = playerY;
+        const playerBottom = playerY + PLAYER_SIZE;
+
+        for (let obs of newObstacles) {
+          if (playerRight > obs.x && 
+              playerLeft < obs.x + obs.width && 
+              playerBottom > obs.y && 
+              playerTop < obs.y + obs.height) {
+            setGameState('gameOver');
+            break;
+          }
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, playerY, playerVelY]);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#2d5a27' }}>Jungle Jump</h2>
+      
+      <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+        Score: {score}
+      </div>
+
+      <div style={{
+        position: 'relative',
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+        backgroundColor: '#87CEEB',
+        border: '3px solid #2d5a27',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          height: '50px',
+          backgroundColor: '#228B22'
+        }} />
+
+        <div style={{
+          position: 'absolute',
+          left: '50px',
+          top: `${playerY}px`,
+          width: `${PLAYER_SIZE}px`,
+          height: `${PLAYER_SIZE}px`,
+          backgroundColor: '#8B4513',
+          borderRadius: '50%',
+          border: '2px solid #654321'
+        }} />
+
+        {obstacles.map((obs, index) => (
+          <div key={index} style={{
+            position: 'absolute',
+            left: `${obs.x}px`,
+            top: `${obs.y}px`,
+            width: `${obs.width}px`,
+            height: `${obs.height}px`,
+            backgroundColor: '#8B4513',
+            border: '1px solid #654321'
+          }} />
+        ))}
+
+        {gameState === 'gameOver' && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Game Over!</h3>
+            <p style={{ margin: '0 0 15px 0' }}>Final Score: {score}</p>
+            <button onClick={resetGame} style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#228B22',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}>
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '14px' }}>
+        <p>Press SPACE or UP ARROW to jump!</p>
+        <button onClick={resetGame} style={{
+          padding: '8px 16px',
+          fontSize: '14px',
+          backgroundColor: '#2d5a27',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          marginTop: '5px'
+        }}>
+          Restart Game
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Space Runner - 2025-08-09 13:51:30.882798
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerY, setPlayerY] = useState(150);
+  const [obstacles, setObstacles] = useState([]);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const resetGame = useCallback(() => {
+    setGameState('playing');
+    setScore(0);
+    setPlayerY(150);
+    setObstacles([]);
+    setGameSpeed(2);
+  }, []);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setObstacles(prev => {
+        let newObstacles = prev.map(obs => ({
+          ...obs,
+          x: obs.x - gameSpeed
+        })).filter(obs => obs.x > -50);
+
+        if (Math.random() < 0.02) {
+          newObstacles.push({
+            x: 450,
+            y: Math.random() * 200 + 50,
+            width: 30,
+            height: 30
+          });
+        }
+
+        const collision = newObstacles.some(obs => 
+          obs.x < 70 && obs.x > 20 && 
+          obs.y < playerY + 30 && obs.y + obs.height > playerY
+        );
+
+        if (collision) {
+          setGameState('gameOver');
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+      setGameSpeed(prev => prev + 0.001);
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, playerY, gameSpeed]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (gameState !== 'playing') return;
+      
+      if (e.key === 'ArrowUp' || e.key === ' ') {
+        setPlayerY(prev => Math.max(0, prev - 40));
+      }
+      if (e.key === 'ArrowDown') {
+        setPlayerY(prev => Math.min(270, prev + 40));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameState]);
+
+  return (
+    <div style={{
+      width: '400px',
+      height: '300px',
+      border: '2px solid #333',
+      position: 'relative',
+      backgroundColor: '#001122',
+      overflow: 'hidden',
+      margin: '20px auto'
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        left: '10px',
+        color: '#fff',
+        fontSize: '16px',
+        fontFamily: 'monospace'
+      }}>
+        Score: {score}
+      </div>
+
+      <div style={{
+        position: 'absolute',
+        left: '50px',
+        top: `${playerY}px`,
+        width: '20px',
+        height: '30px',
+        backgroundColor: '#00ff00',
+        clipPath: 'polygon(0% 50%, 100% 0%, 80% 50%, 100% 100%)'
+      }} />
+
+      {obstacles.map((obs, index) => (
+        <div
+          key={index}
+          style={{
+            position: 'absolute',
+            left: `${obs.x}px`,
+            top: `${obs.y}px`,
+            width: `${obs.width}px`,
+            height: `${obs.height}px`,
+            backgroundColor: '#ff4444',
+            borderRadius: '4px'
+          }}
+        />
+      ))}
+
+      {gameState === 'gameOver' && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          color: '#fff',
+          padding: '20px',
+          borderRadius: '10px',
+          textAlign: 'center',
+          fontFamily: 'monospace'
+        }}>
+          <div style={{ fontSize: '18px', marginBottom: '10px' }}>
+            Game Over!
+          </div>
+          <div style={{ marginBottom: '15px' }}>
+            Final Score: {score}
+          </div>
+          <button
+            onClick={resetGame}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#00ff00',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            Play Again
+          </button>
+        </div>
+      )}
+
+      <div style={{
+        position: 'absolute',
+        bottom: '10px',
+        left: '10px',
+        color: '#888',
+        fontSize: '12px',
+        fontFamily: 'monospace'
+      }}>
+        Use ↑↓ or SPACE to move
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Space Runner - 2025-08-09 13:51:31.814208
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const keysRef = useRef({});
+  
+  const [gameState, setGameState] = useState({
+    player: { x: 50, y: 150, width: 20, height: 20 },
+    obstacles: [],
+    score: 0,
+    gameOver: false,
+    speed: 2
+  });
+
+  const resetGame = useCallback(() => {
+    setGameState({
+      player: { x: 50, y: 150, width: 20, height: 20 },
+      obstacles: [],
+      score: 0,
+      gameOver: false,
+      speed: 2
+    });
+  }, []);
+
+  const generateObstacle = useCallback(() => {
+    return {
+      x: 400,
+      y: Math.random() * 260 + 20,
+      width: 15,
+      height: Math.random() * 40 + 20,
+      id: Date.now()
+    };
+  }, []);
+
+  const checkCollision = useCallback((rect1, rect2) => {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+  }, []);
+
+  const gameLoop = useCallback(() => {
+    setGameState(prevState => {
+      if (prevState.gameOver) return prevState;
+
+      const newState = { ...prevState };
+      
+      if (keysRef.current.ArrowUp && newState.player.y > 0) {
+        newState.player.y -= 3;
+      }
+      if (keysRef.current.ArrowDown && newState.player.y < 280) {
+        newState.player.y += 3;
+      }
+
+      newState.obstacles = newState.obstacles
+        .map(obstacle => ({ ...obstacle, x: obstacle.x - newState.speed }))
+        .filter(obstacle => obstacle.x > -obstacle.width);
+
+      if (Math.random() < 0.02) {
+        newState.obstacles.push(generateObstacle());
+      }
+
+      for (let obstacle of newState.obstacles) {
+        if (checkCollision(newState.player, obstacle)) {
+          newState.gameOver = true;
+          break;
+        }
+      }
+
+      newState.score += 1;
+      if (newState.score % 500 === 0) {
+        newState.speed += 0.5;
+      }
+
+      return newState;
+    });
+  }, [generateObstacle, checkCollision]);
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#000033';
+    ctx.fillRect(0, 0, 400, 300);
+
+    ctx.fillStyle = '#00ff00';
+    ctx.fillRect(gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height);
+
+    ctx.fillStyle = '#ff0000';
+    gameState.obstacles.forEach(obstacle => {
+      ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+    });
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '16px Arial';
+    ctx.fillText(`Score: ${gameState.score}`, 10, 25);
+
+    if (gameState.gameOver) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, 400, 300);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '24px Arial';
+      ctx.fillText('Game Over!', 140, 140);
+      ctx.font = '16px Arial';
+      ctx.fillText(`Final Score: ${gameState.score}`, 140, 170);
+    }
+  }, [gameState]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      keysRef.current[e.code] = true;
+    };
+
+    const handleKeyUp = (e) => {
+      keysRef.current[e.code] = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    const animate = () => {
+      gameLoop();
+      draw();
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [gameLoop, draw]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Space Runner</h2>
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={300}
+        style={{
+          border: '2px solid #333',
+          backgroundColor: '#000033'
+        }}
+      />
+      <div style={{ marginTop: '10px' }}>
+        <p style={{ margin: '5px 0', fontSize: '14px' }}>
+          Use arrow keys to move up and down. Avoid the red obstacles!
+        </p>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '8px 16px',
+            fontSize: '14px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Restart Game
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Jungle Jump - 2025-08-09 13:51:54.993644
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerY, setPlayerY] = useState(250);
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -12;
+  const GROUND_Y = 250;
+  const PLAYER_SIZE = 20;
+  const OBSTACLE_WIDTH = 15;
+  const OBSTACLE_HEIGHT = 40;
+
+  const jump = useCallback(() => {
+    if (!gameStarted) {
+      setGameStarted(true);
+      return;
+    }
+    if (!gameOver && playerY >= GROUND_Y - PLAYER_SIZE) {
+      setPlayerVelocity(JUMP_FORCE);
+    }
+  }, [gameOver, playerY, gameStarted]);
+
+  const resetGame = () => {
+    setPlayerY(GROUND_Y);
+    setPlayerVelocity(0);
+    setObstacles([]);
+    setScore(0);
+    setGameOver(false);
+    setGameStarted(false);
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space' || e.key === ' ') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setPlayerVelocity(prev => prev + GRAVITY);
+      
+      setPlayerY(prev => {
+        const newY = prev + playerVelocity;
+        return Math.min(newY, GROUND_Y);
+      });
+
+      setObstacles(prev => {
+        let newObstacles = prev.map(obs => ({ ...obs, x: obs.x - 3 }))
+          .filter(obs => obs.x > -OBSTACLE_WIDTH);
+
+        if (newObstacles.length === 0 || newObstacles[newObstacles.length - 1].x < 200) {
+          newObstacles.push({ x: 400, y: GROUND_Y - OBSTACLE_HEIGHT });
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameStarted, gameOver, playerVelocity]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const checkCollision = () => {
+      const playerX = 50;
+      const playerBottom = playerY + PLAYER_SIZE;
+
+      for (let obstacle of obstacles) {
+        if (playerX + PLAYER_SIZE > obstacle.x && 
+            playerX < obstacle.x + OBSTACLE_WIDTH &&
+            playerBottom > obstacle.y) {
+          setGameOver(true);
+          break;
+        }
+      }
+    };
+
+    checkCollision();
+  }, [playerY, obstacles, gameStarted, gameOver]);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#2d5016' }}>Jungle Jump</h2>
+      
+      <div style={{
+        position: 'relative',
+        width: '400px',
+        height: '300px',
+        border: '2px solid #2d5016',
+        backgroundColor: '#87ceeb',
+        overflow: 'hidden',
+        cursor: 'pointer'
+      }} onClick={jump}>
+        
+        <div style={{
+          position: 'absolute',
+          bottom: '0',
+          width: '100%',
+          height: '50px',
+          backgroundColor: '#228b22'
+        }} />
+
+        <div style={{
+          position: 'absolute',
+          left: '50px',
+          top: `${playerY}px`,
+          width: `${PLAYER_SIZE}px`,
+          height: `${PLAYER_SIZE}px`,
+          backgroundColor: '#8b4513',
+          borderRadius: '50%',
+          border: '2px solid #654321'
+        }} />
+
+        {obstacles.map((obstacle, index) => (
+          <div key={index} style={{
+            position: 'absolute',
+            left: `${obstacle.x}px`,
+            top: `${obstacle.y}px`,
+            width: `${OBSTACLE_WIDTH}px`,
+            height: `${OBSTACLE_HEIGHT}px`,
+            backgroundColor: '#006400',
+            border: '1px solid #004d00'
+          }} />
+        ))}
+
+        {!gameStarted && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            color: '#2d5016',
+            fontSize: '18px',
+            fontWeight: 'bold'
+          }}>
+            Click or Press Space to Start!
+          </div>
+        )}
+
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '20px',
+            borderRadius: '10px',
+            border: '2px solid #2d5016'
+          }}>
+            <div style={{ color: '#d32f2f', fontSize: '20px', fontWeight: 'bold' }}>
+              Game Over!
+            </div>
+            <div style={{ color: '#2d5016', margin: '10px 0' }}>
+              Final Score: {Math.floor(score / 10)}
+            </div>
+            <button onClick={resetGame} style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#4caf50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}>
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{
+        marginTop: '10px',
+        display: 'flex',
+        gap: '20px',
+        alignItems: 'center'
+      }}>
+        <div style={{ color: '#2d5016', fontWeight: 'bold' }}>
+          Score: {Math.floor(score / 10)}
+        </div>
+        <button onClick={resetGame} style={{
+          padding: '8px 16px',
+          backgroundColor: '#ff9800',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}>
+          Reset
+        </button>
+      </div>
+      
+      <div style={{
+        marginTop: '10px',
+        color: '#666',
+        fontSize: '14px',
+        textAlign: 'center'
+      }}>
+        Click the game area or press Space to jump over obstacles!
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Jungle Jump - 2025-08-09 13:51:57.314328
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerY, setPlayerY] = useState(250);
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const gameLoopRef = useRef();
+
+  const GRAVITY = 0.8;
+  const JUMP_FORCE = -15;
+  const PLAYER_SIZE = 30;
+  const OBSTACLE_WIDTH = 20;
+  const OBSTACLE_HEIGHT = 60;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+  const GROUND_Y = 280;
+
+  useEffect(() => {
+    if (gameStarted && !gameOver) {
+      gameLoopRef.current = setInterval(() => {
+        setPlayerY(prevY => {
+          const newY = prevY + playerVelocity;
+          return Math.min(newY, GROUND_Y - PLAYER_SIZE);
+        });
+
+        setPlayerVelocity(prevVel => {
+          if (playerY >= GROUND_Y - PLAYER_SIZE) {
+            return 0;
+          }
+          return prevVel + GRAVITY;
+        });
+
+        setObstacles(prevObstacles => {
+          const newObstacles = prevObstacles
+            .map(obs => ({ ...obs, x: obs.x - 3 }))
+            .filter(obs => obs.x > -OBSTACLE_WIDTH);
+
+          if (Math.random() < 0.015 && (newObstacles.length === 0 || newObstacles[newObstacles.length - 1].x < GAME_WIDTH - 150)) {
+            newObstacles.push({
+              x: GAME_WIDTH,
+              y: GROUND_Y - OBSTACLE_HEIGHT,
+              width: OBSTACLE_WIDTH,
+              height: OBSTACLE_HEIGHT
+            });
+          }
+
+          return newObstacles;
+        });
+
+        setScore(prevScore => prevScore + 1);
+      }, 1000 / 60);
+    }
+
+    return () => clearInterval(gameLoopRef.current);
+  }, [gameStarted, gameOver, playerY, playerVelocity]);
+
+  useEffect(() => {
+    const checkCollision = () => {
+      const playerX = 50;
+      const playerBottom = playerY + PLAYER_SIZE;
+      const playerRight = playerX + PLAYER_SIZE;
+
+      for (let obstacle of obstacles) {
+        if (
+          playerRight > obstacle.x &&
+          playerX < obstacle.x + obstacle.width &&
+          playerBottom > obstacle.y &&
+          playerY < obstacle.y + obstacle.height
+        ) {
+          setGameOver(true);
+          setGameStarted(false);
+          break;
+        }
+      }
+    };
+
+    if (gameStarted && !gameOver) {
+      checkCollision();
+    }
+  }, [playerY, obstacles, gameStarted, gameOver]);
+
+  const handleJump = () => {
+    if (!gameStarted) {
+      startGame();
+      return;
+    }
+    
+    if (gameOver) return;
+    
+    if (playerY >= GROUND_Y - PLAYER_SIZE) {
+      setPlayerVelocity(JUMP_FORCE);
+    }
+  };
+
+  const startGame = () => {
+    setGameStarted(true);
+    setGameOver(false);
+    setScore(0);
+    setPlayerY(250);
+    setPlayerVelocity(0);
+    setObstacles([]);
+  };
+
+  const resetGame = () => {
+    setGameStarted(false);
+    setGameOver(false);
+    setScore(0);
+    setPlayerY(250);
+    setPlayerVelocity(0);
+    setObstacles([]);
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        handleJump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameStarted, gameOver, playerY]);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#2d5016' }}>Jungle Jump</h2>
+      
+      <div style={{
+        position: 'relative',
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+        backgroundColor: '#87CEEB',
+        border: '2px solid #2d5016',
+        overflow: 'hidden',
+        cursor: 'pointer'
+      }} onClick={handleJump}>
+        
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '100%',
+          height: '20px',
+          backgroundColor: '#8B4513'
+        }} />
+
+        <div style={{
+          position: 'absolute',
+          left: '50px',
+          top: `${playerY}px`,
+          width: `${PLAYER_SIZE}px`,
+          height: `${PLAYER_SIZE}px`,
+          backgroundColor: '#FF6B35',
+          borderRadius: '50%',
+          border: '2px solid #FF4500'
+        }} />
+
+        {obstacles.map((obstacle, index) => (
+          <div key={index} style={{
+            position: 'absolute',
+            left: `${obstacle.x}px`,
+            top: `${obstacle.y}px`,
+            width: `${obstacle.width}px`,
+            height: `${obstacle.height}px`,
+            backgroundColor: '#2d5016',
+            border: '1px solid #1a2e0a'
+          }} />
+        ))}
+
+        {!gameStarted && !gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '20px',
+            borderRadius: '10px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '18px', marginBottom: '10px' }}>Jungle Jump</div>
+            <div style={{ fontSize: '14px', marginBottom: '15px' }}>Click or press SPACE to jump over obstacles!</div>
+            <button onClick={startGame} style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#2d5016',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}>
+              Start Game
+            </button>
+          </div>
+        )}
+
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '20px',
+            borderRadius: '10px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '18px', marginBottom: '10px', color: '#d32f2f' }}>Game Over!</div>
+            <div style={{ fontSize: '16px', marginBottom: '15px' }}>Score: {Math.floor(score / 10)}</div>
+            <button onClick={resetGame} style={{
+              padding: '10
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Space Runner - 2025-08-09 13:52:18.612061
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const gameLoopRef = useRef(null);
+  const keysRef = useRef({});
+  
+  const [gameState, setGameState] = useState({
+    player: { x: 50, y: 150, width: 20, height: 20 },
+    obstacles: [],
+    score: 0,
+    gameOver: false,
+    speed: 2
+  });
+
+  const resetGame = useCallback(() => {
+    setGameState({
+      player: { x: 50, y: 150, width: 20, height: 20 },
+      obstacles: [],
+      score: 0,
+      gameOver: false,
+      speed: 2
+    });
+  }, []);
+
+  const checkCollision = (rect1, rect2) => {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+  };
+
+  const gameLoop = useCallback(() => {
+    setGameState(prevState => {
+      if (prevState.gameOver) return prevState;
+
+      const newState = { ...prevState };
+      
+      // Move player
+      if (keysRef.current['ArrowUp'] && newState.player.y > 0) {
+        newState.player.y -= 3;
+      }
+      if (keysRef.current['ArrowDown'] && newState.player.y < 280) {
+        newState.player.y += 3;
+      }
+
+      // Move obstacles
+      newState.obstacles = newState.obstacles.map(obs => ({
+        ...obs,
+        x: obs.x - newState.speed
+      })).filter(obs => obs.x > -50);
+
+      // Add new obstacles
+      if (Math.random() < 0.02) {
+        newState.obstacles.push({
+          x: 400,
+          y: Math.random() * 250,
+          width: 30,
+          height: 30
+        });
+      }
+
+      // Check collisions
+      for (let obs of newState.obstacles) {
+        if (checkCollision(newState.player, obs)) {
+          newState.gameOver = true;
+          break;
+        }
+      }
+
+      // Update score and speed
+      newState.score += 1;
+      if (newState.score % 500 === 0) {
+        newState.speed += 0.5;
+      }
+
+      return newState;
+    });
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      keysRef.current[e.key] = true;
+    };
+
+    const handleKeyUp = (e) => {
+      keysRef.current[e.key] = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!gameState.gameOver) {
+      gameLoopRef.current = setInterval(gameLoop, 16);
+    } else {
+      clearInterval(gameLoopRef.current);
+    }
+
+    return () => clearInterval(gameLoopRef.current);
+  }, [gameLoop, gameState.gameOver]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 400, 300);
+
+    // Draw background
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 400, 300);
+
+    // Draw stars
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < 50; i++) {
+      const x = (i * 37) % 400;
+      const y = (i * 23) % 300;
+      ctx.fillRect(x, y, 1, 1);
+    }
+
+    // Draw player
+    ctx.fillStyle = '#0f0';
+    ctx.fillRect(gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height);
+
+    // Draw obstacles
+    ctx.fillStyle = '#f00';
+    gameState.obstacles.forEach(obs => {
+      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    });
+
+  }, [gameState]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Space Runner</h2>
+      
+      <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+        Score: {gameState.score}
+      </div>
+
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={300}
+        style={{
+          border: '2px solid #333',
+          backgroundColor: '#000'
+        }}
+      />
+
+      <div style={{ marginTop: '10px', textAlign: 'center' }}>
+        <div style={{ marginBottom: '10px', fontSize: '14px' }}>
+          Use ↑↓ arrow keys to move
+        </div>
+        
+        {gameState.gameOver && (
+          <div style={{ 
+            backgroundColor: '#f44', 
+            color: 'white', 
+            padding: '10px', 
+            borderRadius: '5px',
+            marginBottom: '10px'
+          }}>
+            Game Over! Final Score: {gameState.score}
+          </div>
+        )}
+
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          {gameState.gameOver ? 'Play Again' : 'Restart'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Space Runner - 2025-08-09 13:52:22.199218
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const gameStateRef = useRef({
+    player: { x: 50, y: 150, width: 20, height: 15 },
+    obstacles: [],
+    stars: [],
+    score: 0,
+    speed: 2,
+    gameOver: false,
+    keys: {}
+  });
+
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+
+  const initGame = useCallback(() => {
+    const state = gameStateRef.current;
+    state.player = { x: 50, y: 150, width: 20, height: 15 };
+    state.obstacles = [];
+    state.stars = [];
+    state.score = 0;
+    state.speed = 2;
+    state.gameOver = false;
+    setScore(0);
+    setGameOver(false);
+  }, []);
+
+  const generateObstacle = useCallback(() => {
+    const state = gameStateRef.current;
+    if (Math.random() < 0.02) {
+      state.obstacles.push({
+        x: 400,
+        y: Math.random() * 250 + 25,
+        width: 15,
+        height: 15
+      });
+    }
+  }, []);
+
+  const generateStar = useCallback(() => {
+    const state = gameStateRef.current;
+    if (Math.random() < 0.01) {
+      state.stars.push({
+        x: 400,
+        y: Math.random() * 280 + 10,
+        width: 8,
+        height: 8
+      });
+    }
+  }, []);
+
+  const updateGame = useCallback(() => {
+    const state = gameStateRef.current;
+    const canvas = canvasRef.current;
+    if (!canvas || state.gameOver) return;
+
+    if (state.keys['ArrowUp'] && state.player.y > 0) {
+      state.player.y -= 3;
+    }
+    if (state.keys['ArrowDown'] && state.player.y < 285) {
+      state.player.y += 3;
+    }
+
+    generateObstacle();
+    generateStar();
+
+    state.obstacles = state.obstacles.filter(obstacle => {
+      obstacle.x -= state.speed;
+      if (obstacle.x < state.player.x + state.player.width &&
+          obstacle.x + obstacle.width > state.player.x &&
+          obstacle.y < state.player.y + state.player.height &&
+          obstacle.y + obstacle.height > state.player.y) {
+        state.gameOver = true;
+        setGameOver(true);
+        return false;
+      }
+      return obstacle.x > -obstacle.width;
+    });
+
+    state.stars = state.stars.filter(star => {
+      star.x -= state.speed;
+      if (star.x < state.player.x + state.player.width &&
+          star.x + star.width > state.player.x &&
+          star.y < state.player.y + state.player.height &&
+          star.y + star.height > state.player.y) {
+        state.score += 10;
+        setScore(state.score);
+        return false;
+      }
+      return star.x > -star.width;
+    });
+
+    state.score += 1;
+    if (state.score % 500 === 0) {
+      state.speed += 0.5;
+    }
+    setScore(state.score);
+  }, [generateObstacle, generateStar]);
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!ctx) return;
+
+    const state = gameStateRef.current;
+
+    ctx.fillStyle = '#000011';
+    ctx.fillRect(0, 0, 400, 300);
+
+    ctx.fillStyle = '#00ff00';
+    ctx.fillRect(state.player.x, state.player.y, state.player.width, state.player.height);
+
+    ctx.fillStyle = '#ff0000';
+    state.obstacles.forEach(obstacle => {
+      ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+    });
+
+    ctx.fillStyle = '#ffff00';
+    state.stars.forEach(star => {
+      ctx.fillRect(star.x, star.y, star.width, star.height);
+    });
+  }, []);
+
+  const gameLoop = useCallback(() => {
+    updateGame();
+    draw();
+    if (!gameStateRef.current.gameOver) {
+      animationRef.current = requestAnimationFrame(gameLoop);
+    }
+  }, [updateGame, draw]);
+
+  const handleKeyDown = useCallback((e) => {
+    gameStateRef.current.keys[e.key] = true;
+  }, []);
+
+  const handleKeyUp = useCallback((e) => {
+    gameStateRef.current.keys[e.key] = false;
+  }, []);
+
+  useEffect(() => {
+    initGame();
+    
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    animationRef.current = requestAnimationFrame(gameLoop);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [initGame, handleKeyDown, handleKeyUp, gameLoop]);
+
+  const restart = () => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+    initGame();
+    animationRef.current = requestAnimationFrame(gameLoop);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+      <h2 style={{ color: '#333', margin: '10px 0' }}>Space Runner</h2>
+      <div style={{ marginBottom: '10px' }}>
+        <span style={{ fontSize: '18px', fontWeight: 'bold', marginRight: '20px' }}>Score: {score}</span>
+        <button 
+          onClick={restart}
+          style={{
+            padding: '8px 16px',
+            fontSize: '14px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Restart
+        </button>
+      </div>
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={300}
+        style={{
+          border: '2px solid #333',
+          backgroundColor: '#000011'
+        }}
+      />
+      <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
+        Use arrow keys to move up/down. Avoid red obstacles, collect yellow stars!
+      </div>
+      {gameOver && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '20px',
+          borderRadius: '10px',
+          textAlign: 'center'
+        }}>
+          <h3>Game Over!</h3>
+          <p>Final Score: {score}</p>
+          <button 
+            onClick={restart}
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: '
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Jungle Jump - 2025-08-09 13:52:44.523337
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  
+  const gameRef = useRef({
+    player: { x: 50, y: 200, width: 30, height: 30, velocityY: 0, onGround: false },
+    platforms: [
+      { x: 0, y: 250, width: 100, height: 20 },
+      { x: 150, y: 200, width: 80, height: 20 },
+      { x: 280, y: 150, width: 80, height: 20 },
+      { x: 400, y: 100, width: 80, height: 20 },
+      { x: 550, y: 180, width: 80, height: 20 },
+      { x: 700, y: 220, width: 80, height: 20 }
+    ],
+    camera: { x: 0 },
+    keys: {},
+    gravity: 0.5,
+    jumpPower: -12,
+    speed: 3
+  });
+
+  const resetGame = () => {
+    const game = gameRef.current;
+    game.player = { x: 50, y: 200, width: 30, height: 30, velocityY: 0, onGround: false };
+    game.camera = { x: 0 };
+    setScore(0);
+    setGameState('playing');
+    setGameStarted(true);
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const game = gameRef.current;
+
+    const handleKeyDown = (e) => {
+      game.keys[e.code] = true;
+      if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      game.keys[e.code] = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    const gameLoop = () => {
+      if (!gameStarted || gameState !== 'playing') return;
+
+      // Update player
+      const player = game.player;
+      
+      // Horizontal movement
+      if (game.keys['ArrowLeft'] || game.keys['KeyA']) {
+        player.x -= game.speed;
+      }
+      if (game.keys['ArrowRight'] || game.keys['KeyD']) {
+        player.x += game.speed;
+      }
+
+      // Jumping
+      if ((game.keys['Space'] || game.keys['ArrowUp']) && player.onGround) {
+        player.velocityY = game.jumpPower;
+        player.onGround = false;
+      }
+
+      // Apply gravity
+      player.velocityY += game.gravity;
+      player.y += player.velocityY;
+
+      // Platform collision
+      player.onGround = false;
+      game.platforms.forEach(platform => {
+        if (player.x < platform.x + platform.width &&
+            player.x + player.width > platform.x &&
+            player.y < platform.y + platform.height &&
+            player.y + player.height > platform.y) {
+          
+          if (player.velocityY > 0 && player.y < platform.y) {
+            player.y = platform.y - player.height;
+            player.velocityY = 0;
+            player.onGround = true;
+          }
+        }
+      });
+
+      // Camera follow
+      game.camera.x = player.x - 200;
+      if (game.camera.x < 0) game.camera.x = 0;
+
+      // Update score based on distance
+      const newScore = Math.floor(Math.max(0, player.x - 50) / 10);
+      setScore(newScore);
+
+      // Game over conditions
+      if (player.y > 300) {
+        setGameState('gameOver');
+      }
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw background
+      ctx.fillStyle = '#87CEEB';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw jungle background elements
+      ctx.fillStyle = '#228B22';
+      for (let i = 0; i < 10; i++) {
+        const treeX = i * 80 - game.camera.x;
+        if (treeX > -50 && treeX < canvas.width + 50) {
+          ctx.fillRect(treeX, 0, 30, canvas.height);
+        }
+      }
+
+      // Draw platforms
+      ctx.fillStyle = '#8B4513';
+      game.platforms.forEach(platform => {
+        const platformX = platform.x - game.camera.x;
+        if (platformX > -platform.width && platformX < canvas.width) {
+          ctx.fillRect(platformX, platform.y, platform.width, platform.height);
+          
+          // Add leaves on platforms
+          ctx.fillStyle = '#32CD32';
+          ctx.fillRect(platformX, platform.y - 5, platform.width, 5);
+          ctx.fillStyle = '#8B4513';
+        }
+      });
+
+      // Draw player
+      ctx.fillStyle = player.onGround ? '#FF6B35' : '#FF4500';
+      ctx.fillRect(player.x - game.camera.x, player.y, player.width, player.height);
+      
+      // Player face
+      ctx.fillStyle = '#000';
+      ctx.fillRect(player.x - game.camera.x + 5, player.y + 5, 3, 3);
+      ctx.fillRect(player.x - game.camera.x + 15, player.y + 5, 3, 3);
+    };
+
+    const interval = setInterval(gameLoop, 16);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [gameStarted, gameState]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#2E8B57' }}>Jungle Jump</h2>
+      
+      <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: 'bold' }}>
+        Score: {score}
+      </div>
+
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={300}
+        style={{
+          border: '2px solid #2E8B57',
+          backgroundColor: '#87CEEB',
+          marginBottom: '10px'
+        }}
+      />
+
+      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+        {!gameStarted && (
+          <div>
+            <p>Jump through the jungle platforms!</p>
+            <p>Use ARROW KEYS or WASD to move, SPACE or UP to jump</p>
+          </div>
+        )}
+        
+        {gameState === 'gameOver' && (
+          <div style={{ color: '#D2691E', fontSize: '18px', fontWeight: 'bold' }}>
+            Game Over! Final Score: {score}
+          </div>
+        )}
+      </div>
+
+      <button
+        onClick={resetGame}
+        style={{
+          padding: '10px 20px',
+          
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Jungle Jump - 2025-08-09 13:52:45.357675
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [player, setPlayer] = useState({ x: 50, y: 200, width: 30, height: 30, velocityY: 0, onGround: false });
+  const [platforms, setPlatforms] = useState([
+    { x: 0, y: 250, width: 100, height: 20 },
+    { x: 150, y: 200, width: 80, height: 20 },
+    { x: 280, y: 150, width: 80, height: 20 },
+    { x: 200, y: 100, width: 100, height: 20 },
+    { x: 350, y: 50, width: 50, height: 20 }
+  ]);
+  const [score, setScore] = useState(0);
+  const [gameRunning, setGameRunning] = useState(true);
+  const [keys, setKeys] = useState({});
+
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -12;
+  const MOVE_SPEED = 3;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+
+  const handleKeyDown = useCallback((e) => {
+    setKeys(prev => ({ ...prev, [e.key]: true }));
+  }, []);
+
+  const handleKeyUp = useCallback((e) => {
+    setKeys(prev => ({ ...prev, [e.key]: false }));
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [handleKeyDown, handleKeyUp]);
+
+  const checkCollision = (rect1, rect2) => {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+  };
+
+  const resetGame = () => {
+    setPlayer({ x: 50, y: 200, width: 30, height: 30, velocityY: 0, onGround: false });
+    setScore(0);
+    setGameRunning(true);
+  };
+
+  useEffect(() => {
+    if (!gameRunning) return;
+
+    const gameLoop = setInterval(() => {
+      setPlayer(prevPlayer => {
+        let newPlayer = { ...prevPlayer };
+
+        // Handle input
+        if (keys['ArrowLeft'] || keys['a']) {
+          newPlayer.x = Math.max(0, newPlayer.x - MOVE_SPEED);
+        }
+        if (keys['ArrowRight'] || keys['d']) {
+          newPlayer.x = Math.min(GAME_WIDTH - newPlayer.width, newPlayer.x + MOVE_SPEED);
+        }
+        if ((keys['ArrowUp'] || keys[' '] || keys['w']) && newPlayer.onGround) {
+          newPlayer.velocityY = JUMP_FORCE;
+          newPlayer.onGround = false;
+        }
+
+        // Apply gravity
+        newPlayer.velocityY += GRAVITY;
+        newPlayer.y += newPlayer.velocityY;
+
+        // Check platform collisions
+        newPlayer.onGround = false;
+        platforms.forEach(platform => {
+          if (checkCollision(newPlayer, platform)) {
+            if (newPlayer.velocityY > 0 && newPlayer.y < platform.y) {
+              newPlayer.y = platform.y - newPlayer.height;
+              newPlayer.velocityY = 0;
+              newPlayer.onGround = true;
+              
+              // Score for landing on higher platforms
+              const platformHeight = GAME_HEIGHT - platform.y;
+              if (platformHeight > 50) {
+                setScore(prev => prev + Math.floor(platformHeight / 10));
+              }
+            }
+          }
+        });
+
+        // Check if player fell off screen
+        if (newPlayer.y > GAME_HEIGHT) {
+          setGameRunning(false);
+        }
+
+        return newPlayer;
+      });
+    }, 1000 / 60);
+
+    return () => clearInterval(gameLoop);
+  }, [gameRunning, keys, platforms]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#2c5530' }}>Jungle Jump</h2>
+      
+      <div style={{ marginBottom: '10px' }}>
+        <span style={{ marginRight: '20px', fontWeight: 'bold' }}>Score: {score}</span>
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '5px 15px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
+
+      <div 
+        style={{
+          position: 'relative',
+          width: GAME_WIDTH,
+          height: GAME_HEIGHT,
+          backgroundColor: '#87CEEB',
+          border: '2px solid #2c5530',
+          overflow: 'hidden'
+        }}
+      >
+        {/* Platforms */}
+        {platforms.map((platform, index) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              left: platform.x,
+              top: platform.y,
+              width: platform.width,
+              height: platform.height,
+              backgroundColor: '#8B4513',
+              border: '1px solid #654321'
+            }}
+          />
+        ))}
+
+        {/* Player */}
+        <div
+          style={{
+            position: 'absolute',
+            left: player.x,
+            top: player.y,
+            width: player.width,
+            height: player.height,
+            backgroundColor: '#FF6B35',
+            border: '2px solid #D2691E',
+            borderRadius: '5px'
+          }}
+        />
+
+        {/* Game Over overlay */}
+        {!gameRunning && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: 'white'
+            }}
+          >
+            <h3 style={{ margin: '0 0 10px 0' }}>Game Over!</h3>
+            <p style={{ margin: '0 0 15px 0' }}>Final Score: {score}</p>
+            <button 
+              onClick={resetGame}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
+            >
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: '10px', fontSize: '12px', textAlign: 'center' }}>
+        <p>Use Arrow Keys or WASD to move and jump</p>
+        <p>Jump on higher platforms to score more points!</p>
+      </div>
+    </div>
+  );
+};
+
+export
+----------------------------------------
+

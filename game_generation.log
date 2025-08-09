@@ -987,3 +987,485 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 13:46:54,664 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'boxinggame'
 2025-08-09 13:46:54,664 - INFO - 🤖 Claude generation starting for: 'boxinggame'
 2025-08-09 13:46:54,665 - INFO - 📡 Sending request to Claude for 'boxinggame' - Model: claude-sonnet-4-20250514
+2025-08-09 13:47:17,353 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:47:17,365 - INFO - ✅ Claude generated content for 'boxinggame' - Length: 6181 chars
+2025-08-09 13:47:17,370 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:47:17,372 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:47:17,373 - INFO - ✅ Claude generated game - Length: 6181 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:47:17,373 - INFO - 🎮 GENERATED GAME CODE for 'boxinggame':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerHealth, setPlayerHealth] = useState(100);
+  const [opponentHealth, setOpponentHealth] = useState(100);
+  const [playerStamina, setPlayerStamina] = useState(100);
+  const [gameState, setGameState] = useState('ready'); // ready, fighting, gameOver
+  const [message, setMessage] = useState('Press Fight to start!');
+  const [round, setRound] = useState(1);
+  const [playerWins, setP...
+--------------------------------------------------
+2025-08-09 13:47:17,380 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'boxinggame'
+2025-08-09 13:47:18,573 - INFO - 📖 Read current GameZone.js - Size: 5281 chars
+2025-08-09 13:47:18,573 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'boxinggame', size: 6208 chars
+2025-08-09 13:47:25,492 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:47:25,494 - INFO - ✅ Morph returned updated React component - New size: 11426 chars
+2025-08-09 13:47:26,254 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'boxinggame'
+2025-08-09 13:47:26,254 - INFO - 🎉 GAME GENERATION SUCCESS - 'boxinggame' - Duration: 31.59s - Size: 6181 chars
+2025-08-09 13:47:26,255 - INFO - 127.0.0.1 - - [09/Aug/2025 13:47:26] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:48:14,192 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 13:48:14,193 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 13:48:14,194 - INFO -  * Restarting with stat
+2025-08-09 13:48:15,425 - WARNING -  * Debugger is active!
+2025-08-09 13:48:15,437 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:48:18,044 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:18] "GET / HTTP/1.1" 200 -
+2025-08-09 13:48:40,517 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:40] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:48:40,519 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:40] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:48:40,522 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:40] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:48:40,522 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:40] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:48:40,671 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:40] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:48:40,672 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:40] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:48:43,395 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:43] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:48:52,150 - INFO - 127.0.0.1 - - [09/Aug/2025 13:48:52] "[31m[1mPOST /generate-game HTTP/1.1[0m" 400 -
+2025-08-09 13:49:07,340 - INFO - 127.0.0.1 - - [09/Aug/2025 13:49:07] "POST /connect HTTP/1.1" 200 -
+2025-08-09 13:49:18,791 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 13:49:18,791 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 13:49:18,791 - INFO -  * Restarting with stat
+2025-08-09 13:49:20,049 - WARNING -  * Debugger is active!
+2025-08-09 13:49:20,060 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:49:25,845 - INFO - 127.0.0.1 - - [09/Aug/2025 13:49:25] "GET / HTTP/1.1" 200 -
+2025-08-09 13:49:27,366 - INFO - 127.0.0.1 - - [09/Aug/2025 13:49:27] "POST /connect HTTP/1.1" 200 -
+2025-08-09 13:50:16,876 - INFO - 127.0.0.1 - - [09/Aug/2025 13:50:16] "GET / HTTP/1.1" 200 -
+2025-08-09 13:50:22,217 - INFO - 127.0.0.1 - - [09/Aug/2025 13:50:22] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:50:22,218 - INFO - 127.0.0.1 - - [09/Aug/2025 13:50:22] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 13:50:22,224 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Space Runner' - Timestamp: 2025-08-09 13:50:22.223979
+2025-08-09 13:50:22,226 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Space Runner' - Timestamp: 2025-08-09 13:50:22.225693
+2025-08-09 13:50:22,226 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Space Runner'
+2025-08-09 13:50:22,226 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Space Runner'
+2025-08-09 13:50:22,226 - INFO - 🤖 Claude generation starting for: 'Space Runner'
+2025-08-09 13:50:22,226 - INFO - 🤖 Claude generation starting for: 'Space Runner'
+2025-08-09 13:50:22,226 - INFO - 📡 Sending request to Claude for 'Space Runner' - Model: claude-sonnet-4-20250514
+2025-08-09 13:50:22,227 - INFO - 📡 Sending request to Claude for 'Space Runner' - Model: claude-sonnet-4-20250514
+2025-08-09 13:50:37,573 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:50:37,585 - INFO - ✅ Claude generated content for 'Space Runner' - Length: 4494 chars
+2025-08-09 13:50:37,586 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:50:37,586 - INFO - ✅ Claude generated game - Length: 4494 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:50:37,586 - INFO - 🎮 GENERATED GAME CODE for 'Space Runner':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('menu');
+  const [player, setPlayer] = useState({ x: 50, y: 150 });
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const resetGame = useCallback(() => {
+    setPlayer({ x: 50, y: 150 });
+    setObstacles([]);
+    setScore(0);
+    setGameSpeed(2);
+    se...
+--------------------------------------------------
+2025-08-09 13:50:37,587 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Space Runner'
+2025-08-09 13:50:38,871 - INFO - 📖 Read current GameZone.js - Size: 1053 chars
+2025-08-09 13:50:38,871 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Space Runner', size: 4494 chars
+2025-08-09 13:50:39,998 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:50:40,003 - INFO - ✅ Morph returned updated React component - New size: 4494 chars
+2025-08-09 13:50:40,713 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Space Runner'
+2025-08-09 13:50:40,714 - INFO - 🎉 GAME GENERATION SUCCESS - 'Space Runner' - Duration: 18.49s - Size: 4494 chars
+2025-08-09 13:50:40,716 - INFO - 127.0.0.1 - - [09/Aug/2025 13:50:40] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:50:40,727 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Jungle Jump' - Timestamp: 2025-08-09 13:50:40.726950
+2025-08-09 13:50:40,727 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Jungle Jump'
+2025-08-09 13:50:40,727 - INFO - 🤖 Claude generation starting for: 'Jungle Jump'
+2025-08-09 13:50:40,727 - INFO - 📡 Sending request to Claude for 'Jungle Jump' - Model: claude-sonnet-4-20250514
+2025-08-09 13:50:40,989 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:50:40,999 - INFO - ✅ Claude generated content for 'Space Runner' - Length: 6170 chars
+2025-08-09 13:50:40,999 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:50:40,999 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:50:40,999 - INFO - ✅ Claude generated game - Length: 6170 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:50:40,999 - INFO - 🎮 GENERATED GAME CODE for 'Space Runner':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerY, setPlayerY] = useState(150);
+  const [obstacles, setObstacles] = useState([]);
+  const [stars, setStars] = useState([]);
+  const gameLoopRef = useRef();
+  const keysRef = useRef({ up: false, down: false });
+
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+  const P...
+--------------------------------------------------
+2025-08-09 13:50:41,000 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Space Runner'
+2025-08-09 13:50:42,089 - INFO - 📖 Read current GameZone.js - Size: 4494 chars
+2025-08-09 13:50:42,089 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Space Runner', size: 6184 chars
+2025-08-09 13:50:44,487 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:50:44,488 - INFO - ✅ Morph returned updated React component - New size: 6899 chars
+2025-08-09 13:50:45,377 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Space Runner'
+2025-08-09 13:50:45,377 - INFO - 🎉 GAME GENERATION SUCCESS - 'Space Runner' - Duration: 23.15s - Size: 6170 chars
+2025-08-09 13:50:45,377 - INFO - 127.0.0.1 - - [09/Aug/2025 13:50:45] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:50:45,389 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Jungle Jump' - Timestamp: 2025-08-09 13:50:45.389378
+2025-08-09 13:50:45,389 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Jungle Jump'
+2025-08-09 13:50:45,390 - INFO - 🤖 Claude generation starting for: 'Jungle Jump'
+2025-08-09 13:50:45,390 - INFO - 📡 Sending request to Claude for 'Jungle Jump' - Model: claude-sonnet-4-20250514
+2025-08-09 13:51:02,017 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:51:02,020 - INFO - ✅ Claude generated content for 'Jungle Jump' - Length: 6148 chars
+2025-08-09 13:51:02,021 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:51:02,021 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:51:02,021 - INFO - ✅ Claude generated game - Length: 6148 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:51:02,021 - INFO - 🎮 GENERATED GAME CODE for 'Jungle Jump':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('menu');
+  const [playerY, setPlayerY] = useState(250);
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [platforms, setPlatforms] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const GRAVITY = 0.8;
+  const JUMP_FORCE = -15;
+  const PLAYER_SIZE = 20;
+  const GROUND_Y =...
+--------------------------------------------------
+2025-08-09 13:51:02,022 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Jungle Jump'
+2025-08-09 13:51:03,139 - INFO - 📖 Read current GameZone.js - Size: 6899 chars
+2025-08-09 13:51:03,139 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Jungle Jump', size: 6175 chars
+2025-08-09 13:51:05,603 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:51:05,606 - INFO - ✅ Morph returned updated React component - New size: 6610 chars
+2025-08-09 13:51:06,315 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Jungle Jump'
+2025-08-09 13:51:06,316 - INFO - 🎉 GAME GENERATION SUCCESS - 'Jungle Jump' - Duration: 25.59s - Size: 6148 chars
+2025-08-09 13:51:06,317 - INFO - 127.0.0.1 - - [09/Aug/2025 13:51:06] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:51:07,032 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:51:07,033 - INFO - ✅ Claude generated content for 'Jungle Jump' - Length: 5926 chars
+2025-08-09 13:51:07,033 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:51:07,033 - INFO - ✅ Claude generated game - Length: 5926 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:51:07,033 - INFO - 🎮 GENERATED GAME CODE for 'Jungle Jump':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerY, setPlayerY] = useState(200);
+  const [playerVelY, setPlayerVelY] = useState(0);
+  const [obstacles, setObstacles] = useState([]);
+  const [gameTime, setGameTime] = useState(0);
+  const [keys, setKeys] = useState({});
+
+  const GRAVITY = 0.8;
+  const JUMP_FORCE = -15;
+  const GRO...
+--------------------------------------------------
+2025-08-09 13:51:07,033 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Jungle Jump'
+2025-08-09 13:51:07,973 - INFO - 📖 Read current GameZone.js - Size: 6610 chars
+2025-08-09 13:51:07,974 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Jungle Jump', size: 5926 chars
+2025-08-09 13:51:09,360 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:51:09,363 - INFO - ✅ Morph returned updated React component - New size: 5926 chars
+2025-08-09 13:51:09,998 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Jungle Jump'
+2025-08-09 13:51:09,998 - INFO - 🎉 GAME GENERATION SUCCESS - 'Jungle Jump' - Duration: 24.61s - Size: 5926 chars
+2025-08-09 13:51:10,000 - INFO - 127.0.0.1 - - [09/Aug/2025 13:51:09] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:51:16,021 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Space Runner' - Timestamp: 2025-08-09 13:51:16.021691
+2025-08-09 13:51:16,022 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Space Runner' - Timestamp: 2025-08-09 13:51:16.022620
+2025-08-09 13:51:16,022 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Space Runner'
+2025-08-09 13:51:16,022 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Space Runner'
+2025-08-09 13:51:16,022 - INFO - 🤖 Claude generation starting for: 'Space Runner'
+2025-08-09 13:51:16,022 - INFO - 🤖 Claude generation starting for: 'Space Runner'
+2025-08-09 13:51:16,023 - INFO - 📡 Sending request to Claude for 'Space Runner' - Model: claude-sonnet-4-20250514
+2025-08-09 13:51:16,023 - INFO - 📡 Sending request to Claude for 'Space Runner' - Model: claude-sonnet-4-20250514
+2025-08-09 13:51:30,880 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:51:30,882 - INFO - ✅ Claude generated content for 'Space Runner' - Length: 4223 chars
+2025-08-09 13:51:30,882 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:51:30,882 - INFO - ✅ Claude generated game - Length: 4223 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:51:30,882 - INFO - 🎮 GENERATED GAME CODE for 'Space Runner':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerY, setPlayerY] = useState(150);
+  const [obstacles, setObstacles] = useState([]);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const resetGame = useCallback(() => {
+    setGameState('playing');
+    setScore(0);
+    setPlayerY(150);
+    setObstacles([]);
+    setGameSpeed(2);...
+--------------------------------------------------
+2025-08-09 13:51:30,883 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Space Runner'
+2025-08-09 13:51:31,812 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:51:31,813 - INFO - ✅ Claude generated content for 'Space Runner' - Length: 4876 chars
+2025-08-09 13:51:31,813 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 13:51:31,813 - INFO - ✅ Claude generated game - Length: 4876 chars, Has Canvas: True, Has Script: False
+2025-08-09 13:51:31,814 - INFO - 🎮 GENERATED GAME CODE for 'Space Runner':
+--------------------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const keysRef = useRef({});
+  
+  const [gameState, setGameState] = useState({
+    player: { x: 50, y: 150, width: 20, height: 20 },
+    obstacles: [],
+    score: 0,
+    gameOver: false,
+    speed: 2
+  });
+
+  const resetGame = useCallback(() => {
+    setGameState({
+      player: { x: 50, y: 150, width: 20, height...
+--------------------------------------------------
+2025-08-09 13:51:31,814 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Space Runner'
+2025-08-09 13:51:31,942 - INFO - 📖 Read current GameZone.js - Size: 5926 chars
+2025-08-09 13:51:31,943 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Space Runner', size: 4223 chars
+2025-08-09 13:51:32,835 - INFO - 📖 Read current GameZone.js - Size: 5926 chars
+2025-08-09 13:51:32,835 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Space Runner', size: 4876 chars
+2025-08-09 13:51:32,950 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:51:32,951 - INFO - ✅ Morph returned updated React component - New size: 4223 chars
+2025-08-09 13:51:33,654 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Space Runner'
+2025-08-09 13:51:33,654 - INFO - 🎉 GAME GENERATION SUCCESS - 'Space Runner' - Duration: 17.63s - Size: 4223 chars
+2025-08-09 13:51:33,655 - INFO - 127.0.0.1 - - [09/Aug/2025 13:51:33] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:51:33,662 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Jungle Jump' - Timestamp: 2025-08-09 13:51:33.662166
+2025-08-09 13:51:33,662 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Jungle Jump'
+2025-08-09 13:51:33,662 - INFO - 🤖 Claude generation starting for: 'Jungle Jump'
+2025-08-09 13:51:33,662 - INFO - 📡 Sending request to Claude for 'Jungle Jump' - Model: claude-sonnet-4-20250514
+2025-08-09 13:51:33,845 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:51:33,846 - INFO - ✅ Morph returned updated React component - New size: 4876 chars
+2025-08-09 13:51:34,576 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Space Runner'
+2025-08-09 13:51:34,577 - INFO - 🎉 GAME GENERATION SUCCESS - 'Space Runner' - Duration: 18.55s - Size: 4876 chars
+2025-08-09 13:51:34,578 - INFO - 127.0.0.1 - - [09/Aug/2025 13:51:34] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:51:34,590 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Jungle Jump' - Timestamp: 2025-08-09 13:51:34.589939
+2025-08-09 13:51:34,590 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Jungle Jump'
+2025-08-09 13:51:34,590 - INFO - 🤖 Claude generation starting for: 'Jungle Jump'
+2025-08-09 13:51:34,590 - INFO - 📡 Sending request to Claude for 'Jungle Jump' - Model: claude-sonnet-4-20250514
+2025-08-09 13:51:54,990 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:51:54,992 - INFO - ✅ Claude generated content for 'Jungle Jump' - Length: 6224 chars
+2025-08-09 13:51:54,992 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:51:54,992 - INFO - ✅ Claude generated game - Length: 6224 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:51:54,993 - INFO - 🎮 GENERATED GAME CODE for 'Jungle Jump':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerY, setPlayerY] = useState(250);
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -12;
+  const GROUND_Y = 250;
+  const PLAYER_...
+--------------------------------------------------
+2025-08-09 13:51:54,994 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Jungle Jump'
+2025-08-09 13:51:56,081 - INFO - 📖 Read current GameZone.js - Size: 4876 chars
+2025-08-09 13:51:56,081 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Jungle Jump', size: 6224 chars
+2025-08-09 13:51:57,310 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:51:57,313 - INFO - ✅ Claude generated content for 'Jungle Jump' - Length: 6365 chars
+2025-08-09 13:51:57,313 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:51:57,313 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:51:57,314 - INFO - ✅ Claude generated game - Length: 6365 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:51:57,314 - INFO - 🎮 GENERATED GAME CODE for 'Jungle Jump':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerY, setPlayerY] = useState(250);
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const gameLoopRef = useRef();
+
+  const GRAVITY = 0.8;
+  const JUMP_FORCE = -15;
+  const PLAY...
+--------------------------------------------------
+2025-08-09 13:51:57,314 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Jungle Jump'
+2025-08-09 13:51:57,421 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:51:57,424 - INFO - ✅ Morph returned updated React component - New size: 6224 chars
+2025-08-09 13:51:58,043 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Jungle Jump'
+2025-08-09 13:51:58,044 - INFO - 🎉 GAME GENERATION SUCCESS - 'Jungle Jump' - Duration: 24.38s - Size: 6224 chars
+2025-08-09 13:51:58,045 - INFO - 127.0.0.1 - - [09/Aug/2025 13:51:58] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:51:58,228 - INFO - 📖 Read current GameZone.js - Size: 6224 chars
+2025-08-09 13:51:58,228 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Jungle Jump', size: 6392 chars
+2025-08-09 13:51:59,826 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:51:59,827 - INFO - ✅ Morph returned updated React component - New size: 7482 chars
+2025-08-09 13:52:00,469 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Jungle Jump'
+2025-08-09 13:52:00,469 - INFO - 🎉 GAME GENERATION SUCCESS - 'Jungle Jump' - Duration: 25.88s - Size: 6365 chars
+2025-08-09 13:52:00,470 - INFO - 127.0.0.1 - - [09/Aug/2025 13:52:00] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:52:01,453 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Space Runner' - Timestamp: 2025-08-09 13:52:01.453307
+2025-08-09 13:52:01,454 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Space Runner' - Timestamp: 2025-08-09 13:52:01.453878
+2025-08-09 13:52:01,454 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Space Runner'
+2025-08-09 13:52:01,454 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Space Runner'
+2025-08-09 13:52:01,454 - INFO - 🤖 Claude generation starting for: 'Space Runner'
+2025-08-09 13:52:01,454 - INFO - 🤖 Claude generation starting for: 'Space Runner'
+2025-08-09 13:52:01,454 - INFO - 📡 Sending request to Claude for 'Space Runner' - Model: claude-sonnet-4-20250514
+2025-08-09 13:52:01,454 - INFO - 📡 Sending request to Claude for 'Space Runner' - Model: claude-sonnet-4-20250514
+2025-08-09 13:52:18,610 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:52:18,611 - INFO - ✅ Claude generated content for 'Space Runner' - Length: 4994 chars
+2025-08-09 13:52:18,611 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 13:52:18,611 - INFO - ✅ Claude generated game - Length: 4994 chars, Has Canvas: True, Has Script: False
+2025-08-09 13:52:18,611 - INFO - 🎮 GENERATED GAME CODE for 'Space Runner':
+--------------------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const gameLoopRef = useRef(null);
+  const keysRef = useRef({});
+  
+  const [gameState, setGameState] = useState({
+    player: { x: 50, y: 150, width: 20, height: 20 },
+    obstacles: [],
+    score: 0,
+    gameOver: false,
+    speed: 2
+  });
+
+  const resetGame = useCallback(() => {
+    setGameState({
+      player: { x: 50, y: 150, width: 20, height:...
+--------------------------------------------------
+2025-08-09 13:52:18,612 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Space Runner'
+2025-08-09 13:52:19,734 - INFO - 📖 Read current GameZone.js - Size: 7482 chars
+2025-08-09 13:52:19,734 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Space Runner', size: 4994 chars
+2025-08-09 13:52:20,965 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:52:20,968 - INFO - ✅ Morph returned updated React component - New size: 4994 chars
+2025-08-09 13:52:21,681 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Space Runner'
+2025-08-09 13:52:21,681 - INFO - 🎉 GAME GENERATION SUCCESS - 'Space Runner' - Duration: 20.23s - Size: 4994 chars
+2025-08-09 13:52:21,682 - INFO - 127.0.0.1 - - [09/Aug/2025 13:52:21] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:52:21,694 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Jungle Jump' - Timestamp: 2025-08-09 13:52:21.694895
+2025-08-09 13:52:21,695 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Jungle Jump'
+2025-08-09 13:52:21,695 - INFO - 🤖 Claude generation starting for: 'Jungle Jump'
+2025-08-09 13:52:21,695 - INFO - 📡 Sending request to Claude for 'Jungle Jump' - Model: claude-sonnet-4-20250514
+2025-08-09 13:52:22,195 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:52:22,198 - INFO - ✅ Claude generated content for 'Space Runner' - Length: 6237 chars
+2025-08-09 13:52:22,198 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 13:52:22,198 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:52:22,198 - INFO - ✅ Claude generated game - Length: 6237 chars, Has Canvas: True, Has Script: False
+2025-08-09 13:52:22,198 - INFO - 🎮 GENERATED GAME CODE for 'Space Runner':
+--------------------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const gameStateRef = useRef({
+    player: { x: 50, y: 150, width: 20, height: 15 },
+    obstacles: [],
+    stars: [],
+    score: 0,
+    speed: 2,
+    gameOver: false,
+    keys: {}
+  });
+
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+
+  const initGame = useCallback(()...
+--------------------------------------------------
+2025-08-09 13:52:22,199 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Space Runner'
+2025-08-09 13:52:23,161 - INFO - 📖 Read current GameZone.js - Size: 4994 chars
+2025-08-09 13:52:23,162 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Space Runner', size: 6264 chars
+2025-08-09 13:52:25,163 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:52:25,164 - INFO - ✅ Morph returned updated React component - New size: 6449 chars
+2025-08-09 13:52:25,881 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Space Runner'
+2025-08-09 13:52:25,881 - INFO - 🎉 GAME GENERATION SUCCESS - 'Space Runner' - Duration: 24.43s - Size: 6237 chars
+2025-08-09 13:52:25,882 - INFO - 127.0.0.1 - - [09/Aug/2025 13:52:25] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:52:25,890 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Jungle Jump' - Timestamp: 2025-08-09 13:52:25.890091
+2025-08-09 13:52:25,890 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Jungle Jump'
+2025-08-09 13:52:25,890 - INFO - 🤖 Claude generation starting for: 'Jungle Jump'
+2025-08-09 13:52:25,890 - INFO - 📡 Sending request to Claude for 'Jungle Jump' - Model: claude-sonnet-4-20250514
+2025-08-09 13:52:44,514 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:52:44,522 - INFO - ✅ Claude generated content for 'Jungle Jump' - Length: 5954 chars
+2025-08-09 13:52:44,522 - INFO - 📊 Generated game analysis - Canvas: True, Script: False, Styles: True
+2025-08-09 13:52:44,522 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:52:44,522 - INFO - ✅ Claude generated game - Length: 5954 chars, Has Canvas: True, Has Script: False
+2025-08-09 13:52:44,522 - INFO - 🎮 GENERATED GAME CODE for 'Jungle Jump':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  
+  const gameRef = useRef({
+    player: { x: 50, y: 200, width: 30, height: 30, velocityY: 0, onGround: false },
+    platforms: [
+      { x: 0, y: 250, width: 100, height: 20 },
+      { x: 150, y: 200, width:...
+--------------------------------------------------
+2025-08-09 13:52:44,523 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Jungle Jump'
+2025-08-09 13:52:45,350 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 13:52:45,357 - INFO - ✅ Claude generated content for 'Jungle Jump' - Length: 6441 chars
+2025-08-09 13:52:45,357 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 13:52:45,357 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 13:52:45,357 - INFO - ✅ Claude generated game - Length: 6441 chars, Has Canvas: False, Has Script: False
+2025-08-09 13:52:45,357 - INFO - 🎮 GENERATED GAME CODE for 'Jungle Jump':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [player, setPlayer] = useState({ x: 50, y: 200, width: 30, height: 30, velocityY: 0, onGround: false });
+  const [platforms, setPlatforms] = useState([
+    { x: 0, y: 250, width: 100, height: 20 },
+    { x: 150, y: 200, width: 80, height: 20 },
+    { x: 280, y: 150, width: 80, height: 20 },
+    { x: 200, y: 100, width: 100, height: 20 },
+    { x: 350, y: 50, width: 50, height: 20 }
+ ...
+--------------------------------------------------
+2025-08-09 13:52:45,357 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Jungle Jump'
+2025-08-09 13:52:45,570 - INFO - 📖 Read current GameZone.js - Size: 6449 chars
+2025-08-09 13:52:45,571 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Jungle Jump', size: 5970 chars
+2025-08-09 13:52:46,340 - INFO - 📖 Read current GameZone.js - Size: 6449 chars
+2025-08-09 13:52:46,341 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Jungle Jump', size: 6468 chars
+2025-08-09 13:52:47,601 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:52:47,604 - INFO - ✅ Morph returned updated React component - New size: 6265 chars
+2025-08-09 13:52:47,821 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 13:52:47,824 - INFO - ✅ Morph returned updated React component - New size: 6459 chars
+2025-08-09 13:52:48,220 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Jungle Jump'
+2025-08-09 13:52:48,220 - INFO - 🎉 GAME GENERATION SUCCESS - 'Jungle Jump' - Duration: 26.53s - Size: 5954 chars
+2025-08-09 13:52:48,220 - INFO - 127.0.0.1 - - [09/Aug/2025 13:52:48] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:52:48,450 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Jungle Jump'
+2025-08-09 13:52:48,450 - INFO - 🎉 GAME GENERATION SUCCESS - 'Jungle Jump' - Duration: 22.56s - Size: 6441 chars
+2025-08-09 13:52:48,451 - INFO - 127.0.0.1 - - [09/Aug/2025 13:52:48] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 13:55:54,784 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 13:55:54,974 - INFO -  * Restarting with stat
+2025-08-09 13:55:56,533 - WARNING -  * Debugger is active!
+2025-08-09 13:55:56,542 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 13:56:05,677 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 13:56:05,678 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 13:56:05,679 - INFO -  * Restarting with stat
+2025-08-09 13:56:06,983 - WARNING -  * Debugger is active!
+2025-08-09 13:56:06,990 - INFO -  * Debugger PIN: 803-561-142

@@ -387,6 +387,69 @@ def generate_game():
         print(f"Error generating game: {e}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/generate-idea', methods=['POST'])
+def generate_idea():
+    """Generate a short, simple, descriptive arcade-style game idea using Anthropic.
+    Returns JSON: {"idea": "..."}
+    """
+    try:
+        data = request.get_json(silent=True) or {}
+        prompt = data.get('prompt') or (
+            "Generate a short, simple, descriptive arcade-style game idea that can be built in a browser canvas. "
+            "Respond with a single line: '<Title>: <one-sentence mechanic>'. Keep it concise."
+        )
+        recent_ideas = data.get('recentIdeas') or []
+
+        system_prompt = (
+            "You are a creative assistant helping prototype tiny web arcade games fast. "
+            "Output must be a single line idea suitable for a quick HTML5 canvas prototype."
+        )
+
+        # Compose user prompt with recent ideas to avoid duplicates
+        avoid = ("\nRecent ideas (avoid repeating):\n- " + "\n- ".join(recent_ideas)) if recent_ideas else ""
+        user_prompt = f"{prompt}{avoid}\nReturn only the idea, nothing else."
+
+        idea_text = None
+        try:
+            message = anthropic_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=128,
+                temperature=0.8,
+                system=system_prompt,
+                messages=[{"role": "user", "content": user_prompt}],
+            )
+            idea_text = (message.content[0].text or '').strip()
+        except Exception as e:
+            logger.warning(f"Anthropic idea generation failed: {e}")
+            idea_text = None
+
+        if not idea_text:
+            # Local fallback
+            adjectives = ['Tiny', 'Cosmic', 'Retro', 'Neon', 'Shadow', 'Pixel', 'Turbo', 'Mystic', 'Swift', 'Lucky']
+            nouns = ['Runner', 'Climber', 'Racer', 'Dodger', 'Miner', 'Glider', 'Jumper', 'Fisher', 'Courier', 'Knight']
+            mechanics = [
+                'tap to jump over obstacles and collect coins',
+                'hold to charge a jump and time landings on moving platforms',
+                'swipe to change lanes and avoid traffic',
+                'drag to slingshot between anchors while avoiding spikes',
+                'tap to hook and swing past gaps',
+                'tap to dive and resurface to collect treasures',
+                'hold-and-release to dash through breakable walls',
+                'tap to flip gravity and stay on the track',
+                'tap to fish and upgrade your rod between runs',
+                'tap to deliver packages while dodging drones',
+            ]
+            worlds = ['in a neon city', 'in a haunted forest', 'on floating islands', 'in retro space', 'inside a cave', 'on rooftops']
+            import random
+            for _ in range(5):
+                idea_text = f"{random.choice(adjectives)} {random.choice(nouns)}: {random.choice(mechanics)} {random.choice(worlds)}."
+                if idea_text not in recent_ideas:
+                    break
+
+        return jsonify({"idea": idea_text})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/game-log')
 def get_game_log():
     """Get recent game generation logs"""

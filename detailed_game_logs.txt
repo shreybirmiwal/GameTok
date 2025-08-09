@@ -13363,3 +13363,240 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: flappy bird game - 2025-08-09 15:48:54.954468
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('waiting');
+  const [score, setScore] = useState(0);
+  const [bird, setBird] = useState({ y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const gameLoopRef = useRef();
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const BIRD_SIZE = 20;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 100;
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -8;
+  const PIPE_SPEED = 2;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    const gameLoop = () => {
+      if (gameState !== 'playing') return;
+      
+      setBird(prevBird => {
+        const newY = prevBird.y + prevBird.velocity;
+        const newVelocity = prevBird.velocity + GRAVITY;
+        
+        if (newY < 0 || newY > CANVAS_HEIGHT - BIRD_SIZE) {
+          setGameState('gameOver');
+          return prevBird;
+        }
+        
+        return { y: newY, velocity: newVelocity };
+      });
+      
+      setPipes(prevPipes => {
+        let newPipes = prevPipes.map(pipe => ({
+          ...pipe,
+          x: pipe.x - PIPE_SPEED
+        })).filter(pipe => pipe.x > -PIPE_WIDTH);
+        
+        if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < CANVAS_WIDTH - 200) {
+          const gapY = Math.random() * (CANVAS_HEIGHT - PIPE_GAP - 100) + 50;
+          newPipes.push({
+            x: CANVAS_WIDTH,
+            topHeight: gapY,
+            bottomY: gapY + PIPE_GAP,
+            passed: false
+          });
+        }
+        
+        newPipes.forEach(pipe => {
+          if (!pipe.passed && pipe.x + PIPE_WIDTH < 50) {
+            pipe.passed = true;
+            setScore(prev => prev + 1);
+          }
+        });
+        
+        return newPipes;
+      });
+      
+      gameLoopRef.current = requestAnimationFrame(gameLoop);
+    };
+    
+    if (gameState === 'playing') {
+      gameLoopRef.current = requestAnimationFrame(gameLoop);
+    }
+    
+    return () => {
+      if (gameLoopRef.current) {
+        cancelAnimationFrame(gameLoopRef.current);
+      }
+    };
+  }, [gameState]);
+
+  useEffect(() => {
+    const checkCollisions = () => {
+      if (gameState !== 'playing') return;
+      
+      const birdLeft = 50;
+      const birdRight = 50 + BIRD_SIZE;
+      const birdTop = bird.y;
+      const birdBottom = bird.y + BIRD_SIZE;
+      
+      for (let pipe of pipes) {
+        const pipeLeft = pipe.x;
+        const pipeRight = pipe.x + PIPE_WIDTH;
+        
+        if (birdRight > pipeLeft && birdLeft < pipeRight) {
+          if (birdTop < pipe.topHeight || birdBottom > pipe.bottomY) {
+            setGameState('gameOver');
+            return;
+          }
+        }
+      }
+    };
+    
+    checkCollisions();
+  }, [bird, pipes, gameState]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(50, bird.y, BIRD_SIZE, BIRD_SIZE);
+    
+    ctx.fillStyle = '#228B22';
+    pipes.forEach(pipe => {
+      ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.topHeight);
+      ctx.fillRect(pipe.x, pipe.bottomY, PIPE_WIDTH, CANVAS_HEIGHT - pipe.bottomY);
+    });
+    
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Arial';
+    ctx.fillText(`Score: ${score}`, 10, 30);
+    
+    if (gameState === 'waiting') {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.fillStyle = '#FFF';
+      ctx.font = '24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Click to Start!', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+      ctx.textAlign = 'left';
+    }
+    
+    if (gameState === 'gameOver') {
+      ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.fillStyle = '#FFF';
+      ctx.font = '24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Game Over!', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 20);
+      ctx.fillText(`Final Score: ${score}`, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 20);
+      ctx.textAlign = 'left';
+    }
+  }, [bird, pipes, gameState, score]);
+
+  const handleJump = () => {
+    if (gameState === 'waiting') {
+      setGameState('playing');
+      setBird({ y: 150, velocity: JUMP_FORCE });
+    } else if (gameState === 'playing') {
+      setBird(prev => ({ ...prev, velocity: JUMP_FORCE }));
+    }
+  };
+
+  const resetGame = () => {
+    setGameState('waiting');
+    setScore(0);
+    setBird({ y: 150, velocity: 0 });
+    setPipes([]);
+    if (gameLoopRef.current) {
+      cancelAnimationFrame(gameLoopRef.current);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        handleJump();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameState]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 20px 0', color: '#333' }}>Flappy Bird</h2>
+      
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        onClick={handleJump}
+        style={{
+          border: '2px solid #333',
+          cursor: 'pointer',
+          marginBottom: '20px'
+        }}
+      />
+      
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
+      
+      <div style={{ textAlign: 'center', color: '#666' }}>
+        <p>Click or press SPACE to jump!</p>
+        <p>Avoid the green pipes and try to get a high score!</p>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

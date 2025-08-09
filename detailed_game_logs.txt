@@ -6502,3 +6502,440 @@ const GameZone = ({ currentGame }) => {
           
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: Lucky Racer: hold-and-release to dash through breakable walls in a neon city. - 2025-08-09 14:19:36.447822
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [isCharging, setIsCharging] = useState(false);
+  const [chargeLevel, setChargeLevel] = useState(0);
+  
+  const gameRef = useRef({
+    player: { x: 50, y: 150, width: 20, height: 20, vx: 0, vy: 0, isDashing: false, dashTime: 0 },
+    walls: [],
+    particles: [],
+    camera: { x: 0 },
+    keys: {},
+    lastTime: 0,
+    wallSpawnTimer: 0
+  });
+
+  const resetGame = () => {
+    setGameState('playing');
+    setScore(0);
+    setIsCharging(false);
+    setChargeLevel(0);
+    const game = gameRef.current;
+    game.player = { x: 50, y: 150, width: 20, height: 20, vx: 0, vy: 0, isDashing: false, dashTime: 0 };
+    game.walls = [];
+    game.particles = [];
+    game.camera = { x: 0 };
+    game.wallSpawnTimer = 0;
+    
+    // Initial walls
+    for (let i = 0; i < 10; i++) {
+      game.walls.push({
+        x: 200 + i * 100,
+        y: Math.random() * 200 + 50,
+        width: 30,
+        height: 60,
+        broken: false,
+        health: 1
+      });
+    }
+  };
+
+  useEffect(() => {
+    resetGame();
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const game = gameRef.current;
+    
+    const handleKeyDown = (e) => {
+      game.keys[e.code] = true;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (!game.player.isDashing) {
+          setIsCharging(true);
+        }
+      }
+    };
+    
+    const handleKeyUp = (e) => {
+      game.keys[e.code] = false;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (isCharging && !game.player.isDashing) {
+          // Start dash
+          const dashPower = Math.min(chargeLevel / 60, 1);
+          game.player.isDashing = true;
+          game.player.dashTime = dashPower * 30;
+          game.player.vx = dashPower * 15;
+          game.player.vy = 0;
+        }
+        setIsCharging(false);
+        setChargeLevel(0);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    const gameLoop = (currentTime) => {
+      const deltaTime = currentTime - game.lastTime;
+      game.lastTime = currentTime;
+      
+      if (gameState !== 'playing') return;
+      
+      // Update charge level
+      if (isCharging && chargeLevel < 120) {
+        setChargeLevel(prev => prev + 2);
+      }
+      
+      // Update player
+      const player = game.player;
+      
+      if (player.isDashing) {
+        player.dashTime--;
+        if (player.dashTime <= 0) {
+          player.isDashing = false;
+          player.vx *= 0.8;
+        }
+      } else {
+        // Normal movement
+        if (game.keys['ArrowUp'] && player.y > 0) player.vy = -3;
+        else if (game.keys['ArrowDown'] && player.y < 280) player.vy = 3;
+        else player.vy *= 0.9;
+        
+        player.vx *= 0.95;
+      }
+      
+      player.x += player.vx;
+      player.y += player.vy;
+      
+      // Keep player in bounds
+      player.y = Math.max(0, Math.min(280, player.y));
+      
+      // Update camera
+      game.camera.x = player.x - 100;
+      
+      // Spawn new walls
+      game.wallSpawnTimer++;
+      if (game.wallSpawnTimer > 120) {
+        game.wallSpawnTimer = 0;
+        game.walls.push({
+          x: game.camera.x + 500,
+          y: Math.random() * 200 + 50,
+          width: 30,
+          height: 60,
+          broken: false,
+          health: 1
+        });
+      }
+      
+      // Check wall collisions
+      game.walls.forEach(wall => {
+        if (!wall.broken && 
+            player.x < wall.x + wall.width &&
+            player.x + player.width > wall.x &&
+            player.y < wall.y + wall.height &&
+            player.y + player.height > wall.y) {
+          
+          if (player.isDashing && player.vx > 8) {
+            // Break wall
+            wall.broken = true;
+            setScore(prev => prev + 10);
+            
+            // Create particles
+            for (let i = 0; i < 8; i++) {
+              game.particles.push({
+                x: wall.x + wall.width/2,
+                y: wall.y + wall.height/2,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8,
+                life: 30,
+                color: `hsl(${Math.random() * 60 + 180}, 100%, 60%)`
+              });
+            }
+          } else {
+            // Stop player
+            player.vx = 0;
+            player.x = wall.x - player.width - 1;
+          }
+        }
+      });
+      
+      // Update particles
+      game.particles = game.particles.filter(particle => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.vx *= 0.95;
+        particle.vy *= 0.95;
+        particle.life--;
+        return particle.life > 0;
+      });
+      
+      // Remove old walls
+      game.walls = game.walls.filter(wall => wall.x > game.camera.x - 100);
+      
+      // Render
+      ctx.fillStyle = '#000020';
+      ctx.fillRect(0, 0, 400, 300);
+      
+      // Grid background
+      ctx.strokeStyle = '#00ffff20';
+      ctx.lineWidth = 1;
+      for (let x = -game.camera.x % 40; x < 400; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 300);
+        ctx.stroke();
+      }
+      for (let y = 0; y < 300; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(400, y);
+        ctx.stroke();
+      }
+      
+      // Render walls
+      game.walls.forEach(wall => {
+        if (wall.broken) return;
+        
+        const screenX = wall.x - game.camera.x;
+        if (screenX > -50 && screenX < 450) {
+          ctx.fillStyle = '#ff0080';
+          ctx.fillRect(screenX, wall.y, wall.width, wall.height);
+          
+          // Neon glow
+          ctx.shadowColor = '#ff0080';
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: DotChase: Move white 20px circle with Arrow keys (speed: 5px/frame) to catch randomly-spawning red 10px dots (1 every 2sec) while avoiding black 15px circles that spawn every 3sec and move toward player at 3px/frame; score +1 per dot, lose on black circle collision. - 2025-08-09 14:20:23.199396
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [player, setPlayer] = useState({ x: 200, y: 150 });
+  const [dots, setDots] = useState([]);
+  const [enemies, setEnemies] = useState([]);
+  const [keys, setKeys] = useState({});
+
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+  const PLAYER_SIZE = 20;
+  const DOT_SIZE = 10;
+  const ENEMY_SIZE = 15;
+  const PLAYER_SPEED = 5;
+  const ENEMY_SPEED = 3;
+
+  const generateRandomPosition = () => ({
+    x: Math.random() * (GAME_WIDTH - 20) + 10,
+    y: Math.random() * (GAME_HEIGHT - 20) + 10
+  });
+
+  const checkCollision = (obj1, obj2, size1, size2) => {
+    const dx = obj1.x - obj2.x;
+    const dy = obj1.y - obj2.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    return distance < (size1 + size2) / 2;
+  };
+
+  const resetGame = () => {
+    setGameState('playing');
+    setScore(0);
+    setPlayer({ x: 200, y: 150 });
+    setDots([]);
+    setEnemies([]);
+  };
+
+  const gameLoop = useCallback(() => {
+    if (gameState !== 'playing') return;
+
+    setPlayer(prev => {
+      let newX = prev.x;
+      let newY = prev.y;
+
+      if (keys.ArrowUp) newY = Math.max(PLAYER_SIZE/2, prev.y - PLAYER_SPEED);
+      if (keys.ArrowDown) newY = Math.min(GAME_HEIGHT - PLAYER_SIZE/2, prev.y + PLAYER_SPEED);
+      if (keys.ArrowLeft) newX = Math.max(PLAYER_SIZE/2, prev.x - PLAYER_SPEED);
+      if (keys.ArrowRight) newX = Math.min(GAME_WIDTH - PLAYER_SIZE/2, prev.x + PLAYER_SPEED);
+
+      return { x: newX, y: newY };
+    });
+
+    setEnemies(prev => prev.map(enemy => {
+      const dx = player.x - enemy.x;
+      const dy = player.y - enemy.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance > 0) {
+        return {
+          x: enemy.x + (dx / distance) * ENEMY_SPEED,
+          y: enemy.y + (dy / distance) * ENEMY_SPEED
+        };
+      }
+      return enemy;
+    }));
+
+    setDots(prev => {
+      const remainingDots = prev.filter(dot => {
+        if (checkCollision(player, dot, PLAYER_SIZE, DOT_SIZE)) {
+          setScore(s => s + 1);
+          return false;
+        }
+        return true;
+      });
+      return remainingDots;
+    });
+
+    setEnemies(prev => {
+      const hasCollision = prev.some(enemy => 
+        checkCollision(player, enemy, PLAYER_SIZE, ENEMY_SIZE)
+      );
+      if (hasCollision) {
+        setGameState('gameOver');
+      }
+      return prev;
+    });
+  }, [gameState, keys, player]);
+
+  useEffect(() => {
+    const interval = setInterval(gameLoop, 16);
+    return () => clearInterval(interval);
+  }, [gameLoop]);
+
+  useEffect(() => {
+    const dotInterval = setInterval(() => {
+      if (gameState === 'playing') {
+        setDots(prev => [...prev, generateRandomPosition()]);
+      }
+    }, 2000);
+
+    const enemyInterval = setInterval(() => {
+      if (gameState === 'playing') {
+        setEnemies(prev => [...prev, generateRandomPosition()]);
+      }
+    }, 3000);
+
+    return () => {
+      clearInterval(dotInterval);
+      clearInterval(enemyInterval);
+    };
+  }, [gameState]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      setKeys(prev => ({ ...prev, [e.key]: true }));
+    };
+
+    const handleKeyUp = (e) => {
+      setKeys(prev => ({ ...prev, [e.key]: false }));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <div style={{ marginBottom: '10px' }}>
+        <div>Score: {score}</div>
+        {gameState === 'gameOver' && (
+          <div style={{ color: 'red', fontWeight: 'bold' }}>Game Over!</div>
+        )}
+      </div>
+      
+      <div
+        style={{
+          position: 'relative',
+          width: GAME_WIDTH,
+          height: GAME_HEIGHT,
+          border: '2px solid #333',
+          margin: '0 auto',
+          backgroundColor: '#f0f0f0'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: player.x - PLAYER_SIZE/2,
+            top: player.y - PLAYER_SIZE/2,
+            width: PLAYER_SIZE,
+            height: PLAYER_SIZE,
+            backgroundColor: 'white',
+            borderRadius: '50%',
+            border: '1px solid #ccc'
+          }}
+        />
+        
+        {dots.map((dot, index) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              left: dot.x - DOT_SIZE/2,
+              top: dot.y - DOT_SIZE/2,
+              width: DOT_SIZE,
+              height: DOT_SIZE,
+              backgroundColor: 'red',
+              borderRadius: '50%'
+            }}
+          />
+        ))}
+        
+        {enemies.map((enemy, index) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              left: enemy.x - ENEMY_SIZE/2,
+              top: enemy.y - ENEMY_SIZE/2,
+              width: ENEMY_SIZE,
+              height: ENEMY_SIZE,
+              backgroundColor: 'black',
+              borderRadius: '50%'
+            }}
+          />
+        ))}
+      </div>
+      
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={resetGame} style={{ padding: '8px 16px', fontSize: '16px' }}>
+          {gameState === 'gameOver' ? 'Play Again' : 'Restart'}
+        </button>
+      </div>
+      
+      <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+        Use Arrow Keys to move. Catch red dots, avoid black circles!
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

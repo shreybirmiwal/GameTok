@@ -11,7 +11,7 @@ import os
 import json
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 import anthropic
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -61,6 +61,26 @@ last_generation_debug = {
 
 # In-memory prepared games storage
 prepared_games = {}
+PREPARED_MAX = 20
+PREPARED_TTL_SECS = 600
+
+
+def _cleanup_prepared():
+    now = datetime.utcnow()
+    # Remove expired or overflow
+    expired = []
+    for token, rec in list(prepared_games.items()):
+        ts = datetime.fromisoformat(rec.get("created_at"))
+        if now - ts > timedelta(seconds=PREPARED_TTL_SECS):
+            expired.append(token)
+    for t in expired:
+        prepared_games.pop(t, None)
+    # Trim if over capacity (oldest first)
+    if len(prepared_games) > PREPARED_MAX:
+        oldest_first = sorted(prepared_games.items(), key=lambda kv: kv[1].get("created_at"))
+        for t, _ in oldest_first[: len(prepared_games) - PREPARED_MAX]:
+            prepared_games.pop(t, None)
+
 
 # --------------------
 # Sanitization helpers
@@ -523,10 +543,11 @@ def get_last_debug():
 def prepare_game():
     """Generate game code (Anthropic) and store it without applying. Returns a token."""
     data = request.get_json() or {}
-    game_idea = data.get('game_idea')
-    if not game_idea:
-        return jsonify({"error": "Missing 'game_idea'"}), 400
+    game_idea = (data.get('game_idea') or '').strip()
+    if not game_idea or len(game_idea) > 200:
+        return jsonify({"error": "Invalid 'game_idea'"}), 400
     try:
+        _cleanup_prepared()
         logger.info(f"🧪 Preparing game (generate only) for idea: '{game_idea}'")
         game_html = generate_game_with_anthropic(game_idea)
         if not game_html:
@@ -534,12 +555,14 @@ def prepare_game():
         sanitized_code, _ = sanitize_react_code(game_html, "Claude")
         if not sanitized_code:
             return jsonify({"error": "Sanitization failed"}), 500
+        if len(sanitized_code) > 250_000:
+            return jsonify({"error": "Prepared code too large"}), 400
         import uuid
         token = uuid.uuid4().hex
         prepared_games[token] = {
             "idea": game_idea,
             "code": sanitized_code,
-            "created_at": datetime.now().isoformat(),
+            "created_at": datetime.utcnow().isoformat(),
         }
         logger.info(f"✅ Prepared game stored with token: {token}")
         return jsonify({"success": True, "token": token})
@@ -551,9 +574,10 @@ def prepare_game():
 def apply_prepared():
     """Apply a previously prepared game by token using Morph to write GameZone.js."""
     data = request.get_json() or {}
-    token = data.get('token')
+    token = (data.get('token') or '').strip()
     if not token:
         return jsonify({"error": "Missing 'token'"}), 400
+    _cleanup_prepared()
     if token not in prepared_games:
         return jsonify({"error": "Invalid or expired token"}), 404
     try:

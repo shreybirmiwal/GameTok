@@ -9,6 +9,7 @@ function App() {
   const [lastPrompt, setLastPrompt] = useState('');
   const [nextIdea, setNextIdea] = useState('');
   const [nextToken, setNextToken] = useState('');
+  const [queue, setQueue] = useState([]); // [{idea, token}]
 
   const isGeneratingRef = useRef(false);
   const gameContainerRef = useRef(null);
@@ -184,18 +185,56 @@ function App() {
     };
   }, [isGameActive]);
 
-  // Preload next idea + prepare code on mount
+  // Preload N ideas + prepare code on mount
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const idea = await fetchIdeaFromAnthropic();
-      if (cancelled) return;
-      setNextIdea(idea);
-      const token = await prepareGame(idea);
-      if (!cancelled) setNextToken(token);
+      const items = [];
+      for (let i = 0; i < 3; i++) {
+        const idea = await fetchIdeaFromAnthropic();
+        if (cancelled) return;
+        const token = await prepareGame(idea);
+        if (cancelled) return;
+        items.push({ idea, token });
+      }
+      if (!cancelled) {
+        setQueue(items);
+        setNextIdea(items[0]?.idea || '');
+        setNextToken(items[0]?.token || '');
+      }
     })();
     return () => { cancelled = true; };
   }, []);
+
+  // After applying one, rotate queue and top up
+  const rotateAndTopUpQueue = async () => {
+    setQueue((prev) => {
+      const [, ...rest] = prev;
+      return rest;
+    });
+    // Update next immediately from current queue state
+    setTimeout(async () => {
+      const snapshot = queue.slice(1);
+      const next = snapshot[0];
+      if (next) {
+        setNextIdea(next.idea);
+        setNextToken(next.token);
+      } else {
+        // Top up if empty
+        const idea = await fetchIdeaFromAnthropic();
+        const token = await prepareGame(idea);
+        setQueue([{ idea, token }]);
+        setNextIdea(idea);
+        setNextToken(token);
+      }
+      // Always attempt to top up to keep ~3 in queue
+      while (queue.length < 3) {
+        const idea = await fetchIdeaFromAnthropic();
+        const token = await prepareGame(idea);
+        setQueue((prev) => [...prev, { idea, token }]);
+      }
+    }, 0);
+  };
 
   // Trigger next when next slide snaps into view
   useEffect(() => {
@@ -210,9 +249,9 @@ function App() {
             nextTriggeringRef.current = true;
             const idea = nextIdea || generateIdeaLocally();
             if (nextToken) {
-              applyPrepared(nextToken, idea);
+              applyPrepared(nextToken, idea).finally(() => rotateAndTopUpQueue());
             } else {
-              updateGameViaFreestyle(idea);
+              updateGameViaFreestyle(idea).finally(() => rotateAndTopUpQueue());
             }
           }
         }

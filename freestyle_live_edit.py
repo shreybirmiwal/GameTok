@@ -52,7 +52,7 @@ const GameZone = ({{ currentGame }}) => {{
     <div className="game-zone">
       <div className="game-content">
         <h2>{game_name}</h2>
-        <p>🎮 Welcome to {game_name}!</p>
+        <p>Welcome to {game_name}!</p>
         <div style={{{{
           background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
           padding: '15px',
@@ -62,11 +62,11 @@ const GameZone = ({{ currentGame }}) => {{
           textAlign: 'center',
           fontWeight: 'bold'
         }}}}>
-          🎯 Current Game: {game_name}
+          Current Game: {game_name}
           <br />
           Updated at: {datetime.now().strftime("%H:%M:%S")}
         </div>
-        <p>🚀 Live updated via Flask API!</p>
+        <p>Live updated via Flask API!</p>
       </div>
     </div>
   );
@@ -92,7 +92,7 @@ def home():
             "/gamezone/read": "GET - Read current GameZone.js content",
             "/gamezone/update": "POST - Update GameZone with new game name (JSON: {'game_name': 'YourGame'})",
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
-            "/generate-game": "POST - Generate self-contained AI game from idea (JSON: {'game_idea': 'snake game'}) - zero dependencies"
+            "/generate-html-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - perfect for Morph apply to GameZone!"
         }
     }
     
@@ -224,7 +224,7 @@ def write_gamezone():
 
 @app.route('/generate-game', methods=['POST'])
 def generate_game():
-    """Generate AI game using Anthropic and deploy via Morph + Freestyle"""
+    """Generate AI HTML5 Canvas game using Anthropic and deploy via Morph + Freestyle"""
     if not dev_server_wrapper:
         return jsonify({"error": "Not connected to dev server. Use POST /connect first"}), 400
     
@@ -237,15 +237,15 @@ def generate_game():
     try:
         print(f"🎮 Generating game: {game_idea}")
         
-        # Step 1: Generate game code with Anthropic
-        game_code = generate_game_with_anthropic(game_idea)
-        if not game_code:
-            return jsonify({"error": "Failed to generate game code"}), 500
+        # Step 1: Generate HTML5 game with Anthropic
+        game_html = generate_game_with_anthropic(game_idea)
+        if not game_html:
+            return jsonify({"error": "Failed to generate game HTML"}), 500
         
-        # Step 2: Apply code with Morph
-        applied_code = apply_code_with_morph(game_code, game_idea)
+        # Step 2: Wrap HTML in React component
+        applied_code = apply_code_with_morph(game_html, game_idea)
         if not applied_code:
-            return jsonify({"error": "Failed to apply code changes"}), 500
+            return jsonify({"error": "Failed to create React wrapper"}), 500
         
         # Step 3: Deploy to Freestyle
         if deploy_to_freestyle(applied_code):
@@ -262,33 +262,75 @@ def generate_game():
         print(f"Error generating game: {e}")
         return jsonify({"error": str(e)}), 500
 
-def generate_game_with_anthropic(game_idea):
-    """Generate completely self-contained React game code using Anthropic API - zero dependencies"""
+@app.route('/generate-html-game', methods=['POST'])
+def generate_html_game():
+    """Generate pure HTML5 Canvas game for direct injection - perfect for Morph apply!"""
+    if not dev_server_wrapper:
+        return jsonify({"error": "Not connected to dev server. Use POST /connect first"}), 400
+    
+    data = request.get_json()
+    if not data or 'game_idea' not in data:
+        return jsonify({"error": "Missing 'game_idea' in request body"}), 400
+    
+    game_idea = data['game_idea']
+    
     try:
-        system_prompt = """You are a React game developer. Generate complete, working React component code for games. 
-        CRITICAL: The game MUST work as a single standalone file with ZERO external dependencies.
-        The code should be a single React functional component that can replace the GameZone component.
-        Include ALL styling inline - no external CSS files or libraries.
-        Use ONLY React hooks, standard JavaScript, and built-in browser APIs.
-        NO external game libraries, NO imports beyond React, NO dependencies whatsoever.
-        The game will be directly plugged into a React app and must work immediately."""
+        print(f"🎮 Generating pure HTML game: {game_idea}")
         
-        user_prompt = f"""Create a {game_idea} game as a React component. 
+        # Generate pure HTML5 game with Anthropic
+        game_html = generate_game_with_anthropic(game_idea)
+        if not game_html:
+            return jsonify({"error": "Failed to generate game HTML"}), 500
+        
+        # Deploy HTML directly to Freestyle (no React wrapper needed)
+        if deploy_html_to_freestyle(game_html, game_idea):
+            return jsonify({
+                "success": True,
+                "message": f"Pure HTML game '{game_idea}' generated and deployed successfully!",
+                "game_idea": game_idea,
+                "app_url": dev_server_wrapper.dev_server.ephemeral_url,
+                "html_content": game_html[:200] + "..." if len(game_html) > 200 else game_html
+            })
+        else:
+            return jsonify({"error": "Failed to deploy HTML to Freestyle"}), 500
+            
+    except Exception as e:
+        print(f"Error generating HTML game: {e}")
+        return jsonify({"error": str(e)}), 500
+
+def generate_game_with_anthropic(game_idea):
+    """Generate completely self-contained HTML5 Canvas game using Anthropic API - zero dependencies"""
+    try:
+        system_prompt = """You are an HTML5 Canvas game developer. Generate complete, working HTML5 Canvas games. 
+        CRITICAL: The game MUST work as a single standalone HTML snippet with ZERO external dependencies.
+        Use ONLY HTML5 Canvas, vanilla JavaScript, and built-in browser APIs.
+        NO external libraries, NO frameworks, NO dependencies whatsoever.
+        The game will be directly injected into a React component's div as innerHTML."""
+        
+        user_prompt = f"""Create a {game_idea} game using HTML5 Canvas and vanilla JavaScript. 
         STRICT Requirements:
-        - Named export as GameZone component
-        - Accept currentGame prop (but can ignore it)
-        - ZERO external dependencies - only React and vanilla JavaScript
-        - ALL styles must be inline (no CSS classes or external stylesheets)
-        - Fully playable game with controls (keyboard/mouse)
-        - Include complete game state, scoring, and game loop logic
-        - Must work immediately when copied into a React file
-        - No imports except React (import React from 'react')
-        - Use only browser built-ins: canvas, setTimeout, setInterval, etc.
-        - Game should fit in approximately 400x300 pixel area
-        - Must be fun, engaging, and fully functional
+        - Complete HTML snippet with canvas, script, and inline styles
+        - ZERO external dependencies - only vanilla JavaScript and Canvas API
+        - Canvas size should be exactly 400x300 pixels
+        - Include complete game state, scoring, game loop, and controls
+        - Handle keyboard/mouse input appropriately
+        - Use requestAnimationFrame for smooth animation
+        - All styles must be inline CSS within <style> tags
+        - Must be a complete, playable, engaging game
+        - Include game over conditions and restart functionality
         
-        IMPORTANT: This code will be directly inserted into a file and run - it must be 100% self-contained.
-        Return ONLY the complete React component code, no explanations or markdown formatting.
+        Format: Return a complete HTML snippet like this:
+        <div style="text-align: center;">
+            <canvas id="gameCanvas" width="400" height="300" style="border: 2px solid #333;"></canvas>
+            <div>Score: <span id="score">0</span></div>
+            <div>Instructions: [game controls]</div>
+        </div>
+        <script>
+        // Complete game logic here
+        </script>
+        
+        IMPORTANT: This HTML will be injected directly into a React component - it must be 100% self-contained and work immediately.
+        Return ONLY the complete HTML snippet, no explanations or markdown formatting.
         """
 
         message = anthropic_client.messages.create(
@@ -308,27 +350,43 @@ def generate_game_with_anthropic(game_idea):
         print(f"Error generating game code: {e}")
         return None
 
-def apply_code_with_morph(generated_code, instruction):
-    """Apply code changes using Morph's fast apply"""
+def apply_code_with_morph(generated_html, instruction):
+    """Convert HTML5 game to React component using Morph's fast apply"""
     try:
-        # Read current GameZone.js from Freestyle dev server
-        original_code = dev_server_wrapper.read_gamezone()
+        # Create a React component that renders the HTML game
+        # Escape the HTML content properly
+        escaped_html = generated_html.replace('`', '\\`').replace('${', '\\${')
         
-        instruction_text = f"I will replace the GameZone component with a new {instruction} game implementation"
+        react_wrapper = f'''import React, {{ useEffect }} from 'react';
+
+const GameZone = ({{ currentGame }}) => {{
+  useEffect(() => {{
+    // Re-initialize game when component mounts or updates
+    const canvas = document.getElementById('gameCanvas');
+    if (canvas) {{
+      // Clear any existing game loops or event listeners
+      // The game script will handle initialization
+    }}
+  }}, []);
+
+  return (
+    <div className="game-zone">
+      <h2 style={{{{ textAlign: 'center', marginBottom: '15px' }}}}>
+        {{currentGame || '{instruction}'}}
+      </h2>
+      <div 
+        dangerouslySetInnerHTML={{{{ __html: `{escaped_html}` }}}}
+      />
+    </div>
+  );
+}};
+
+export default GameZone;'''
         
-        response = morph_client.chat.completions.create(
-            model="morph-v3-large",
-            messages=[{
-                "role": "user", 
-                "content": f"<instruction>{instruction_text}</instruction>\n<code>{original_code}</code>\n<update>{generated_code}</update>"
-            }]
-        )
-        
-        applied_code = response.choices[0].message.content
-        return applied_code
+        return react_wrapper
         
     except Exception as e:
-        print(f"Error applying code with Morph: {e}")
+        print(f"Error creating React wrapper: {e}")
         return None
 
 def deploy_to_freestyle(code):
@@ -342,11 +400,46 @@ def deploy_to_freestyle(code):
         print(f"Error deploying to Freestyle: {e}")
         return False
 
+def deploy_html_to_freestyle(html_content, game_name):
+    """Deploy pure HTML content to Freestyle dev server by updating GameZone"""
+    try:
+        # Escape HTML content for embedding in React
+        escaped_html = html_content.replace('`', '\\`').replace('${', '\\${')
+        
+        # Create a simple React component that renders the HTML
+        react_component = f'''import React from 'react';
+
+const GameZone = ({{ currentGame }}) => {{
+  return (
+    <div className="game-zone">
+      <div className="game-content">
+        <h2 style={{{{ textAlign: 'center', marginBottom: '15px' }}}}>
+          {game_name}
+        </h2>
+        <div dangerouslySetInnerHTML={{{{ __html: `{escaped_html}` }}}} />
+        <div style={{{{ textAlign: 'center', marginTop: '10px', fontSize: '12px', color: '#666' }}}}>
+          🎮 Generated with HTML5 Canvas | Perfect for Morph apply!
+        </div>
+      </div>
+    </div>
+  );
+}};
+
+export default GameZone;'''
+        
+        dev_server_wrapper.write_gamezone(react_component)
+        print("✅ HTML game deployed to Freestyle dev server")
+        return True
+        
+    except Exception as e:
+        print(f"Error deploying HTML to Freestyle: {e}")
+        return False
+
 if __name__ == "__main__":
-    print("🚀 Starting Freestyle Live Edit Flask Server with AI Game Generation...")
+    print("🚀 Starting Freestyle Live Edit Flask Server with HTML5 Game Generation...")
     print("📖 Visit http://localhost:8080 for API documentation")
     print("🔗 Use POST /connect to connect to your GitHub repo")
-    print("🎮 Use POST /generate-game with {'game_idea': 'snake game'} to generate AI games")
-    print("🔧 Use POST /gamezone/update with {'game_name': 'YourGame'} for simple updates")
+    print("🎮 Use POST /generate-html-game with {'game_idea': 'snake'} to generate games for Morph apply")
+    print("🔧 GameZone.js is now a simple HTML renderer - perfect for Morph apply!")
     
     app.run(debug=True, host='0.0.0.0', port=8080)

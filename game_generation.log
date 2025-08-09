@@ -2596,3 +2596,95 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 14:42:21,822 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
 2025-08-09 14:42:21,822 - INFO - ✅ Prepared game stored with token: 8e41b3bf737c4b7f8be9020835e635c1
 2025-08-09 14:42:21,822 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:21] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:42:22,773 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:22,808 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:22] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:42:22,819 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
+2025-08-09 14:42:22,819 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
+2025-08-09 14:42:22,820 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:42:23,785 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:23,789 - INFO - ✅ Claude generated content for '' - Length: 3184 chars
+2025-08-09 14:42:23,789 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:42:23,789 - INFO - ✅ Claude generated game - Length: 3184 chars, Has Canvas: False, Has Script: False
+2025-08-09 14:42:23,789 - INFO - 🎮 GENERATED GAME CODE for '':
+--------------------------------------------------
+import React, { useState, useEffect } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [score, setScore] = useState(0);
+  const [position, setPosition] = useState({ x: 200, y: 150 });
+  const [target, setTarget] = useState({ x: 100, y: 100 });
+  const [gameOver, setGameOver] = useState(false);
+
+  const generateTarget = () => {
+    return {
+      x: Math.floor(Math.random() * 350),
+      y: Math.floor(Math.random() * 250)
+    };
+  };
+
+  const handleClick = (e) => {
+    if (gameOver)...
+--------------------------------------------------
+2025-08-09 14:42:23,789 - INFO - ⚡ Applying React component to GameZone.js using Morph for: ''
+2025-08-09 14:42:24,960 - INFO - 📖 Read current GameZone.js - Size: 3896 chars
+2025-08-09 14:42:24,960 - INFO - ⚡ Sending React component to Morph fast apply - Game: '', size: 3184 chars
+2025-08-09 14:42:26,126 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 14:42:26,127 - INFO - ✅ Morph returned updated React component - New size: 3184 chars
+2025-08-09 14:42:26,765 - INFO - 📝 Written new React GameZone to Freestyle - Game: ''
+2025-08-09 14:42:26,765 - INFO - 🎉 GAME GENERATION SUCCESS - '' - Duration: 15.11s - Size: 3184 chars
+2025-08-09 14:42:26,766 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:26] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 14:42:27,484 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:27,486 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:27] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:42:28,394 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:28,397 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:28] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:42:28,465 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:28,466 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:28] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:42:28,472 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
+2025-08-09 14:42:28,472 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
+2025-08-09 14:42:28,473 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:42:35,308 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:35,313 - INFO - ✅ Claude generated content for 'shooting game' - Length: 3669 chars
+2025-08-09 14:42:35,313 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:42:35,314 - INFO - ✅ Claude generated game - Length: 3669 chars, Has Canvas: False, Has Script: False
+2025-08-09 14:42:35,314 - INFO - 🎮 GENERATED GAME CODE for 'shooting game':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [targets, setTargets] = useState([]);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const gameAreaRef = useRef(null);
+
+  useEffect(() => {
+    const spawnTarget = () => {
+      if (!gameOver && targets.length < 5) {
+        const newTarget = {
+          id: Date.now(),
+          x:...
+--------------------------------------------------
+2025-08-09 14:42:35,314 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'shooting game'
+2025-08-09 14:42:36,446 - INFO - 📖 Read current GameZone.js - Size: 3184 chars
+2025-08-09 14:42:36,446 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'shooting game', size: 3669 chars
+2025-08-09 14:42:37,479 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 14:42:37,481 - INFO - ✅ Morph returned updated React component - New size: 3669 chars
+2025-08-09 14:42:38,150 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'shooting game'
+2025-08-09 14:42:38,150 - INFO - 🎉 GAME GENERATION SUCCESS - 'shooting game' - Duration: 16.87s - Size: 3669 chars
+2025-08-09 14:42:38,152 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:38] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 14:42:38,176 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:38,178 - INFO - ✅ Claude generated content for 'endless runner platformer' - Length: 3852 chars
+2025-08-09 14:42:38,178 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:42:38,178 - INFO - ✅ Prepared game stored with token: b9bcc211d1a5439abf60d16df193e837
+2025-08-09 14:42:38,178 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:38] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:42:44,229 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:44,232 - INFO - ✅ Claude generated content for 'endless runner platformer' - Length: 4163 chars
+2025-08-09 14:42:44,232 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:42:44,233 - INFO - ✅ Prepared game stored with token: a9288b1e28ea49028aadc8c5e365193d
+2025-08-09 14:42:44,233 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:44] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:42:45,047 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:42:45,048 - INFO - 127.0.0.1 - - [09/Aug/2025 14:42:45] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:42:45,059 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
+2025-08-09 14:42:45,059 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
+2025-08-09 14:42:45,060 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022

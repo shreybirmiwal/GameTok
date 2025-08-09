@@ -8184,3 +8184,301 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION:  - 2025-08-09 14:42:23.789766
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [score, setScore] = useState(0);
+  const [position, setPosition] = useState({ x: 200, y: 150 });
+  const [target, setTarget] = useState({ x: 100, y: 100 });
+  const [gameOver, setGameOver] = useState(false);
+
+  const generateTarget = () => {
+    return {
+      x: Math.floor(Math.random() * 350),
+      y: Math.floor(Math.random() * 250)
+    };
+  };
+
+  const handleClick = (e) => {
+    if (gameOver) return;
+    
+    const distance = Math.sqrt(
+      Math.pow(position.x - target.x, 2) + 
+      Math.pow(position.y - target.y, 2)
+    );
+
+    if (distance < 30) {
+      setScore(score + 1);
+      setTarget(generateTarget());
+    } else {
+      setGameOver(true);
+    }
+  };
+
+  const resetGame = () => {
+    setScore(0);
+    setPosition({ x: 200, y: 150 });
+    setTarget(generateTarget());
+    setGameOver(false);
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setPosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    };
+
+    const gameArea = document.querySelector('#gameArea');
+    if (gameArea) {
+      gameArea.addEventListener('mousemove', handleMouseMove);
+    }
+
+    return () => {
+      if (gameArea) {
+        gameArea.removeEventListener('mousemove', handleMouseMove);
+      }
+    };
+  }, []);
+
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <h2>Target Chase</h2>
+      <p>Score: {score}</p>
+      <div
+        id="gameArea"
+        onClick={handleClick}
+        style={{
+          position: 'relative',
+          width: '400px',
+          height: '300px',
+          border: '2px solid black',
+          margin: '0 auto',
+          backgroundColor: '#f0f0f0',
+          overflow: 'hidden',
+          cursor: 'none'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: target.x,
+            top: target.y,
+            width: '20px',
+            height: '20px',
+            backgroundColor: 'red',
+            borderRadius: '50%'
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            left: position.x - 10,
+            top: position.y - 10,
+            width: '20px',
+            height: '20px',
+            backgroundColor: 'blue',
+            borderRadius: '50%'
+          }}
+        />
+        {gameOver && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              color: 'white',
+              padding: '20px',
+              borderRadius: '10px'
+            }}
+          >
+            <h3>Game Over!</h3>
+            <p>Final Score: {score}</p>
+          </div>
+        )}
+      </div>
+      <button
+        onClick={resetGame}
+        style={{
+          marginTop: '10px',
+          padding: '8px 16px',
+          fontSize: '16px',
+          cursor: 'pointer'
+        }}
+      >
+        Reset Game
+      </button>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: shooting game - 2025-08-09 14:42:35.314500
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [targets, setTargets] = useState([]);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const gameAreaRef = useRef(null);
+
+  useEffect(() => {
+    const spawnTarget = () => {
+      if (!gameOver && targets.length < 5) {
+        const newTarget = {
+          id: Date.now(),
+          x: Math.random() * 360,
+          y: 0,
+          speed: 1 + Math.random() * 2
+        };
+        setTargets(prev => [...prev, newTarget]);
+      }
+    };
+
+    const gameLoop = setInterval(() => {
+      setTargets(prev => {
+        const updated = prev.map(target => ({
+          ...target,
+          y: target.y + target.speed
+        }));
+        
+        if (updated.some(target => target.y > 280)) {
+          setGameOver(true);
+          return prev;
+        }
+        return updated.filter(target => target.y <= 280);
+      });
+    }, 50);
+
+    const targetSpawner = setInterval(spawnTarget, 1000);
+
+    return () => {
+      clearInterval(gameLoop);
+      clearInterval(targetSpawner);
+    };
+  }, [gameOver, targets]);
+
+  const handleMouseMove = (e) => {
+    if (gameAreaRef.current) {
+      const rect = gameAreaRef.current.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+  };
+
+  const handleClick = () => {
+    if (gameOver) return;
+    
+    setTargets(prev => {
+      const hit = prev.find(target => 
+        Math.abs(target.x - mousePos.x) < 20 &&
+        Math.abs(target.y - mousePos.y) < 20
+      );
+      
+      if (hit) {
+        setScore(s => s + 1);
+        return prev.filter(t => t.id !== hit.id);
+      }
+      return prev;
+    });
+  };
+
+  const resetGame = () => {
+    setScore(0);
+    setGameOver(false);
+    setTargets([]);
+  };
+
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div
+        ref={gameAreaRef}
+        style={{
+          width: 400,
+          height: 300,
+          border: '2px solid black',
+          position: 'relative',
+          cursor: 'crosshair',
+          backgroundColor: '#f0f0f0',
+          overflow: 'hidden'
+        }}
+        onMouseMove={handleMouseMove}
+        onClick={handleClick}
+      >
+        {targets.map(target => (
+          <div
+            key={target.id}
+            style={{
+              position: 'absolute',
+              left: target.x,
+              top: target.y,
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              backgroundColor: 'red'
+            }}
+          />
+        ))}
+        <div
+          style={{
+            position: 'absolute',
+            left: mousePos.x - 10,
+            top: mousePos.y - 10,
+            width: 20,
+            height: 20,
+            border: '1px solid black',
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }}
+        />
+        {gameOver && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              color: 'white',
+              padding: '20px',
+              borderRadius: '10px'
+            }}
+          >
+            Game Over!
+          </div>
+        )}
+      </div>
+      <div style={{ marginTop: 10 }}>
+        <p>Score: {score}</p>
+        <button onClick={resetGame}>
+          {gameOver ? 'Play Again' : 'Reset Game'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

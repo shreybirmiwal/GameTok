@@ -2195,3 +2195,153 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 14:32:25,502 - INFO -  * Restarting with stat
 2025-08-09 14:32:27,107 - WARNING -  * Debugger is active!
 2025-08-09 14:32:27,116 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:33:06,656 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 14:33:06,656 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 14:33:06,657 - INFO -  * Restarting with stat
+2025-08-09 14:33:07,906 - WARNING -  * Debugger is active!
+2025-08-09 14:33:07,916 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:35:23,692 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:23] "POST /connect HTTP/1.1" 200 -
+2025-08-09 14:35:33,840 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:33] "OPTIONS /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:33,840 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:33] "OPTIONS /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:34,699 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:34,718 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:34] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:34,727 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:34] "OPTIONS /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:35:34,729 - INFO - 🧪 Preparing game (generate only) for idea: 'racing puzzle platformer'
+2025-08-09 14:35:34,729 - INFO - 🤖 Claude generation starting for: 'racing puzzle platformer'
+2025-08-09 14:35:34,729 - INFO - 📡 Sending request to Claude for 'racing puzzle platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:35:35,067 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:35,069 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:35] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:36,918 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:36] "OPTIONS /generate-game HTTP/1.1" 200 -
+2025-08-09 14:35:36,922 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.' - Timestamp: 2025-08-09 14:35:36.921992
+2025-08-09 14:35:36,922 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.'
+2025-08-09 14:35:36,922 - INFO - 🤖 Claude generation starting for: 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.'
+2025-08-09 14:35:36,922 - INFO - 📡 Sending request to Claude for 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:35:52,005 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:52,006 - INFO - ✅ Claude generated content for 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.' - Length: 3737 chars
+2025-08-09 14:35:52,006 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:35:52,006 - INFO - ✅ Claude generated game - Length: 3737 chars, Has Canvas: False, Has Script: False
+2025-08-09 14:35:52,006 - INFO - 🎮 GENERATED GAME CODE for 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerY, setPlayerY] = useState(150);
+  const [treasures, setTreasures] = useState([]);
+  const [score, setScore] = useState(0);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isDiving, setIsDiving] = useState(false);
+  const gameLoopRef = useRef(null);
+
+  const resetGame = () => {
+    setPlayerY(150);
+    setTreasures([]);
+    setScore(0);
+    setIsGameOver(false);
+    ...
+--------------------------------------------------
+2025-08-09 14:35:52,007 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.'
+2025-08-09 14:35:53,047 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:53,048 - INFO - ✅ Claude generated content for 'racing puzzle platformer' - Length: 4559 chars
+2025-08-09 14:35:53,048 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:35:53,048 - INFO - ✅ Prepared game stored with token: 90a167f8216b410fb69a908886a1efac
+2025-08-09 14:35:53,048 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:53] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:35:53,355 - INFO - 📖 Read current GameZone.js - Size: 1053 chars
+2025-08-09 14:35:53,355 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.', size: 3737 chars
+2025-08-09 14:35:53,865 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:53,867 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:53] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:53,874 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
+2025-08-09 14:35:53,874 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
+2025-08-09 14:35:53,874 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:35:54,627 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 14:35:54,640 - INFO - ✅ Morph returned updated React component - New size: 3737 chars
+2025-08-09 14:35:55,341 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.'
+2025-08-09 14:35:55,341 - INFO - 🎉 GAME GENERATION SUCCESS - 'Cosmic Knight: tap to dive and resurface to collect treasures inside a cave.' - Duration: 18.42s - Size: 3737 chars
+2025-08-09 14:35:55,342 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:55] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 14:35:56,298 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:56,301 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:56] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:56,308 - INFO - 🧪 Preparing game (generate only) for idea: 'space exploration survival game'
+2025-08-09 14:35:56,308 - INFO - 🤖 Claude generation starting for: 'space exploration survival game'
+2025-08-09 14:35:56,308 - INFO - 📡 Sending request to Claude for 'space exploration survival game' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:35:57,921 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:57,923 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:57] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:58,295 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:35:58,296 - INFO - 127.0.0.1 - - [09/Aug/2025 14:35:58] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:35:58,300 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
+2025-08-09 14:35:58,300 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
+2025-08-09 14:35:58,300 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:36:10,431 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.' - Timestamp: 2025-08-09 14:36:10.430982
+2025-08-09 14:36:10,432 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.'
+2025-08-09 14:36:10,432 - INFO - 🤖 Claude generation starting for: 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.'
+2025-08-09 14:36:10,432 - INFO - 📡 Sending request to Claude for 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:36:11,012 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:11,014 - INFO - ✅ Claude generated content for 'endless runner platformer' - Length: 4238 chars
+2025-08-09 14:36:11,014 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:36:11,015 - INFO - ✅ Prepared game stored with token: 955398141843423bb828749d53a89ef8
+2025-08-09 14:36:11,015 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:11] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:36:13,269 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:13,277 - INFO - ✅ Claude generated content for 'space exploration survival game' - Length: 4352 chars
+2025-08-09 14:36:13,277 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:36:13,277 - INFO - ✅ Prepared game stored with token: 1a4fb51febae4fe4807d1031d0bfb245
+2025-08-09 14:36:13,278 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:13] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:36:13,740 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:13,743 - INFO - ✅ Claude generated content for 'endless runner platformer' - Length: 3905 chars
+2025-08-09 14:36:13,744 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:36:13,744 - INFO - ✅ Prepared game stored with token: 3ce060eba92149e4b7b376f9742156d6
+2025-08-09 14:36:13,744 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:13] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:36:15,067 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:15,069 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:15] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:36:15,078 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner game'
+2025-08-09 14:36:15,078 - INFO - 🤖 Claude generation starting for: 'endless runner game'
+2025-08-09 14:36:15,078 - INFO - 📡 Sending request to Claude for 'endless runner game' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:36:27,194 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:27,198 - INFO - ✅ Claude generated content for 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.' - Length: 4018 chars
+2025-08-09 14:36:27,198 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:36:27,198 - INFO - ✅ Claude generated game - Length: 4018 chars, Has Canvas: False, Has Script: False
+2025-08-09 14:36:27,198 - INFO - 🎮 GENERATED GAME CODE for 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.':
+--------------------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [score, setScore] = useState(0);
+  const [coins, setCoins] = useState(0);
+  const [rodLevel, setRodLevel] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [position, setPosition] = useState(150);
+  const [fish, setFish] = useState([]);
+  
+  const gameAreaRef = useRef(null);
+
+  const startGame = () => {
+    setIsPlaying(true);
+    setPosition(150);
+    setFish([]...
+--------------------------------------------------
+2025-08-09 14:36:27,199 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.'
+2025-08-09 14:36:28,261 - INFO - 📖 Read current GameZone.js - Size: 3737 chars
+2025-08-09 14:36:28,262 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.', size: 4018 chars
+2025-08-09 14:36:29,224 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 14:36:29,226 - INFO - ✅ Morph returned updated React component - New size: 4018 chars
+2025-08-09 14:36:29,608 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:29,613 - INFO - ✅ Claude generated content for 'endless runner game' - Length: 3756 chars
+2025-08-09 14:36:29,613 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:36:29,613 - INFO - ✅ Prepared game stored with token: afd33fa4e74f474b8c3787d8abaf8ed9
+2025-08-09 14:36:29,614 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:29] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:36:29,879 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.'
+2025-08-09 14:36:29,880 - INFO - 🎉 GAME GENERATION SUCCESS - 'Neon Glider: tap to fish and upgrade your rod between runs inside a cave.' - Duration: 19.45s - Size: 4018 chars
+2025-08-09 14:36:29,880 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:29] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 14:36:30,409 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:30,414 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:30] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:36:30,825 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:30,826 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:30] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:36:31,492 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:31,493 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:31] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:36:31,536 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:36:31,537 - INFO - 127.0.0.1 - - [09/Aug/2025 14:36:31] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:36:31,544 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
+2025-08-09 14:36:31,544 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
+2025-08-09 14:36:31,544 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:36:41,422 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:36:41,614 - INFO -  * Restarting with stat

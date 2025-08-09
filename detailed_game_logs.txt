@@ -7566,3 +7566,341 @@ const GameZone = ({ currentGame }) => {
           <button
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: Cosmic Knight: tap to dive and resurface to collect treasures inside a cave. - 2025-08-09 14:35:52.007113
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerY, setPlayerY] = useState(150);
+  const [treasures, setTreasures] = useState([]);
+  const [score, setScore] = useState(0);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isDiving, setIsDiving] = useState(false);
+  const gameLoopRef = useRef(null);
+
+  const resetGame = () => {
+    setPlayerY(150);
+    setTreasures([]);
+    setScore(0);
+    setIsGameOver(false);
+    setIsDiving(false);
+  };
+
+  useEffect(() => {
+    const spawnTreasure = () => {
+      if (treasures.length < 3) {
+        const newTreasure = {
+          x: 400,
+          y: Math.random() * 200 + 100,
+          id: Date.now()
+        };
+        setTreasures(prev => [...prev, newTreasure]);
+      }
+    };
+
+    const gameLoop = () => {
+      if (!isGameOver) {
+        setTreasures(prev => {
+          const newTreasures = prev
+            .map(t => ({ ...t, x: t.x - 2 }))
+            .filter(t => t.x > -20);
+
+          newTreasures.forEach(treasure => {
+            if (Math.abs(treasure.x - 50) < 20 && Math.abs(treasure.y - playerY) < 20) {
+              setScore(s => s + 10);
+              newTreasures.splice(newTreasures.indexOf(treasure), 1);
+            }
+          });
+
+          return newTreasures;
+        });
+
+        if (playerY < 50 || playerY > 250) {
+          setIsGameOver(true);
+        }
+      }
+    };
+
+    const interval = setInterval(() => {
+      gameLoop();
+      if (Math.random() < 0.02) spawnTreasure();
+    }, 16);
+
+    return () => clearInterval(interval);
+  }, [playerY, isGameOver]);
+
+  useEffect(() => {
+    if (isDiving) {
+      setPlayerY(y => y + 2);
+    } else {
+      setPlayerY(y => y - 2);
+    }
+  }, [isDiving]);
+
+  const handleMouseDown = () => {
+    setIsDiving(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsDiving(false);
+  };
+
+  return (
+    <div
+      style={{
+        width: '400px',
+        height: '300px',
+        border: '2px solid #333',
+        position: 'relative',
+        backgroundColor: '#87CEEB',
+        overflow: 'hidden',
+        userSelect: 'none'
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: '50px',
+          top: `${playerY}px`,
+          width: '20px',
+          height: '20px',
+          backgroundColor: '#FF4444',
+          borderRadius: '50%'
+        }}
+      />
+      {treasures.map(treasure => (
+        <div
+          key={treasure.id}
+          style={{
+            position: 'absolute',
+            left: `${treasure.x}px`,
+            top: `${treasure.y}px`,
+            width: '15px',
+            height: '15px',
+            backgroundColor: '#FFD700',
+            borderRadius: '50%'
+          }}
+        />
+      ))}
+      <div
+        style={{
+          position: 'absolute',
+          top: '10px',
+          left: '10px',
+          color: '#333',
+          fontSize: '20px'
+        }}
+      >
+        Score: {score}
+      </div>
+      {isGameOver && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center'
+          }}
+        >
+          <div style={{ fontSize: '24px', marginBottom: '10px' }}>Game Over!</div>
+          <button
+            style={{
+              padding: '8px 16px',
+              fontSize: '16px',
+              cursor: 'pointer'
+            }}
+            onClick={resetGame}
+          >
+            Restart
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: Neon Glider: tap to fish and upgrade your rod between runs inside a cave. - 2025-08-09 14:36:27.199308
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [score, setScore] = useState(0);
+  const [coins, setCoins] = useState(0);
+  const [rodLevel, setRodLevel] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [position, setPosition] = useState(150);
+  const [fish, setFish] = useState([]);
+  
+  const gameAreaRef = useRef(null);
+
+  const startGame = () => {
+    setIsPlaying(true);
+    setPosition(150);
+    setFish([]);
+    spawnFish();
+  };
+
+  const resetGame = () => {
+    setScore(0);
+    setIsPlaying(false);
+    setPosition(150);
+    setFish([]);
+  };
+
+  const spawnFish = () => {
+    if (!isPlaying) return;
+    
+    const newFish = {
+      x: 400,
+      y: Math.random() * 250,
+      speed: 2 + Math.random() * 2
+    };
+    
+    setFish(prev => [...prev, newFish]);
+    setTimeout(spawnFish, 2000);
+  };
+
+  const handleClick = () => {
+    if (!isPlaying) {
+      startGame();
+      return;
+    }
+    setPosition(prev => Math.max(20, Math.min(280, prev - 40)));
+  };
+
+  const upgradeRod = () => {
+    if (coins >= rodLevel * 10) {
+      setCoins(prev => prev - rodLevel * 10);
+      setRodLevel(prev => prev + 1);
+    }
+  };
+
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    const gameLoop = setInterval(() => {
+      setFish(prevFish => {
+        const newFish = prevFish.map(fish => ({
+          ...fish,
+          x: fish.x - fish.speed
+        })).filter(fish => fish.x > -20);
+
+        newFish.forEach(fish => {
+          if (Math.abs(fish.y - position) < 30 && fish.x < 100 && fish.x > 80) {
+            setScore(prev => prev + rodLevel);
+            setCoins(prev => prev + 1);
+          }
+        });
+
+        return newFish;
+      });
+
+      setPosition(prev => Math.min(280, prev + 2));
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [isPlaying, position, rodLevel]);
+
+  return (
+    <div style={{ 
+      width: '400px', 
+      height: '400px', 
+      backgroundColor: '#000', 
+      position: 'relative',
+      overflow: 'hidden',
+      fontFamily: 'Arial',
+      color: '#0ff',
+      textAlign: 'center',
+      border: '2px solid #0ff',
+      borderRadius: '10px'
+    }}>
+      <div style={{ padding: '10px' }}>
+        <div style={{ color: '#0ff' }}>Score: {score} | Coins: {coins}</div>
+        <div>Rod Level: {rodLevel}</div>
+        <button 
+          onClick={upgradeRod}
+          style={{
+            backgroundColor: '#0ff',
+            border: 'none',
+            padding: '5px 10px',
+            margin: '5px',
+            cursor: 'pointer',
+            borderRadius: '5px'
+          }}
+        >
+          Upgrade Rod ({rodLevel * 10} coins)
+        </button>
+        <button 
+          onClick={resetGame}
+          style={{
+            backgroundColor: '#0ff',
+            border: 'none',
+            padding: '5px 10px',
+            margin: '5px',
+            cursor: 'pointer',
+            borderRadius: '5px'
+          }}
+        >
+          Reset
+        </button>
+      </div>
+      <div 
+        ref={gameAreaRef}
+        onClick={handleClick}
+        style={{
+          width: '400px',
+          height: '300px',
+          position: 'relative',
+          backgroundColor: '#001',
+          cursor: 'pointer'
+        }}
+      >
+        <div style={{
+          position: 'absolute',
+          left: '80px',
+          top: `${position}px`,
+          width: '20px',
+          height: '4px',
+          backgroundColor: '#0ff',
+          boxShadow: '0 0 10px #0ff',
+          transition: 'top 0.1s'
+        }} />
+        {fish.map((fish, index) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              left: `${fish.x}px`,
+              top: `${fish.y}px`,
+              width: '20px',
+              height: '10px',
+              backgroundColor: '#f0f',
+              borderRadius: '50%',
+              boxShadow: '0 0 5px #f0f'
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

@@ -200,6 +200,30 @@ function App() {
     return () => { cancelled = true; };
   }, []);
 
+  // Auto-start with a default game (once per tab)
+  useEffect(() => {
+    const FLAG = 'autoInitDone';
+    if (sessionStorage.getItem(FLAG)) return;
+    if (isGeneratingRef.current) return;
+
+    (async () => {
+      try {
+        sessionStorage.setItem(FLAG, '1');
+        const idea = 'flappy bird game';
+        setLastPrompt(idea);
+        setCurrentGame(`Generating ${idea}...`);
+        const token = await prepareGame(idea);
+        if (token) {
+          await applyPrepared(token, idea);
+        } else {
+          await updateGameViaFreestyle(idea);
+        }
+      } catch (e) {
+        console.warn('Auto-init failed', e);
+      }
+    })();
+  }, []);
+
   // After applying one, rotate queue and top up
   const rotateAndTopUpQueue = async () => {
     setQueue((prev) => {

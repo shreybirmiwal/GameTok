@@ -14,7 +14,7 @@ const GameZone = ({ currentGame }) => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#0f0';
     ctx.font = '16px monospace';
-    ctx.fillText('React GameZone Scaffold', 90, 150);
+    ctx.fillText('Setting up...', 90, 150);
   }, [currentGame]);
 
   return (

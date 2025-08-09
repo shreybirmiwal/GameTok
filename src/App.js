@@ -28,9 +28,6 @@ function App() {
     }
   };
 
-  const handlePlayGame = () => {
-    console.log(`Play specific game button clicked! Current game: ${games[currentGameIndex]}`);
-  };
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -42,10 +39,6 @@ function App() {
   return (
     <div className="App">
       <div className="content-container">
-        <button className="play-button" onClick={handlePlayGame}>
-          Play Specific Game
-        </button>
-        
         <GameZone currentGame={games[currentGameIndex]} />
         
         <div className="scroll-indicator">

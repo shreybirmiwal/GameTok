@@ -10638,3 +10638,1490 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: flappy bird game - 2025-08-09 15:23:48.334695
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [bird, setBird] = useState({ x: 50, y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -8;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 120;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+
+  const jump = useCallback(() => {
+    if (!gameStarted) {
+      setGameStarted(true);
+    }
+    if (!gameOver) {
+      setBird(prev => ({ ...prev, velocity: JUMP_FORCE }));
+    }
+  }, [gameStarted, gameOver]);
+
+  const resetGame = () => {
+    setBird({ x: 50, y: 150, velocity: 0 });
+    setPipes([]);
+    setScore(0);
+    setGameStarted(false);
+    setGameOver(false);
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setBird(prev => {
+        const newY = prev.y + prev.velocity;
+        const newVelocity = prev.velocity + GRAVITY;
+        
+        if (newY <= 0 || newY >= GAME_HEIGHT - 20) {
+          setGameOver(true);
+          return prev;
+        }
+        
+        return { ...prev, y: newY, velocity: newVelocity };
+      });
+
+      setPipes(prev => {
+        let newPipes = prev.map(pipe => ({ ...pipe, x: pipe.x - 2 }));
+        
+        newPipes = newPipes.filter(pipe => pipe.x > -PIPE_WIDTH);
+        
+        if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < GAME_WIDTH - 200) {
+          const gapY = Math.random() * (GAME_HEIGHT - PIPE_GAP - 100) + 50;
+          newPipes.push({
+            x: GAME_WIDTH,
+            topHeight: gapY,
+            bottomY: gapY + PIPE_GAP,
+            passed: false
+          });
+        }
+        
+        return newPipes;
+      });
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameStarted, gameOver]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    pipes.forEach(pipe => {
+      if (!pipe.passed && bird.x > pipe.x + PIPE_WIDTH) {
+        pipe.passed = true;
+        setScore(prev => prev + 1);
+      }
+
+      const birdLeft = bird.x;
+      const birdRight = bird.x + 20;
+      const birdTop = bird.y;
+      const birdBottom = bird.y + 20;
+      
+      const pipeLeft = pipe.x;
+      const pipeRight = pipe.x + PIPE_WIDTH;
+      
+      if (birdRight > pipeLeft && birdLeft < pipeRight) {
+        if (birdTop < pipe.topHeight || birdBottom > pipe.bottomY) {
+          setGameOver(true);
+        }
+      }
+    });
+  }, [bird, pipes, gameStarted, gameOver]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2>Flappy Bird</h2>
+      <div style={{ marginBottom: '10px' }}>
+        Score: {score}
+      </div>
+      
+      <div 
+        onClick={jump}
+        style={{
+          position: 'relative',
+          width: GAME_WIDTH,
+          height: GAME_HEIGHT,
+          backgroundColor: '#87CEEB',
+          border: '2px solid #333',
+          cursor: 'pointer',
+          overflow: 'hidden'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: bird.x,
+            top: bird.y,
+            width: 20,
+            height: 20,
+            backgroundColor: '#FFD700',
+            borderRadius: '50%',
+            border: '2px solid #FFA500'
+          }}
+        />
+        
+        {pipes.map((pipe, index) => (
+          <div key={index}>
+            <div
+              style={{
+                position: 'absolute',
+                left: pipe.x,
+                top: 0,
+                width: PIPE_WIDTH,
+                height: pipe.topHeight,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                left: pipe.x,
+                top: pipe.bottomY,
+                width: PIPE_WIDTH,
+                height: GAME_HEIGHT - pipe.bottomY,
+                backgroundColor: '#228B22',
+                border: '2px solid #006400'
+              }}
+            />
+          </div>
+        ))}
+        
+        {!gameStarted && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            color: '#333',
+            fontSize: '18px',
+            fontWeight: 'bold'
+          }}>
+            Click or Press Space to Start
+          </div>
+        )}
+        
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            color: '#FF0000',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '20px',
+            borderRadius: '10px'
+          }}>
+            Game Over!<br />
+            Score: {score}
+          </div>
+        )}
+      </div>
+      
+      <div style={{ marginTop: '10px' }}>
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
+      
+      <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
+        Click the game area or press Space to jump
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: tower defense game - 2025-08-09 15:24:29.339099
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const gameStateRef = useRef({
+    towers: [],
+    enemies: [],
+    projectiles: [],
+    money: 100,
+    lives: 10,
+    wave: 1,
+    enemySpawnTimer: 0,
+    enemiesInWave: 5,
+    enemiesSpawned: 0,
+    gameOver: false,
+    paused: false
+  });
+
+  const [gameState, setGameState] = useState(gameStateRef.current);
+  const [selectedTowerType, setSelectedTowerType] = useState('basic');
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const TOWER_COST = 50;
+  const ENEMY_PATH = [
+    { x: 0, y: 150 },
+    { x: 100, y: 150 },
+    { x: 100, y: 100 },
+    { x: 200, y: 100 },
+    { x: 200, y: 200 },
+    { x: 300, y: 200 },
+    { x: 300, y: 150 },
+    { x: 400, y: 150 }
+  ];
+
+  const createEnemy = () => {
+    return {
+      x: ENEMY_PATH[0].x,
+      y: ENEMY_PATH[0].y,
+      health: 30 + gameStateRef.current.wave * 10,
+      maxHealth: 30 + gameStateRef.current.wave * 10,
+      speed: 1,
+      pathIndex: 0,
+      reward: 20
+    };
+  };
+
+  const createTower = (x, y) => {
+    return {
+      x: x,
+      y: y,
+      range: 60,
+      damage: 15,
+      fireRate: 30,
+      lastFired: 0,
+      type: selectedTowerType
+    };
+  };
+
+  const createProjectile = (startX, startY, targetX, targetY, damage) => {
+    const dx = targetX - startX;
+    const dy = targetY - startY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    return {
+      x: startX,
+      y: startY,
+      dx: (dx / distance) * 5,
+      dy: (dy / distance) * 5,
+      damage: damage
+    };
+  };
+
+  const getDistance = (x1, y1, x2, y2) => {
+    return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  };
+
+  const isOnPath = (x, y) => {
+    for (let i = 0; i < ENEMY_PATH.length - 1; i++) {
+      const p1 = ENEMY_PATH[i];
+      const p2 = ENEMY_PATH[i + 1];
+      const minX = Math.min(p1.x, p2.x) - 20;
+      const maxX = Math.max(p1.x, p2.x) + 20;
+      const minY = Math.min(p1.y, p2.y) - 20;
+      const maxY = Math.max(p1.y, p2.y) + 20;
+      if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const updateEnemies = () => {
+    const state = gameStateRef.current;
+    state.enemies = state.enemies.filter(enemy => {
+      if (enemy.pathIndex < ENEMY_PATH.length - 1) {
+        const target = ENEMY_PATH[enemy.pathIndex + 1];
+        const dx = target.x - enemy.x;
+        const dy = target.y - enemy.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 5) {
+          enemy.pathIndex++;
+        } else {
+          enemy.x += (dx / distance) * enemy.speed;
+          enemy.y += (dy / distance) * enemy.speed;
+        }
+        return true;
+      } else {
+        state.lives--;
+        return false;
+      }
+    });
+  };
+
+  const updateTowers = () => {
+    const state = gameStateRef.current;
+    state.towers.forEach(tower => {
+      tower.lastFired++;
+      if (tower.lastFired >= tower.fireRate) {
+        const target = state.enemies.find(enemy => 
+          getDistance(tower.x, tower.y, enemy.x, enemy.y) <= tower.range
+        );
+        if (target) {
+          state.projectiles.push(createProjectile(tower.x, tower.y, target.x, target.y, tower.damage));
+          tower.lastFired = 0;
+        }
+      }
+    });
+  };
+
+  const updateProjectiles = () => {
+    const state = gameStateRef.current;
+    state.projectiles = state.projectiles.filter(projectile => {
+      projectile.x += projectile.dx;
+      projectile.y += projectile.dy;
+      
+      const hitEnemy = state.enemies.find(enemy => 
+        getDistance(projectile.x, projectile.y, enemy.x, enemy.y) < 10
+      );
+      
+      if (hitEnemy) {
+        hitEnemy.health -= projectile.damage;
+        if (hitEnemy.health <= 0) {
+          state.money += hitEnemy.reward;
+          state.enemies = state.enemies.filter(e => e !== hitEnemy);
+        }
+        return false;
+      }
+      
+      return projectile.x >= 0 && projectile.x <= CANVAS_WIDTH && 
+             projectile.y >= 0 && projectile.y <= CANVAS_HEIGHT;
+    });
+  };
+
+  const spawnEnemies = () => {
+    const state = gameStateRef.current;
+    state.enemySpawnTimer++;
+    if (state.enemySpawnTimer >= 60 && state.enemiesSpawned < state.enemiesInWave) {
+      state.enemies.push(createEnemy());
+      state.enemiesSpawned++;
+      state.enemySpawnTimer = 0;
+    }
+    
+    if (state.enemiesSpawned >= state.enemiesInWave && state.enemies.length === 0) {
+      state.wave++;
+      state.enemiesInWave += 2;
+      state.enemiesSpawned = 0;
+      state.money += 50;
+    }
+  };
+
+  const gameLoop = () => {
+    const state = gameStateRef.current;
+    if (state.gameOver || state.paused) return;
+    
+    updateEnemies();
+    updateTowers();
+    updateProjectiles();
+    spawnEnemies();
+    
+    if (state.lives <= 0) {
+      state.gameOver = true;
+    }
+    
+    setGameState({ ...state });
+  };
+
+  const draw = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    
+    // Draw path
+    ctx.strokeStyle = '#8B4513';
+    ctx.lineWidth = 20;
+    ctx.beginPath();
+    ctx.moveTo(ENEMY_PATH[0].x, ENEMY_PATH[0].y);
+    for (let i = 1; i < ENEMY_PATH.length; i++) {
+      ctx.lineTo(ENEMY_PATH[i].x, ENEMY_PATH[i].y);
+    }
+    ctx.stroke();
+    
+    // Draw towers
+    gameStateRef.current.towers.forEach(tower => {
+      ctx.fillStyle = '#4A4A4A';
+      ctx.fillRect(tower.x - 10, tower.y - 10, 20, 20);
+      ctx.strokeStyle = '#333';
+      ctx.strokeRect(tower.x - 10, tower.y - 10, 20, 20);
+    });
+    
+    // Draw enemies
+    gameStateRef.current.enemies.forEach(enemy => {
+      ctx.fillStyle = '#FF4444';
+      ctx.beginPath();
+      ctx.arc(enemy.x, enemy.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Health bar
+      const healthPercent = enemy.health / enemy.maxHealth;
+      ctx.fillStyle = '#FF0000';
+      ctx.fillRect(enemy.x - 10, enemy.y - 15, 20, 3);
+      ctx.fillStyle = '#00FF00';
+      ctx.fillRect(enemy.x - 10, enemy.y - 15, 20 * healthPercent, 3);
+    });
+    
+    // Draw projectiles
+    gameStateRef.current.projectiles.forEach(projectile => {
+      ctx.fillStyle = '#FFFF00';
+      ctx.beginPath();
+      ctx.arc(projectile.x, projectile.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  };
+
+  const handleCanvasClick = (event) => {
+    if (gameStateRef.current.gameOver) return;
+    
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    if (isOnPath(x, y)) return;
+    
+    const existingTower = gameStateRef.current.towers.find(tower => 
+      getDistance(tower.x, tower.y, x, y) < 25
+    );
+    
+    if (existingTower) return;
+    
+    if (gameStateRef.current.money >= TOWER_COST) {
+      gameStateRef.current.towers.push(createTower(x, y));
+      gameStateRef.current.money -= TOWER_COST;
+      setGameState({ ...gameStateRef.current });
+    }
+  };
+
+  const resetGame = () => {
+    gameStateRef.current = {
+      towers: [],
+      enemies: [],
+      projectiles: [],
+      money: 100,
+      lives: 10,
+      wave: 1,
+      enemySpawnTimer: 0,
+      enemiesInWave: 5,
+      enemiesSpawned: 0,
+      gameOver: false,
+      paused: false
+    };
+    setGameState({ ...gameStateRef.current });
+  };
+
+  useEffect(() => {
+    const animate = () => {
+      gameLoop();
+      draw();
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    animate();
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <div style={{ marginBottom: '10px', display: 'flex', gap: '20px', alignItems: 'center' }}>
+        <div>Money: ${gameState.money}</div>
+        <div>Lives: {gameState.lives}</div>
+        <div>Wave: {gameState.wave}</div>
+        <button 
+          onClick={resetGame}
+          style={{ 
+            padding: '5px 10px', 
+            backgroundColor: '#4CAF50', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '3px',
+            cursor: 'pointer'
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
+      
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        onClick={handleCanvasClick}
+        style={{ 
+          border: '2px solid #333', 
+          backgroundColor: '#90EE90',
+          cursor: 'crosshair'
+        }}
+      />
+      
+      <div style={{ marginTop: '10px', fontSize: '14px' }}>
+        <div>Click to place towers (Cost: ${TOWER_COST})</div>
+        <div>Towers automatically shoot at enemies in range</div>
+        {gameState.gameOver && (
+          <div style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+            Game Over! Click Reset to play again.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: racing game - 2025-08-09 15:25:36.422144
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [playerX, setPlayerX] = useState(200);
+  const [playerY, setPlayerY] = useState(250);
+  const [obstacles, setObstacles] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const resetGame = useCallback(() => {
+    setPlayerX(200);
+    setPlayerY(250);
+    setObstacles([]);
+    setScore(0);
+    setGameOver(false);
+    setGameStarted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setObstacles(prev => {
+        const newObstacles = prev
+          .map(obs => ({ ...obs, y: obs.y + 3 }))
+          .filter(obs => obs.y < 320);
+
+        if (Math.random() < 0.02) {
+          newObstacles.push({
+            x: Math.random() * 360,
+            y: -20,
+            width: 40,
+            height: 20
+          });
+        }
+
+        return newObstacles;
+      });
+
+      setScore(prev => prev + 1);
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [gameStarted, gameOver]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const handleKeyPress = (e) => {
+      switch(e.key) {
+        case 'ArrowLeft':
+          setPlayerX(prev => Math.max(0, prev - 20));
+          break;
+        case 'ArrowRight':
+          setPlayerX(prev => Math.min(360, prev + 20));
+          break;
+        case 'ArrowUp':
+          setPlayerY(prev => Math.max(0, prev - 20));
+          break;
+        case 'ArrowDown':
+          setPlayerY(prev => Math.min(280, prev + 20));
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameStarted, gameOver]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const checkCollision = () => {
+      obstacles.forEach(obs => {
+        if (
+          playerX < obs.x + obs.width &&
+          playerX + 40 > obs.x &&
+          playerY < obs.y + obs.height &&
+          playerY + 20 > obs.y
+        ) {
+          setGameOver(true);
+        }
+      });
+    };
+
+    checkCollision();
+  }, [playerX, playerY, obstacles, gameStarted, gameOver]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0', color: '#333' }}>Simple Racing Game</h2>
+      
+      <div style={{ marginBottom: '10px' }}>
+        <span style={{ marginRight: '20px', fontWeight: 'bold' }}>Score: {score}</span>
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          {gameStarted ? 'Restart' : 'Start Game'}
+        </button>
+      </div>
+
+      <div style={{
+        position: 'relative',
+        width: '400px',
+        height: '300px',
+        backgroundColor: '#333',
+        border: '2px solid #666',
+        overflow: 'hidden'
+      }}>
+        {gameStarted && (
+          <>
+            <div style={{
+              position: 'absolute',
+              left: `${playerX}px`,
+              top: `${playerY}px`,
+              width: '40px',
+              height: '20px',
+              backgroundColor: '#00ff00',
+              borderRadius: '3px'
+            }} />
+
+            {obstacles.map((obs, index) => (
+              <div
+                key={index}
+                style={{
+                  position: 'absolute',
+                  left: `${obs.x}px`,
+                  top: `${obs.y}px`,
+                  width: `${obs.width}px`,
+                  height: `${obs.height}px`,
+                  backgroundColor: '#ff0000',
+                  borderRadius: '2px'
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            textAlign: 'center'
+          }}>
+            GAME OVER!<br />
+            <span style={{ fontSize: '16px' }}>Final Score: {score}</span>
+          </div>
+        )}
+
+        {!gameStarted && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            fontSize: '18px',
+            textAlign: 'center'
+          }}>
+            Click Start Game to begin!<br />
+            <span style={{ fontSize: '14px' }}>Use arrow keys to move</span>
+          </div>
+        )}
+      </div>
+
+      <div style={{ 
+        marginTop: '10px', 
+        fontSize: '14px', 
+        color: '#666',
+        textAlign: 'center'
+      }}>
+        Use arrow keys to move your green car and avoid red obstacles!
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: shootinggame - 2025-08-09 15:27:15.129395
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [player, setPlayer] = useState({ x: 200, y: 250 });
+  const [bullets, setBullets] = useState([]);
+  const [enemies, setEnemies] = useState([]);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [keys, setKeys] = useState({});
+
+  const gameWidth = 400;
+  const gameHeight = 300;
+
+  const resetGame = () => {
+    setPlayer({ x: 200, y: 250 });
+    setBullets([]);
+    setEnemies([]);
+    setScore(0);
+    setGameOver(false);
+  };
+
+  const handleKeyDown = useCallback((e) => {
+    setKeys(prev => ({ ...prev, [e.key]: true }));
+  }, []);
+
+  const handleKeyUp = useCallback((e) => {
+    setKeys(prev => ({ ...prev, [e.key]: false }));
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [handleKeyDown, handleKeyUp]);
+
+  useEffect(() => {
+    if (gameOver) return;
+
+    const gameLoop = setInterval(() => {
+      setPlayer(prev => {
+        let newX = prev.x;
+        let newY = prev.y;
+        
+        if (keys['ArrowLeft'] && newX > 0) newX -= 5;
+        if (keys['ArrowRight'] && newX < gameWidth - 20) newX += 5;
+        if (keys['ArrowUp'] && newY > 0) newY -= 5;
+        if (keys['ArrowDown'] && newY < gameHeight - 20) newY += 5;
+        
+        return { x: newX, y: newY };
+      });
+
+      if (keys[' ']) {
+        setBullets(prev => [...prev, { x: player.x + 10, y: player.y, id: Date.now() }]);
+      }
+
+      setBullets(prev => prev.filter(bullet => bullet.y > 0).map(bullet => ({ ...bullet, y: bullet.y - 8 })));
+
+      setEnemies(prev => {
+        let newEnemies = prev.map(enemy => ({ ...enemy, y: enemy.y + 2 })).filter(enemy => enemy.y < gameHeight);
+        
+        if (Math.random() < 0.02) {
+          newEnemies.push({ x: Math.random() * (gameWidth - 20), y: 0, id: Date.now() });
+        }
+        
+        return newEnemies;
+      });
+
+      setBullets(prevBullets => {
+        setEnemies(prevEnemies => {
+          const newBullets = [];
+          const newEnemies = [];
+          
+          prevEnemies.forEach(enemy => {
+            let hit = false;
+            prevBullets.forEach(bullet => {
+              if (bullet.x < enemy.x + 20 && bullet.x + 5 > enemy.x && 
+                  bullet.y < enemy.y + 20 && bullet.y + 5 > enemy.y) {
+                hit = true;
+                setScore(prev => prev + 10);
+              } else {
+                if (!newBullets.find(b => b.id === bullet.id)) {
+                  newBullets.push(bullet);
+                }
+              }
+            });
+            if (!hit) {
+              newEnemies.push(enemy);
+            }
+          });
+          
+          return newEnemies;
+        });
+        
+        return prevBullets.filter(bullet => {
+          return !enemies.some(enemy => 
+            bullet.x < enemy.x + 20 && bullet.x + 5 > enemy.x && 
+            bullet.y < enemy.y + 20 && bullet.y + 5 > enemy.y
+          );
+        });
+      });
+
+      setEnemies(prevEnemies => {
+        const collision = prevEnemies.some(enemy => 
+          player.x < enemy.x + 20 && player.x + 20 > enemy.x && 
+          player.y < enemy.y + 20 && player.y + 20 > enemy.y
+        );
+        if (collision) {
+          setGameOver(true);
+        }
+        return prevEnemies;
+      });
+
+    }, 50);
+
+    return () => clearInterval(gameLoop);
+  }, [keys, player, gameOver, enemies]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2>Shooting Game</h2>
+      <div style={{ marginBottom: '10px' }}>
+        Score: {score} | Use arrow keys to move, spacebar to shoot
+      </div>
+      
+      <div style={{
+        position: 'relative',
+        width: gameWidth,
+        height: gameHeight,
+        border: '2px solid #333',
+        backgroundColor: '#000',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          left: player.x,
+          top: player.y,
+          width: 20,
+          height: 20,
+          backgroundColor: '#00ff00',
+          borderRadius: '3px'
+        }} />
+        
+        {bullets.map(bullet => (
+          <div key={bullet.id} style={{
+            position: 'absolute',
+            left: bullet.x,
+            top: bullet.y,
+            width: 5,
+            height: 10,
+            backgroundColor: '#ffff00',
+            borderRadius: '2px'
+          }} />
+        ))}
+        
+        {enemies.map(enemy => (
+          <div key={enemy.id} style={{
+            position: 'absolute',
+            left: enemy.x,
+            top: enemy.y,
+            width: 20,
+            height: 20,
+            backgroundColor: '#ff0000',
+            borderRadius: '3px'
+          }} />
+        ))}
+        
+        {gameOver && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: '#fff',
+            fontSize: '24px',
+            textAlign: 'center',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            padding: '20px',
+            borderRadius: '10px'
+          }}>
+            Game Over!<br />
+            Final Score: {score}
+          </div>
+        )}
+      </div>
+      
+      <button 
+        onClick={resetGame}
+        style={{
+          marginTop: '10px',
+          padding: '10px 20px',
+          fontSize: '16px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+      >
+        {gameOver ? 'Play Again' : 'Restart'}
+      </button>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: puzzle platformer game - 2025-08-09 15:27:54.391344
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const GRID_SIZE = 20;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+  const COLS = GAME_WIDTH / GRID_SIZE;
+  const ROWS = GAME_HEIGHT / GRID_SIZE;
+
+  const [playerPos, setPlayerPos] = useState({ x: 1, y: 13 });
+  const [isJumping, setIsJumping] = useState(false);
+  const [jumpVelocity, setJumpVelocity] = useState(0);
+  const [gameWon, setGameWon] = useState(false);
+
+  const level = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+  ];
+
+  const platforms = [
+    { x: 3, y: 12, width: 3 },
+    { x: 8, y: 10, width: 2 },
+    { x: 12, y: 8, width: 3 },
+    { x: 16, y: 6, width: 2 },
+    { x: 5, y: 6, width: 2 },
+    { x: 10, y: 4, width: 2 },
+    { x: 17, y: 2, width: 2 }
+  ];
+
+  const goalPos = { x: 18, y: 1 };
+
+  const isOnGround = useCallback((x, y) => {
+    if (y >= ROWS - 2) return true;
+    for (let platform of platforms) {
+      if (x >= platform.x && x < platform.x + platform.width && y === platform.y - 1) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
+
+  const isWall = useCallback((x, y) => {
+    if (x < 1 || x >= COLS - 1 || y < 1 || y >= ROWS - 1) return true;
+    for (let platform of platforms) {
+      if (x >= platform.x && x < platform.x + platform.width && y === platform.y) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
+
+  const handleKeyPress = useCallback((e) => {
+    if (gameWon) return;
+    
+    const { x, y } = playerPos;
+    let newX = x;
+    let newY = y;
+
+    switch (e.key) {
+      case 'ArrowLeft':
+      case 'a':
+        newX = x - 1;
+        break;
+      case 'ArrowRight':
+      case 'd':
+        newX = x + 1;
+        break;
+      case 'ArrowUp':
+      case 'w':
+      case ' ':
+        if (isOnGround(x, y) && !isJumping) {
+          setIsJumping(true);
+          setJumpVelocity(-3);
+        }
+        break;
+    }
+
+    if (!isWall(newX, y)) {
+      setPlayerPos(prev => ({ ...prev, x: newX }));
+    }
+  }, [playerPos, gameWon, isOnGround, isWall, isJumping]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
+
+  useEffect(() => {
+    if (!isJumping) return;
+
+    const interval = setInterval(() => {
+      setPlayerPos(prev => {
+        const newY = prev.y + Math.ceil(jumpVelocity / 2);
+        
+        if (isWall(prev.x, newY) || isOnGround(prev.x, newY)) {
+          setIsJumping(false);
+          setJumpVelocity(0);
+          return prev;
+        }
+
+        return { ...prev, y: newY };
+      });
+
+      setJumpVelocity(prev => prev + 0.5);
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [isJumping, jumpVelocity, isWall, isOnGround]);
+
+  useEffect(() => {
+    if (playerPos.x === goalPos.x && playerPos.y === goalPos.y) {
+      setGameWon(true);
+    }
+  }, [playerPos]);
+
+  const resetGame = () => {
+    setPlayerPos({ x: 1, y: 13 });
+    setIsJumping(false);
+    setJumpVelocity(0);
+    setGameWon(false);
+  };
+
+  const renderGrid = () => {
+    const grid = [];
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        let cellStyle = {
+          position: 'absolute',
+          left: col * GRID_SIZE,
+          top: row * GRID_SIZE,
+          width: GRID_SIZE,
+          height: GRID_SIZE,
+          border: '1px solid #ddd'
+        };
+
+        let content = '';
+        let bgColor = '#f0f0f0';
+
+        if ((col === 0 || col === COLS - 1 || row === 0 || row === ROWS - 1)) {
+          bgColor = '#333';
+        }
+
+        for (let platform of platforms) {
+          if (col >= platform.x && col < platform.x + platform.width && row === platform.y) {
+            bgColor = '#8B4513';
+          }
+        }
+
+        if (col === playerPos.x && row === playerPos.y) {
+          content = '🟦';
+          bgColor = 'transparent';
+        }
+
+        if (col === goalPos.x && row === goalPos.y) {
+          content = '⭐';
+          bgColor = 'transparent';
+        }
+
+        cellStyle.backgroundColor = bgColor;
+
+        grid.push(
+          <div key={`${row}-${col}`} style={cellStyle}>
+            {content}
+          </div>
+        );
+      }
+    }
+    return grid;
+  };
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2>Puzzle Platformer</h2>
+      <div style={{
+        position: 'relative',
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+        border: '2px solid #333',
+        backgroundColor: '#87CEEB',
+        overflow: 'hidden'
+      }}>
+        {renderGrid()}
+      </div>
+      
+      <div style={{ marginTop: '10px', textAlign: 'center' }}>
+        <p>Use WASD or Arrow Keys to move. Space/W/Up to jump.</p>
+        <p>Reach the ⭐ to win!</p>
+        {gameWon && <p style={{ color: 'green', fontWeight: 'bold' }}>🎉 You Won! 🎉</p>}
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginTop: '10px'
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: puzzle platformer game - 2025-08-09 15:29:41.562202
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const GRID_SIZE = 20;
+  const GAME_WIDTH = 400;
+  const GAME_HEIGHT = 300;
+  const COLS = GAME_WIDTH / GRID_SIZE;
+  const ROWS = GAME_HEIGHT / GRID_SIZE;
+
+  const [player, setPlayer] = useState({ x: 1, y: 13 });
+  const [goal, setGoal] = useState({ x: 18, y: 2 });
+  const [gameWon, setGameWon] = useState(false);
+  const [level, setLevel] = useState(1);
+
+  const platforms = [
+    // Bottom platform
+    ...Array.from({ length: 20 }, (_, i) => ({ x: i, y: 14 })),
+    // Middle platforms
+    { x: 5, y: 10 }, { x: 6, y: 10 }, { x: 7, y: 10 },
+    { x: 12, y: 8 }, { x: 13, y: 8 }, { x: 14, y: 8 },
+    { x: 3, y: 6 }, { x: 4, y: 6 },
+    { x: 16, y: 4 }, { x: 17, y: 4 }, { x: 18, y: 4 },
+    // Walls
+    ...Array.from({ length: 15 }, (_, i) => ({ x: 0, y: i })),
+    ...Array.from({ length: 15 }, (_, i) => ({ x: 19, y: i })),
+  ];
+
+  const isPlatform = (x, y) => {
+    return platforms.some(p => p.x === x && p.y === y);
+  };
+
+  const canMoveTo = (x, y) => {
+    return x >= 0 && x < COLS && y >= 0 && y < ROWS && !isPlatform(x, y);
+  };
+
+  const handleKeyPress = useCallback((e) => {
+    if (gameWon) return;
+
+    setPlayer(prev => {
+      let newX = prev.x;
+      let newY = prev.y;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+        case 'a':
+          newX = prev.x - 1;
+          break;
+        case 'ArrowRight':
+        case 'd':
+          newX = prev.x + 1;
+          break;
+        case 'ArrowUp':
+        case 'w':
+          // Jump - only if standing on platform
+          if (isPlatform(prev.x, prev.y + 1)) {
+            newY = prev.y - 1;
+          }
+          break;
+        case 'ArrowDown':
+        case 's':
+          newY = prev.y + 1;
+          break;
+        default:
+          return prev;
+      }
+
+      if (canMoveTo(newX, newY)) {
+        return { x: newX, y: newY };
+      }
+      return prev;
+    });
+  }, [gameWon]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
+
+  useEffect(() => {
+    // Apply gravity
+    const gravityInterval = setInterval(() => {
+      if (gameWon) return;
+
+      setPlayer(prev => {
+        const below = { x: prev.x, y: prev.y + 1 };
+        if (canMoveTo(below.x, below.y)) {
+          return below;
+        }
+        return prev;
+      });
+    }, 200);
+
+    return () => clearInterval(gravityInterval);
+  }, [gameWon]);
+
+  useEffect(() => {
+    if (player.x === goal.x && player.y === goal.y) {
+      setGameWon(true);
+    }
+  }, [player, goal]);
+
+  const resetGame = () => {
+    setPlayer({ x: 1, y: 13 });
+    setGameWon(false);
+  };
+
+  const nextLevel = () => {
+    setLevel(prev => prev + 1);
+    setPlayer({ x: 1, y: 13 });
+    setGoal({ x: 18 - (level % 5), y: 2 + (level % 3) });
+    setGameWon(false);
+  };
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2>Puzzle Platformer - Level {level}</h2>
+      
+      <div style={{
+        position: 'relative',
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+        border: '2px solid #333',
+        backgroundColor: '#87CEEB',
+        margin: '10px 0'
+      }}>
+        {/* Platforms */}
+        {platforms.map((platform, i) => (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: platform.x * GRID_SIZE,
+              top: platform.y * GRID_SIZE,
+              width: GRID_SIZE,
+              height: GRID_SIZE,
+              backgroundColor: '#8B4513'
+            }}
+          />
+        ))}
+
+        {/* Goal */}
+        <div
+          style={{
+            position: 'absolute',
+            left: goal.x * GRID_SIZE,
+            top: goal.y * GRID_SIZE,
+            width: GRID_SIZE,
+            height: GRID_SIZE,
+            backgroundColor: '#FFD700',
+            borderRadius: '50%'
+          }}
+        />
+
+        {/* Player */}
+        <div
+          style={{
+            position: 'absolute',
+            left: player.x * GRID_SIZE,
+            top: player.y * GRID_SIZE,
+            width: GRID_SIZE,
+            height: GRID_SIZE,
+            backgroundColor: '#FF6B6B',
+            borderRadius: '3px'
+          }}
+        />
+
+        {/* Win message */}
+        {gameWon && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            textAlign: 'center'
+          }}>
+            <h3>Level Complete!</h3>
+            <button 
+              onClick={nextLevel}
+              style={{
+                padding: '10px 20px',
+                margin: '5px',
+                fontSize: '16px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Next Level
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: '10px' }}>
+        <p>Use WASD or Arrow Keys to move. W/↑ to jump. Reach the gold circle!</p>
+        <button 
+          onClick={resetGame}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            margin: '5px'
+          }}
+        >
+          Restart Level
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

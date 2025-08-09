@@ -202,6 +202,19 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  position: relative;
+}
+
+.next-cta .ready-dot {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2b8cff;
+  /* blue */
+  box-shadow: 0 0 6px rgba(43, 140, 255, 0.7);
 }
 
 .next-cta:disabled {

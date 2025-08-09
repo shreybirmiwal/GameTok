@@ -8,6 +8,7 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [lastPrompt, setLastPrompt] = useState('');
   const [isSwiping, setIsSwiping] = useState(false);
+  const [hasNextReady, setHasNextReady] = useState(false);
 
   const isGeneratingRef = useRef(false);
   const gameContainerRef = useRef(null);
@@ -153,6 +154,24 @@ function App() {
     })();
   }, []);
 
+  const pollPreparedStatus = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/prepared-status');
+      if (!res.ok) return;
+      const data = await res.json();
+      setHasNextReady(Boolean(data?.has_next));
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  useEffect(() => {
+    // Poll readiness every few seconds
+    const id = setInterval(pollPreparedStatus, 3000);
+    pollPreparedStatus();
+    return () => clearInterval(id);
+  }, []);
+
   const handleNextClick = async () => {
     if (isGeneratingRef.current || isSwiping) return;
     setIsSwiping(true);
@@ -222,6 +241,7 @@ function App() {
         <button className="next-cta" onClick={handleNextClick} disabled={isGenerating || isSwiping}>
           <span className="next-cta-arrow">▲</span>
           <span>Swipe for next</span>
+          {hasNextReady && <span className="ready-dot" />}
         </button>
       </div>
 

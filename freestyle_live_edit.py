@@ -591,7 +591,7 @@ def fill_next():
 
 @app.route('/scroll-apply', methods=['POST'])
 def scroll_apply():
-    """Apply next-game instantly if available; otherwise return not-ready."""
+    """Apply next-game instantly by directly writing GameZone.js; no Morph step."""
     if not dev_server_wrapper:
         return jsonify({"error": "Not connected to dev server. Use POST /connect first"}), 400
     try:
@@ -600,12 +600,17 @@ def scroll_apply():
             return jsonify({"success": False, "used_next": False, "reason": "not_ready"}), 200
         idea = next_game.get("idea")
         code = next_game.get("code")
-        next_game = None  # consume slot
-        ok = apply_react_with_morph_to_gamezone(code, idea)
-        if ok:
-            return jsonify({"success": True, "used_next": True, "game_idea": idea, "app_url": dev_server_wrapper.dev_server.ephemeral_url})
-        else:
-            return jsonify({"success": False, "used_next": True, "reason": "apply_failed"}), 500
+        # Ensure React file contract, then write directly
+        sanitized_code, _meta = sanitize_react_code(code, "NextSlot")
+        dev_server_wrapper.write_gamezone(sanitized_code)
+        last_generation_debug["before_code"] = None
+        last_generation_debug["morph_code_raw"] = None
+        last_generation_debug["morph_code"] = None
+        last_generation_debug["written_code"] = sanitized_code
+        # Consume slot only after successful write
+        next_game = None
+        logger.info(f"📝 Direct write of next-game to GameZone.js - Game: '{idea}'")
+        return jsonify({"success": True, "used_next": True, "game_idea": idea, "app_url": dev_server_wrapper.dev_server.ephemeral_url})
     except Exception as e:
         logger.error(f"scroll-apply error: {e}")
         return jsonify({"error": str(e)}), 500

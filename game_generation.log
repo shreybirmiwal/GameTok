@@ -1634,3 +1634,42 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 14:10:51,823 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.'
 2025-08-09 14:10:51,823 - INFO - 🤖 Claude generation starting for: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.'
 2025-08-09 14:10:51,823 - INFO - 📡 Sending request to Claude for 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.' - Model: claude-sonnet-4-20250514
+2025-08-09 14:11:12,289 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:11:12,290 - INFO - ✅ Claude generated content for 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.' - Length: 5846 chars
+2025-08-09 14:11:12,290 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:11:12,290 - WARNING - Sanitized Claude: stripped_fences=False, fixes=['added_export']
+2025-08-09 14:11:12,290 - INFO - ✅ Claude generated game - Length: 5846 chars, Has Canvas: False, Has Script: False
+2025-08-09 14:11:12,290 - INFO - 🎮 GENERATED GAME CODE for 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.':
+--------------------------------------------------
+import React, { useState, useEffect, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const [player, setPlayer] = useState({ x: 200, y: 200, vx: 0, vy: 0, onGround: false });
+  const [platforms] = useState([
+    { x: 0, y: 280, width: 400, height: 20 },
+    { x: 100, y: 220, width: 80, height: 15 },
+    { x: 250, y: 180, width: 80, height: 15 },
+    { x: 50, y: 120, width: 80, height: 15 },
+    { x: 280, y: 80, width: 80, height: 15 }
+  ]);
+  const [stars, setStars] = useSt...
+--------------------------------------------------
+2025-08-09 14:11:12,291 - INFO - ⚡ Applying React component to GameZone.js using Morph for: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.'
+2025-08-09 14:11:13,337 - INFO - 📖 Read current GameZone.js - Size: 5104 chars
+2025-08-09 14:11:13,337 - INFO - ⚡ Sending React component to Morph fast apply - Game: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.', size: 5873 chars
+2025-08-09 14:11:19,243 - INFO - HTTP Request: POST https://api.morphllm.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-09 14:11:19,246 - INFO - ✅ Morph returned updated React component - New size: 8192 chars
+2025-08-09 14:11:19,905 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.'
+2025-08-09 14:11:19,905 - INFO - 🎉 GAME GENERATION SUCCESS - 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.' - Duration: 28.08s - Size: 5846 chars
+2025-08-09 14:11:19,905 - INFO - 127.0.0.1 - - [09/Aug/2025 14:11:19] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 14:11:30,108 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.113.157.12:8080
+2025-08-09 14:11:30,109 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-09 14:11:30,113 - INFO -  * Restarting with stat
+2025-08-09 14:11:31,472 - WARNING -  * Debugger is active!
+2025-08-09 14:11:31,481 - INFO -  * Debugger PIN: 803-561-142
+2025-08-09 14:12:01,861 - INFO - 127.0.0.1 - - [09/Aug/2025 14:12:01] "GET / HTTP/1.1" 200 -
+2025-08-09 14:12:02,966 - INFO - 127.0.0.1 - - [09/Aug/2025 14:12:02] "GET / HTTP/1.1" 200 -
+2025-08-09 14:12:21,482 - INFO - 127.0.0.1 - - [09/Aug/2025 14:12:21] "POST /connect HTTP/1.1" 200 -

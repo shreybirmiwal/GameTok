@@ -11,6 +11,8 @@ function App() {
   const sentinelRef = useRef(null);
   const isGeneratingRef = useRef(false);
   const canScrollTriggerRef = useRef(true);
+  const gameContainerRef = useRef(null);
+  const [isGameActive, setIsGameActive] = useState(false);
 
   const updateGameViaFreestyle = async (gameName) => {
     try {
@@ -101,6 +103,35 @@ function App() {
     }
   };
 
+  // Prevent page scroll from stealing controls while game is active/focused/hovered
+  useEffect(() => {
+    if (!isGameActive) return;
+
+    const scrollKeys = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Space', 'PageUp', 'PageDown', 'Home', 'End']);
+
+    const onKeyDown = (e) => {
+      if (scrollKeys.has(e.key)) {
+        e.preventDefault();
+      }
+    };
+    const onWheel = (e) => {
+      e.preventDefault();
+    };
+    const onTouchMove = (e) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener('keydown', onKeyDown, { capture: false });
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown, { capture: false });
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('touchmove', onTouchMove);
+    };
+  }, [isGameActive]);
+
   // Bottom scroll: when sentinel enters viewport, generate one new idea
   useEffect(() => {
     const handler = async () => {
@@ -147,7 +178,18 @@ function App() {
           </form>
         </div>
 
-        <GameZone currentGame={currentGame} />
+        <div
+          ref={gameContainerRef}
+          className="game-container"
+          tabIndex={0}
+          onFocus={() => setIsGameActive(true)}
+          onBlur={() => setIsGameActive(false)}
+          onMouseEnter={() => setIsGameActive(true)}
+          onMouseLeave={() => setIsGameActive(false)}
+          onClick={() => gameContainerRef.current && gameContainerRef.current.focus()}
+        >
+          <GameZone currentGame={currentGame} />
+        </div>
 
         {/* Spacer to enable scrolling to bottom on simple screens */}
         <div className="scroll-spacer" />

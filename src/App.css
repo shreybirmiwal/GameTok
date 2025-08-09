@@ -168,3 +168,13 @@
   font-size: 12px;
   pointer-events: none;
 }
+
+.game-container {
+  outline: none;
+  display: inline-block;
+}
+
+.game-container:focus {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}

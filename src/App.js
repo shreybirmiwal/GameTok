@@ -77,22 +77,15 @@ function App() {
 
   // Fetch a concise idea from backend Anthropic endpoint
   const fetchIdeaFromAnthropic = async () => {
-    try {
-      const res = await fetch('http://localhost:8080/generate-idea', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
-      });
-      if (!res.ok) throw new Error('Bad response');
-      const data = await res.json();
-      if (data && typeof data.idea === 'string' && data.idea.trim().length > 0) {
-        return data.idea.trim();
-      }
-      throw new Error('No idea in response');
-    } catch (e) {
-      console.warn('Anthropic idea endpoint failed, using local fallback', e);
-      return generateIdeaLocally();
-    }
+    const res = await fetch('http://localhost:8080/generate-idea', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    if (!res.ok) throw new Error('idea_generation_failed');
+    const data = await res.json();
+    if (!data?.idea) throw new Error('idea_generation_failed');
+    return String(data.idea).trim();
   };
 
   // Prepare a game server-side to reduce latency
@@ -256,7 +249,7 @@ function App() {
     setIsSwiping(true);
     // Small visual swipe animation before triggering
     setTimeout(() => {
-      const idea = nextIdea || generateIdeaLocally();
+      const idea = nextIdea; // no local fallback
       if (nextToken) {
         applyPrepared(nextToken, idea).finally(() => rotateAndTopUpQueue());
       } else {

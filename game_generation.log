@@ -2359,3 +2359,22 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 14:36:47,668 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
 2025-08-09 14:36:47,668 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
 2025-08-09 14:36:47,668 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:37:03,296 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:37:03,299 - INFO - ✅ Claude generated content for 'endless runner platformer' - Length: 3905 chars
+2025-08-09 14:37:03,299 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:37:03,299 - INFO - ✅ Prepared game stored with token: b16bd1c349b34e539490d0bce6a23cc4
+2025-08-09 14:37:03,301 - INFO - 127.0.0.1 - - [09/Aug/2025 14:37:03] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:37:04,026 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:37:04,027 - INFO - 127.0.0.1 - - [09/Aug/2025 14:37:04] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:37:04,034 - INFO - 🧪 Preparing game (generate only) for idea: 'endless runner platformer'
+2025-08-09 14:37:04,034 - INFO - 🤖 Claude generation starting for: 'endless runner platformer'
+2025-08-09 14:37:04,034 - INFO - 📡 Sending request to Claude for 'endless runner platformer' - Model: claude-3-5-sonnet-20241022
+2025-08-09 14:37:19,624 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:37:19,629 - INFO - ✅ Claude generated content for 'endless runner platformer' - Length: 3847 chars
+2025-08-09 14:37:19,629 - INFO - 📊 Generated game analysis - Canvas: False, Script: False, Styles: True
+2025-08-09 14:37:19,629 - INFO - ✅ Prepared game stored with token: 9a66220c10e34f5881aebc426028065e
+2025-08-09 14:37:19,630 - INFO - 127.0.0.1 - - [09/Aug/2025 14:37:19] "POST /prepare-game HTTP/1.1" 200 -
+2025-08-09 14:38:01,975 - INFO -  * Detected change in '/Users/shreybirmiwal/projects/yc-hack/freestyle_live_edit.py', reloading
+2025-08-09 14:38:02,176 - INFO -  * Restarting with stat
+2025-08-09 14:38:03,755 - WARNING -  * Debugger is active!
+2025-08-09 14:38:03,765 - INFO -  * Debugger PIN: 803-561-142

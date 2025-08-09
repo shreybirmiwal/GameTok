@@ -447,27 +447,7 @@ def generate_idea():
             idea_text = None
 
         if not idea_text:
-            # Local fallback
-            adjectives = ['Tiny', 'Cosmic', 'Retro', 'Neon', 'Shadow', 'Pixel', 'Turbo', 'Mystic', 'Swift', 'Lucky']
-            nouns = ['Runner', 'Climber', 'Racer', 'Dodger', 'Miner', 'Glider', 'Jumper', 'Fisher', 'Courier', 'Knight']
-            mechanics = [
-                'tap to jump over obstacles and collect coins',
-                'hold to charge a jump and time landings on moving platforms',
-                'swipe to change lanes and avoid traffic',
-                'drag to slingshot between anchors while avoiding spikes',
-                'tap to hook and swing past gaps',
-                'tap to dive and resurface to collect treasures',
-                'hold-and-release to dash through breakable walls',
-                'tap to flip gravity and stay on the track',
-                'tap to fish and upgrade your rod between runs',
-                'tap to deliver packages while dodging drones',
-            ]
-            worlds = ['in a neon city', 'in a haunted forest', 'on floating islands', 'in retro space', 'inside a cave', 'on rooftops']
-            import random
-            for _ in range(5):
-                idea_text = f"{random.choice(adjectives)} {random.choice(nouns)}: {random.choice(mechanics)} {random.choice(worlds)}."
-                if idea_text not in recent_ideas:
-                    break
+            return jsonify({"error": "idea_generation_failed"}), 502
 
         return jsonify({"idea": idea_text})
     except Exception as e:

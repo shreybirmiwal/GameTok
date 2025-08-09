@@ -1,9 +1,12 @@
 import React from 'react';
 
-const GameZone = () => {
+const GameZone = ({ currentGame }) => {
   return (
     <div className="game-zone">
-      <p>Game Zone - Ready for games!</p>
+      <div className="game-content">
+        <h2>{currentGame}</h2>
+        <p>🎮 Game will load here</p>
+      </div>
     </div>
   );
 };

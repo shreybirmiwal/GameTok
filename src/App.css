@@ -1,52 +1,80 @@
 .App {
-  min-height: 200vh; /* Make page scrollable */
-  background-color: #f0f0f0;
+  min-height: 300vh; /* Make page scrollable */
+  background-color: #000;
 }
 
 .content-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
   gap: 20px;
 }
 
 .play-button {
-  background-color: #007bff;
+  background-color: #ff0050;
   color: white;
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 25px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  z-index: 10;
 }
 
 .play-button:hover {
-  background-color: #0056b3;
+  background-color: #cc0040;
+  transform: scale(1.05);
 }
 
 .game-zone {
-  width: 80vw;
-  height: 60vh;
+  width: 90vw;
+  height: 70vh;
   background-color: white;
-  border: 2px solid #ddd;
   border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  color: #666;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333;
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.1);
+  transition: all 0.5s ease;
 }
 
-.scroll-content {
-  margin-top: 40px;
+.game-content {
   text-align: center;
-  color: #666;
+  padding: 20px;
 }
 
-.scroll-content p {
-  margin: 20px 0;
-  font-size: 18px;
+.game-content h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.game-content p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  text-align: center;
+  color: white;
+  z-index: 10;
+}
+
+.scroll-indicator p {
+  margin: 5px 0;
+  font-size: 14px;
+  opacity: 0.8;
 }

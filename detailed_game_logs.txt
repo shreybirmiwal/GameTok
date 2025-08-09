@@ -6939,3 +6939,419 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: Lucky Glider: swipe to change lanes and avoid traffic on floating islands. - 2025-08-09 14:25:09.344616
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [playerLane, setPlayerLane] = useState(1);
+  const [islands, setIslands] = useState([]);
+  const [traffic, setTraffic] = useState([]);
+  const [gameSpeed, setGameSpeed] = useState(2);
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const LANES = 3;
+  const LANE_WIDTH = CANVAS_WIDTH / LANES;
+  const PLAYER_SIZE = 20;
+  const TRAFFIC_SIZE = 15;
+  const ISLAND_HEIGHT = 40;
+
+  const resetGame = useCallback(() => {
+    setGameState('playing');
+    setScore(0);
+    setPlayerLane(1);
+    setIslands([
+      { x: 0, y: 260, width: CANVAS_WIDTH, height: ISLAND_HEIGHT },
+      { x: 0, y: 180, width: CANVAS_WIDTH, height: ISLAND_HEIGHT },
+      { x: 0, y: 100, width: CANVAS_WIDTH, height: ISLAND_HEIGHT },
+      { x: 0, y: 20, width: CANVAS_WIDTH, height: ISLAND_HEIGHT }
+    ]);
+    setTraffic([]);
+    setGameSpeed(2);
+  }, []);
+
+  const handleSwipe = useCallback((direction) => {
+    if (gameState !== 'playing') return;
+    
+    if (direction === 'left' && playerLane > 0) {
+      setPlayerLane(prev => prev - 1);
+    } else if (direction === 'right' && playerLane < LANES - 1) {
+      setPlayerLane(prev => prev + 1);
+    }
+  }, [gameState, playerLane]);
+
+  const handleKeyPress = useCallback((e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+      handleSwipe('left');
+    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+      handleSwipe('right');
+    }
+  }, [handleSwipe]);
+
+  const handleTouch = useCallback((e) => {
+    e.preventDefault();
+    const touch = e.touches[0] || e.changedTouches[0];
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    
+    if (x < CANVAS_WIDTH / 2) {
+      handleSwipe('left');
+    } else {
+      handleSwipe('right');
+    }
+  }, [handleSwipe]);
+
+  useEffect(() => {
+    resetGame();
+  }, [resetGame]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = setInterval(() => {
+      setIslands(prev => prev.map(island => ({
+        ...island,
+        y: island.y + gameSpeed
+      })).filter(island => island.y < CANVAS_HEIGHT + ISLAND_HEIGHT));
+
+      setTraffic(prev => {
+        let newTraffic = prev.map(car => ({
+          ...car,
+          y: car.y + gameSpeed
+        })).filter(car => car.y < CANVAS_HEIGHT + TRAFFIC_SIZE);
+
+        if (Math.random() < 0.03) {
+          const lane = Math.floor(Math.random() * LANES);
+          newTraffic.push({
+            x: lane * LANE_WIDTH + LANE_WIDTH / 2 - TRAFFIC_SIZE / 2,
+            y: -TRAFFIC_SIZE,
+            lane: lane
+          });
+        }
+
+        return newTraffic;
+      });
+
+      setScore(prev => prev + 1);
+      setGameSpeed(prev => Math.min(prev + 0.005, 4));
+
+      setTraffic(currentTraffic => {
+        const playerX = playerLane * LANE_WIDTH + LANE_WIDTH / 2;
+        const playerY = CANVAS_HEIGHT - 60;
+        
+        for (let car of currentTraffic) {
+          const distance = Math.sqrt(
+            Math.pow(car.x + TRAFFIC_SIZE / 2 - playerX, 2) + 
+            Math.pow(car.y + TRAFFIC_SIZE / 2 - playerY, 2)
+          );
+          
+          if (distance < (PLAYER_SIZE + TRAFFIC_SIZE) / 2) {
+            setGameState('gameOver');
+            break;
+          }
+        }
+        
+        return currentTraffic;
+      });
+
+      setIslands(currentIslands => {
+        if (currentIslands.length < 4) {
+          const newIslands = [...currentIslands];
+          const lastIsland = newIslands[newIslands.length - 1];
+          if (!lastIsland || lastIsland.y > -ISLAND_HEIGHT) {
+            newIslands.push({
+              x: 0,
+              y: lastIsland ? lastIsland.y - 80 : -ISLAND_HEIGHT,
+              width: CANVAS_WIDTH,
+              height: ISLAND_HEIGHT
+            });
+          }
+          return newIslands;
+        }
+        return currentIslands;
+      });
+    }, 16);
+
+    return () => clearInterval(gameLoop);
+  }, [gameState, gameSpeed, playerLane]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    islands.forEach(island => {
+      ctx.fillStyle = '#90EE90';
+      ctx.fillRect(island.x, island.y, island.width, island.height);
+      
+      ctx.fillStyle = '#228B22';
+      ctx.fillRect(island.x, island.y, island.width, 5);
+    });
+
+    for (let i = 1; i < LANES; i++) {
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([10, 10]);
+      ctx.beginPath();
+      ctx.moveTo(i * LANE_WIDTH, 0);
+      ctx.lineTo(i * LANE_WIDTH, CANVAS_HEIGHT);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    traffic.forEach(car => {
+      ctx.fillStyle = '#FF4444';
+      ctx.fillRect(car.x, car.y, TRAFFIC_SIZE, TRAFFIC_SIZE);
+    });
+
+    const playerX = playerLane * LANE_WIDTH + LANE_WIDTH / 2 - PLAYER_SIZE / 2;
+    const playerY = CANVAS_HEIGHT - 60;
+    
+    ctx.fillStyle = '#4169E1';
+    ctx.beginPath();
+    ctx.moveTo(playerX + PLAYER_SIZE / 2, playerY);
+    ctx.lineTo(playerX, playerY + PLAYER_SIZE);
+    ctx.lineTo(playerX + PLAYER_SIZE, playerY + PLAYER_SIZE);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '16px Arial';
+    ctx.fillText(`Score: ${score}`, 10, 25);
+    
+    if (gameState === 'gameOver') {
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: DotChase: Move blue 20px circle with Arrow keys at 5px/step to collect green 10px dots (+1 point each) while avoiding red 15px circles that spawn every 2s and move at 3px/step toward player; game ends if touched by red circle or reaching 30 points. - 2025-08-09 14:26:01.315612
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const gameLoopRef = useRef(null);
+  const keysRef = useRef({});
+  
+  const [gameState, setGameState] = useState({
+    player: { x: 200, y: 150 },
+    dots: [],
+    enemies: [],
+    score: 0,
+    gameOver: false,
+    won: false
+  });
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const PLAYER_SIZE = 20;
+  const DOT_SIZE = 10;
+  const ENEMY_SIZE = 15;
+  const PLAYER_SPEED = 5;
+  const ENEMY_SPEED = 3;
+
+  const resetGame = useCallback(() => {
+    setGameState({
+      player: { x: 200, y: 150 },
+      dots: [
+        { x: 50, y: 50 },
+        { x: 350, y: 50 },
+        { x: 50, y: 250 },
+        { x: 350, y: 250 },
+        { x: 200, y: 100 }
+      ],
+      enemies: [],
+      score: 0,
+      gameOver: false,
+      won: false
+    });
+  }, []);
+
+  const spawnDot = useCallback(() => {
+    return {
+      x: Math.random() * (CANVAS_WIDTH - DOT_SIZE),
+      y: Math.random() * (CANVAS_HEIGHT - DOT_SIZE)
+    };
+  }, []);
+
+  const spawnEnemy = useCallback(() => {
+    const side = Math.floor(Math.random() * 4);
+    let x, y;
+    
+    switch(side) {
+      case 0: x = 0; y = Math.random() * CANVAS_HEIGHT; break;
+      case 1: x = CANVAS_WIDTH; y = Math.random() * CANVAS_HEIGHT; break;
+      case 2: x = Math.random() * CANVAS_WIDTH; y = 0; break;
+      case 3: x = Math.random() * CANVAS_WIDTH; y = CANVAS_HEIGHT; break;
+    }
+    
+    return { x, y };
+  }, []);
+
+  const checkCollision = useCallback((obj1, obj2, size1, size2) => {
+    const dx = obj1.x - obj2.x;
+    const dy = obj1.y - obj2.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    return distance < (size1 + size2) / 2;
+  }, []);
+
+  const updateGame = useCallback(() => {
+    setGameState(prevState => {
+      if (prevState.gameOver || prevState.won) return prevState;
+
+      let newState = { ...prevState };
+      
+      // Move player
+      let newX = newState.player.x;
+      let newY = newState.player.y;
+      
+      if (keysRef.current.ArrowLeft) newX = Math.max(PLAYER_SIZE/2, newX - PLAYER_SPEED);
+      if (keysRef.current.ArrowRight) newX = Math.min(CANVAS_WIDTH - PLAYER_SIZE/2, newX + PLAYER_SPEED);
+      if (keysRef.current.ArrowUp) newY = Math.max(PLAYER_SIZE/2, newY - PLAYER_SPEED);
+      if (keysRef.current.ArrowDown) newY = Math.min(CANVAS_HEIGHT - PLAYER_SIZE/2, newY + PLAYER_SPEED);
+      
+      newState.player = { x: newX, y: newY };
+
+      // Move enemies toward player
+      newState.enemies = newState.enemies.map(enemy => {
+        const dx = newState.player.x - enemy.x;
+        const dy = newState.player.y - enemy.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance > 0) {
+          const moveX = (dx / distance) * ENEMY_SPEED;
+          const moveY = (dy / distance) * ENEMY_SPEED;
+          return {
+            x: enemy.x + moveX,
+            y: enemy.y + moveY
+          };
+        }
+        return enemy;
+      });
+
+      // Check dot collection
+      newState.dots = newState.dots.filter(dot => {
+        if (checkCollision(newState.player, dot, PLAYER_SIZE, DOT_SIZE)) {
+          newState.score++;
+          return false;
+        }
+        return true;
+      });
+
+      // Spawn new dots if needed
+      while (newState.dots.length < 3) {
+        newState.dots.push(spawnDot());
+      }
+
+      // Check enemy collision
+      for (let enemy of newState.enemies) {
+        if (checkCollision(newState.player, enemy, PLAYER_SIZE, ENEMY_SIZE)) {
+          newState.gameOver = true;
+          break;
+        }
+      }
+
+      // Check win condition
+      if (newState.score >= 30) {
+        newState.won = true;
+      }
+
+      return newState;
+    });
+  }, [checkCollision, spawnDot]);
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Draw player
+    ctx.fillStyle = 'blue';
+    ctx.beginPath();
+    ctx.arc(gameState.player.x, gameState.player.y, PLAYER_SIZE/2, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Draw dots
+    ctx.fillStyle = 'green';
+    gameState.dots.forEach(dot => {
+      ctx.beginPath();
+      ctx.arc(dot.x + DOT_SIZE/2, dot.y + DOT_SIZE/2, DOT_SIZE/2, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+
+    // Draw enemies
+    ctx.fillStyle = 'red';
+    gameState.enemies.forEach(enemy => {
+      ctx.beginPath();
+      ctx.arc(enemy.x, enemy.y, ENEMY_SIZE/2, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+  }, [gameState]);
+
+  useEffect(() => {
+    resetGame();
+  }, [resetGame]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        keysRef.current[e.key] = true;
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      keysRef.current[e.key] = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!gameState.gameOver && !gameState.won) {
+      gameLoopRef.current = setInterval(() => {
+        updateGame();
+      }, 1000 / 60);
+
+      return () => {
+        if (gameLoopRef.current) {
+          clearInterval(gameLoopRef.current);
+        }
+      };
+    }
+  }, [gameState.gameOver, gameState.won, updateGame]);
+
+  useEffect(() => {
+    if (!gameState.gameOver && !gameState.won) {
+      const enemySpawnInterval = setInterval(() => {
+        setGameState(prevState => ({
+----------------------------------------
+

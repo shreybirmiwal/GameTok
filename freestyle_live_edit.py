@@ -544,11 +544,15 @@ def prepare_game():
     """Generate game code (Anthropic) and store it without applying. Returns a token."""
     data = request.get_json() or {}
     game_idea = (data.get('game_idea') or '').strip()
-    if not game_idea or len(game_idea) > 200:
-        return jsonify({"error": "Invalid 'game_idea'"}), 400
+    MAX_IDEA_LEN = 500
+    if not game_idea or len(game_idea) > MAX_IDEA_LEN:
+        logger.warning(f"prepare-game rejected idea length={len(game_idea)} (max={MAX_IDEA_LEN})")
+        return jsonify({"error": f"Invalid 'game_idea' (max {MAX_IDEA_LEN} chars)"}), 400
     try:
         _cleanup_prepared()
         logger.info(f"🧪 Preparing game (generate only) for idea: '{game_idea}'")
+        if len(game_idea) < 4:
+            return jsonify({"error": "Idea too short"}), 400
         game_html = generate_game_with_anthropic(game_idea)
         if not game_html:
             return jsonify({"error": "Failed to generate game HTML"}), 500

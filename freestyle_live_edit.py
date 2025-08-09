@@ -59,10 +59,46 @@ last_generation_debug = {
     "written_code": None
 }
 
-# In-memory prepared games storage
-prepared_games = {}
-PREPARED_MAX = 20
+# In-memory next game storage (single-slot)
+next_game = None  # {"idea": str, "code": str, "created_at": iso str}
 PREPARED_TTL_SECS = 600
+PREPARE_DEFAULT_IDEAS = [
+    "pong game",
+    "brick breaker",
+    "endless runner",
+    "space shooter",
+    "snake game",
+]
+
+def fill_next_game(idea: str = None):
+    global next_game
+    try:
+        # If slot is occupied and fresh, skip
+        if next_game:
+            try:
+                ts = datetime.fromisoformat(next_game.get("created_at", datetime.utcnow().isoformat()))
+                if datetime.utcnow() - ts <= timedelta(seconds=PREPARED_TTL_SECS):
+                    return {"filled": False, "reason": "slot_fresh"}
+            except Exception:
+                pass
+        chosen_idea = (idea or PREPARE_DEFAULT_IDEAS[datetime.utcnow().second % len(PREPARE_DEFAULT_IDEAS)]).strip()
+        logger.info(f"🧪 Filling next-game slot with idea: '{chosen_idea}'")
+        game_html = generate_game_with_anthropic(chosen_idea)
+        if not game_html:
+            return {"filled": False, "reason": "generation_failed"}
+        sanitized_code, _ = sanitize_react_code(game_html, "Claude")
+        if not sanitized_code:
+            return {"filled": False, "reason": "sanitization_failed"}
+        next_game = {
+            "idea": chosen_idea,
+            "code": sanitized_code,
+            "created_at": datetime.utcnow().isoformat(),
+        }
+        logger.info("✅ next-game slot filled")
+        return {"filled": True, "idea": chosen_idea}
+    except Exception as e:
+        logger.error(f"❌ fill_next_game error: {e}")
+        return {"filled": False, "reason": str(e)}
 
 
 def _cleanup_prepared():
@@ -203,6 +239,9 @@ def home():
             "/gamezone/update": "POST - Update GameZone with new game name (JSON: {'game_name': 'YourGame'})",
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
             "/generate-game": "POST - Generate HTML5 Canvas game (JSON: {'game_idea': 'snake'}) - Claude generates, Morph applies!",
+            "/scroll-apply": "POST - Apply next-game instantly if available; otherwise returns not-ready",
+            "/prepared-status": "GET - Inspect next-game slot",
+            "/fill-next": "POST - Fill the next-game slot (optional JSON: {'idea': 'snake game'})",
             "/game-log": "GET - View recent game generation logs",
             "/detailed-log": "GET - View detailed game code and before/after comparisons",
             "/last-debug": "GET - View last Claude output, Morph result, and written code"
@@ -246,6 +285,7 @@ def connect_to_repo():
         
         # Create wrapper
         dev_server_wrapper = DevServerWrapper(dev_server)
+        
         
         return jsonify({
             "success": True,
@@ -393,6 +433,7 @@ def generate_game():
             duration = (end_time - start_time).total_seconds()
             logger.info(f"🎉 GAME GENERATION SUCCESS - '{game_idea}' - Duration: {duration:.2f}s - Size: {game_length} chars")
             
+
             return jsonify({
                 "success": True,
                 "message": f"Game '{game_idea}' generated and deployed successfully!",
@@ -512,6 +553,61 @@ def get_last_debug():
             "debug": last_generation_debug
         })
     except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/prepared-status')
+def prepared_status():
+    """Inspect next-game slot."""
+    try:
+        # Expire if stale
+        global next_game
+        if next_game:
+            try:
+                ts = datetime.fromisoformat(next_game.get("created_at", datetime.utcnow().isoformat()))
+                if datetime.utcnow() - ts > timedelta(seconds=PREPARED_TTL_SECS):
+                    next_game = None
+            except Exception:
+                pass
+        sample_view = None
+        if next_game:
+            sample_view = {
+                "idea": next_game.get("idea"),
+                "created_at": next_game.get("created_at"),
+                "code_preview": (next_game.get("code", "")[:120] + ("..." if len(next_game.get("code", "")) > 120 else ""))
+            }
+        return jsonify({"success": True, "has_next": bool(next_game), "sample": sample_view})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/fill-next', methods=['POST'])
+def fill_next():
+    data = request.get_json(silent=True) or {}
+    idea = (data.get('idea') or '').strip() or None
+    result = fill_next_game(idea)
+    status = 200 if result.get('filled') or result.get('reason') == 'slot_fresh' else 500
+    return jsonify(result), status
+
+
+@app.route('/scroll-apply', methods=['POST'])
+def scroll_apply():
+    """Apply next-game instantly if available; otherwise return not-ready."""
+    if not dev_server_wrapper:
+        return jsonify({"error": "Not connected to dev server. Use POST /connect first"}), 400
+    try:
+        global next_game
+        if not next_game:
+            return jsonify({"success": False, "used_next": False, "reason": "not_ready"}), 200
+        idea = next_game.get("idea")
+        code = next_game.get("code")
+        next_game = None  # consume slot
+        ok = apply_react_with_morph_to_gamezone(code, idea)
+        if ok:
+            return jsonify({"success": True, "used_next": True, "game_idea": idea, "app_url": dev_server_wrapper.dev_server.ephemeral_url})
+        else:
+            return jsonify({"success": False, "used_next": True, "reason": "apply_failed"}), 500
+    except Exception as e:
+        logger.error(f"scroll-apply error: {e}")
         return jsonify({"error": str(e)}), 500
 
 # @app.route('/prepare-game', methods=['POST'])

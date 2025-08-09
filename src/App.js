@@ -29,6 +29,12 @@ function App() {
         const result = await response.json();
         console.log('Game generated successfully:', result);
         setCurrentGame(gameName);
+        // Ensure the newly written GameZone.js is loaded
+        setTimeout(() => {
+          try {
+            window.location.reload();
+          } catch { }
+        }, 300);
       } else {
         const error = await response.json();
         console.error('Failed to generate game:', error);

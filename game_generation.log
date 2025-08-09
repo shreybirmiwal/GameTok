@@ -1628,3 +1628,9 @@ const GameZone = ({ currentGame }) => {
 2025-08-09 14:10:08,650 - INFO - 📝 Written new React GameZone to Freestyle - Game: 'Color Matcher: Match falling colored blocks with same-colored zones at the bottom by sliding left/right before they land.'
 2025-08-09 14:10:08,650 - INFO - 🎉 GAME GENERATION SUCCESS - 'Color Matcher: Match falling colored blocks with same-colored zones at the bottom by sliding left/right before they land.' - Duration: 20.34s - Size: 5104 chars
 2025-08-09 14:10:08,651 - INFO - 127.0.0.1 - - [09/Aug/2025 14:10:08] "POST /generate-game HTTP/1.1" 200 -
+2025-08-09 14:10:51,814 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-08-09 14:10:51,816 - INFO - 127.0.0.1 - - [09/Aug/2025 14:10:51] "POST /generate-idea HTTP/1.1" 200 -
+2025-08-09 14:10:51,823 - INFO - 🎮 GAME GENERATION STARTED - Idea: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.' - Timestamp: 2025-08-09 14:10:51.823173
+2025-08-09 14:10:51,823 - INFO - 📝 Calling Claude to generate HTML5 Canvas game for: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.'
+2025-08-09 14:10:51,823 - INFO - 🤖 Claude generation starting for: 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.'
+2025-08-09 14:10:51,823 - INFO - 📡 Sending request to Claude for 'Pixel Pogo: Bounce a square character between platforms while collecting stars and avoiding spikes.' - Model: claude-sonnet-4-20250514

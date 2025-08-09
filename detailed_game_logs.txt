@@ -12846,3 +12846,520 @@ const GameZone = ({ currentGame }) => {
 export default GameZone;
 ----------------------------------------
 
+
+================================================================================
+GAME GENERATION: flappy bird game - 2025-08-09 15:39:08.967418
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('ready');
+  const [score, setScore] = useState(0);
+  const [bird, setBird] = useState({ y: 150, velocity: 0 });
+  const [pipes, setPipes] = useState([]);
+  const gameLoopRef = useRef();
+  const keysRef = useRef({});
+
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 300;
+  const BIRD_SIZE = 20;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 100;
+  const GRAVITY = 0.5;
+  const JUMP_FORCE = -8;
+  const PIPE_SPEED = 2;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleKeyDown = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (gameState === 'ready') {
+          startGame();
+        } else if (gameState === 'playing') {
+          setBird(prev => ({ ...prev, velocity: JUMP_FORCE }));
+        }
+      }
+    };
+
+    const handleClick = () => {
+      if (gameState === 'ready') {
+        startGame();
+      } else if (gameState === 'playing') {
+        setBird(prev => ({ ...prev, velocity: JUMP_FORCE }));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    canvas.addEventListener('click', handleClick);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      canvas.removeEventListener('click', handleClick);
+    };
+  }, [gameState]);
+
+  const startGame = () => {
+    setGameState('playing');
+    setScore(0);
+    setBird({ y: 150, velocity: 0 });
+    setPipes([{ x: CANVAS_WIDTH, topHeight: Math.random() * 100 + 50 }]);
+  };
+
+  const resetGame = () => {
+    setGameState('ready');
+    setScore(0);
+    setBird({ y: 150, velocity: 0 });
+    setPipes([]);
+    if (gameLoopRef.current) {
+      cancelAnimationFrame(gameLoopRef.current);
+    }
+  };
+
+  const checkCollision = (birdY, pipes) => {
+    if (birdY < 0 || birdY > CANVAS_HEIGHT - BIRD_SIZE) {
+      return true;
+    }
+
+    for (let pipe of pipes) {
+      if (pipe.x < 50 + BIRD_SIZE && pipe.x + PIPE_WIDTH > 50) {
+        if (birdY < pipe.topHeight || birdY + BIRD_SIZE > pipe.topHeight + PIPE_GAP) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+
+    const gameLoop = () => {
+      setBird(prev => {
+        const newY = prev.y + prev.velocity;
+        const newVelocity = prev.velocity + GRAVITY;
+        return { y: newY, velocity: newVelocity };
+      });
+
+      setPipes(prev => {
+        let newPipes = prev.map(pipe => ({ ...pipe, x: pipe.x - PIPE_SPEED }));
+        newPipes = newPipes.filter(pipe => pipe.x > -PIPE_WIDTH);
+
+        if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < CANVAS_WIDTH - 200) {
+          newPipes.push({
+            x: CANVAS_WIDTH,
+            topHeight: Math.random() * 100 + 50
+          });
+        }
+
+        const passedPipes = newPipes.filter(pipe => pipe.x + PIPE_WIDTH < 50);
+        if (passedPipes.length > prev.filter(pipe => pipe.x + PIPE_WIDTH < 50).length) {
+          setScore(s => s + 1);
+        }
+
+        return newPipes;
+      });
+
+      gameLoopRef.current = requestAnimationFrame(gameLoop);
+    };
+
+    gameLoopRef.current = requestAnimationFrame(gameLoop);
+
+    return () => {
+      if (gameLoopRef.current) {
+        cancelAnimationFrame(gameLoopRef.current);
+      }
+    };
+  }, [gameState]);
+
+  useEffect(() => {
+    if (gameState === 'playing' && checkCollision(bird.y, pipes)) {
+      setGameState('gameOver');
+      if (gameLoopRef.current) {
+        cancelAnimationFrame(gameLoopRef.current);
+      }
+    }
+  }, [bird.y, pipes, gameState]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    if (gameState === 'playing' || gameState === 'gameOver') {
+      pipes.forEach(pipe => {
+        ctx.fillStyle = '#228B22';
+        ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.topHeight);
+        ctx.fillRect(pipe.x, pipe.topHeight + PIPE_GAP, PIPE_WIDTH, CANVAS_HEIGHT - pipe.topHeight - PIPE_GAP);
+      });
+
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(50, bird.y, BIRD_SIZE, BIRD_SIZE);
+    }
+
+    if (gameState === 'ready') {
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(50, bird.y, BIRD_SIZE, BIRD_SIZE);
+    }
+  }, [bird, pipes, gameState]);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+      <h2 style={{ margin: '0 0 10px 0' }}>Flappy Bird</h2>
+      <div style={{ marginBottom: '10px' }}>Score: {score}</div>
+      
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        style={{
+          border: '2px solid #333',
+          backgroundColor: '#87CEEB',
+          cursor: 'pointer'
+        }}
+      />
+      
+      <div style={{ marginTop: '10px', textAlign: 'center' }}>
+        {gameState === 'ready' && (
+          <div>
+            <p>Click or press SPACE to start!</p>
+            <p>Click or press SPACE to flap</p>
+          </div>
+        )}
+        {gameState === 'playing' && (
+          <p>Click or press SPACE to flap!</p>
+        )}
+        {gameState === 'gameOver' && (
+          <div>
+            <p>Game Over! Final Score: {score}</p>
+            <button 
+              onClick={resetGame}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+
+
+================================================================================
+GAME GENERATION: space invaders - 2025-08-09 15:40:34.846829
+================================================================================
+FULL CLAUDE GENERATED CODE:
+----------------------------------------
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const GameZone = ({ currentGame }) => {
+  const canvasRef = useRef(null);
+  const [gameState, setGameState] = useState('playing');
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(3);
+  
+  const gameRef = useRef({
+    player: { x: 200, y: 270, width: 40, height: 20 },
+    bullets: [],
+    invaders: [],
+    invaderBullets: [],
+    keys: {},
+    lastTime: 0,
+    invaderDirection: 1,
+    invaderSpeed: 0.5,
+    invaderDropDistance: 20
+  });
+
+  const initializeInvaders = useCallback(() => {
+    const invaders = [];
+    for (let row = 0; row < 5; row++) {
+      for (let col = 0; col < 8; col++) {
+        invaders.push({
+          x: col * 45 + 50,
+          y: row * 35 + 50,
+          width: 30,
+          height: 20,
+          alive: true
+        });
+      }
+    }
+    gameRef.current.invaders = invaders;
+  }, []);
+
+  const resetGame = useCallback(() => {
+    setGameState('playing');
+    setScore(0);
+    setLives(3);
+    gameRef.current.player = { x: 200, y: 270, width: 40, height: 20 };
+    gameRef.current.bullets = [];
+    gameRef.current.invaderBullets = [];
+    gameRef.current.invaderDirection = 1;
+    gameRef.current.invaderSpeed = 0.5;
+    initializeInvaders();
+  }, [initializeInvaders]);
+
+  const handleKeyDown = useCallback((e) => {
+    gameRef.current.keys[e.key] = true;
+    if (e.key === ' ') {
+      e.preventDefault();
+      if (gameState === 'playing') {
+        const player = gameRef.current.player;
+        gameRef.current.bullets.push({
+          x: player.x + player.width / 2 - 2,
+          y: player.y,
+          width: 4,
+          height: 10,
+          speed: 5
+        });
+      }
+    }
+  }, [gameState]);
+
+  const handleKeyUp = useCallback((e) => {
+    gameRef.current.keys[e.key] = false;
+  }, []);
+
+  const checkCollision = (rect1, rect2) => {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
+  };
+
+  const gameLoop = useCallback((currentTime) => {
+    if (gameState !== 'playing') return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const game = gameRef.current;
+    const deltaTime = currentTime - game.lastTime;
+    game.lastTime = currentTime;
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (game.keys['ArrowLeft'] && game.player.x > 0) {
+      game.player.x -= 3;
+    }
+    if (game.keys['ArrowRight'] && game.player.x < canvas.width - game.player.width) {
+      game.player.x += 3;
+    }
+
+    ctx.fillStyle = '#0f0';
+    ctx.fillRect(game.player.x, game.player.y, game.player.width, game.player.height);
+
+    game.bullets = game.bullets.filter(bullet => {
+      bullet.y -= bullet.speed;
+      ctx.fillStyle = '#ff0';
+      ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+      return bullet.y > 0;
+    });
+
+    let shouldMoveDown = false;
+    const aliveInvaders = game.invaders.filter(inv => inv.alive);
+    
+    if (aliveInvaders.length > 0) {
+      const leftmost = Math.min(...aliveInvaders.map(inv => inv.x));
+      const rightmost = Math.max(...aliveInvaders.map(inv => inv.x + inv.width));
+      
+      if ((rightmost >= canvas.width - 10 && game.invaderDirection > 0) ||
+          (leftmost <= 10 && game.invaderDirection < 0)) {
+        shouldMoveDown = true;
+        game.invaderDirection *= -1;
+      }
+    }
+
+    game.invaders.forEach(invader => {
+      if (!invader.alive) return;
+      
+      if (shouldMoveDown) {
+        invader.y += game.invaderDropDistance;
+      } else {
+        invader.x += game.invaderDirection * game.invaderSpeed;
+      }
+      
+      ctx.fillStyle = '#f00';
+      ctx.fillRect(invader.x, invader.y, invader.width, invader.height);
+
+      if (Math.random() < 0.0005) {
+        game.invaderBullets.push({
+          x: invader.x + invader.width / 2 - 2,
+          y: invader.y + invader.height,
+          width: 4,
+          height: 8,
+          speed: 2
+        });
+      }
+    });
+
+    game.invaderBullets = game.invaderBullets.filter(bullet => {
+      bullet.y += bullet.speed;
+      ctx.fillStyle = '#f0f';
+      ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+      return bullet.y < canvas.height;
+    });
+
+    for (let i = game.bullets.length - 1; i >= 0; i--) {
+      const bullet = game.bullets[i];
+      for (let j = 0; j < game.invaders.length; j++) {
+        const invader = game.invaders[j];
+        if (invader.alive && checkCollision(bullet, invader)) {
+          invader.alive = false;
+          game.bullets.splice(i, 1);
+          setScore(prev => prev + 10);
+          break;
+        }
+      }
+    }
+
+    for (let i = game.invaderBullets.length - 1; i >= 0; i--) {
+      const bullet = game.invaderBullets[i];
+      if (checkCollision(bullet, game.player)) {
+        game.invaderBullets.splice(i, 1);
+        setLives(prev => {
+          const newLives = prev - 1;
+          if (newLives <= 0) {
+            setGameState('gameOver');
+          }
+          return newLives;
+        });
+        break;
+      }
+    }
+
+    const remainingInvaders = game.invaders.filter(inv => inv.alive);
+    if (remainingInvaders.length === 0) {
+      setGameState('won');
+    }
+
+    if (remainingInvaders.some(inv => inv.y + inv.height >= game.player.y)) {
+      setGameState('gameOver');
+    }
+
+    requestAnimationFrame(gameLoop);
+  }, [gameState]);
+
+  useEffect(() => {
+    initializeInvaders();
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [handleKeyDown, handleKeyUp, initializeInvaders]);
+
+  useEffect(() => {
+    if (gameState === 'playing') {
+      requestAnimationFrame(gameLoop);
+    }
+  }, [gameState, gameLoop]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      padding: '20px',
+      fontFamily: 'monospace',
+      backgroundColor: '#222',
+      color: '#fff',
+      minHeight: '100vh'
+    }}>
+      <h2 style={{ margin: '0 0 10px 0' }}>Space Invaders</h2>
+      
+      <div style={{ marginBottom: '10px' }}>
+        <span style={{ marginRight: '20px' }}>Score: {score}</span>
+        <span>Lives: {lives}</span>
+      </div>
+
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={300}
+        style={{
+          border: '2px solid #fff',
+          backgroundColor: '#000'
+        }}
+      />
+
+      <div style={{ marginTop: '10px', textAlign: 'center' }}>
+        <div style={{ marginBottom: '10px', fontSize: '12px' }}>
+          Use ← → arrows to move, SPACE to shoot
+        </div>
+        
+        {gameState === 'gameOver' && (
+          <div>
+            <div style={{ color: '#f00', marginBottom: '10px' }}>GAME OVER</div>
+            <button onClick={resetGame} style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#0f0',
+              border: 'none',
+              cursor: 'pointer'
+            }}>
+              Play Again
+            </button>
+          </div>
+        )}
+        
+        {gameState === 'won' && (
+          <div>
+            <div style={{ color: '#0f0', marginBottom: '10px' }}>YOU WIN!</div>
+            <button onClick={resetGame} style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#0f0',
+              border: 'none',
+              cursor: 'pointer'
+            }}>
+              Play Again
+            </button>
+          </div>
+        )}
+        
+        {gameState === 'playing' && (
+          <button onClick={resetGame} style={{
+            padding: '8px 16px',
+            fontSize: '14px',
+            backgroundColor: '#666',
+            color: '#fff',
+            border: 'none',
+            cursor: 'pointer'
+          }}>
+            Restart
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default GameZone;
+----------------------------------------
+

@@ -92,7 +92,7 @@ def home():
             "/gamezone/read": "GET - Read current GameZone.js content",
             "/gamezone/update": "POST - Update GameZone with new game name (JSON: {'game_name': 'YourGame'})",
             "/gamezone/write": "POST - Write custom content to GameZone.js (JSON: {'content': 'your_content'})",
-            "/generate-game": "POST - Generate AI game from idea (JSON: {'game_idea': 'snake game'})"
+            "/generate-game": "POST - Generate self-contained AI game from idea (JSON: {'game_idea': 'snake game'}) - zero dependencies"
         }
     }
     
@@ -263,25 +263,33 @@ def generate_game():
         return jsonify({"error": str(e)}), 500
 
 def generate_game_with_anthropic(game_idea):
-    """Generate React game code using Anthropic API"""
+    """Generate completely self-contained React game code using Anthropic API - zero dependencies"""
     try:
         system_prompt = """You are a React game developer. Generate complete, working React component code for games. 
+        CRITICAL: The game MUST work as a single standalone file with ZERO external dependencies.
         The code should be a single React functional component that can replace the GameZone component.
-        Include inline styles for a complete, playable game experience.
-        Use only React hooks and standard JavaScript - no external game libraries.
-        Make the game interactive and fun within a 400x300 pixel area."""
+        Include ALL styling inline - no external CSS files or libraries.
+        Use ONLY React hooks, standard JavaScript, and built-in browser APIs.
+        NO external game libraries, NO imports beyond React, NO dependencies whatsoever.
+        The game will be directly plugged into a React app and must work immediately."""
         
         user_prompt = f"""Create a {game_idea} game as a React component. 
-        Requirements:
+        STRICT Requirements:
         - Named export as GameZone component
         - Accept currentGame prop (but can ignore it)
-        - Fully playable game with controls
-        - Use inline styles for all styling
-        - Include game state, scoring, and basic game loop
-        - Responsive to user input (keyboard/mouse)
-        - Should be fun and engaging
+        - ZERO external dependencies - only React and vanilla JavaScript
+        - ALL styles must be inline (no CSS classes or external stylesheets)
+        - Fully playable game with controls (keyboard/mouse)
+        - Include complete game state, scoring, and game loop logic
+        - Must work immediately when copied into a React file
+        - No imports except React (import React from 'react')
+        - Use only browser built-ins: canvas, setTimeout, setInterval, etc.
+        - Game should fit in approximately 400x300 pixel area
+        - Must be fun, engaging, and fully functional
         
-        Return only the complete React component code, no explanations."""
+        IMPORTANT: This code will be directly inserted into a file and run - it must be 100% self-contained.
+        Return ONLY the complete React component code, no explanations or markdown formatting.
+        """
 
         message = anthropic_client.messages.create(
             model="claude-sonnet-4-20250514",
